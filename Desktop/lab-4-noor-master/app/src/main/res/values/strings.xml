@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SECards</string>
+    <string name="app_title">Software Engineering Flashcards</string>
+    <string name="hello_world">Hello, World!</string>
+    <string name="previous">Previous</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="next">Next</string>
+    <string name="cards_in_deck_text_format">Deck contains %d cards</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
