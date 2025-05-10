@@ -1,0 +1,25 @@
+{
+  "name": "cse110-sp25-group23",
+  "version": "1.0.0",
+  "description": "- [Link to our team.md](https://cse110-sp25-group23.github.io/cse110-sp25-group23/admin/team.html)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cse110-sp25-group23/cse110-sp25-group23.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cse110-sp25-group23/cse110-sp25-group23/issues"
+  },
+  "homepage": "https://github.com/cse110-sp25-group23/cse110-sp25-group23#readme",
+  "devDependencies": {
+    "eslint": "^9.26.0",
+    "htmlhint": "^1.1.4",
+    "stylelint": "^16.19.1"
+  }
+}

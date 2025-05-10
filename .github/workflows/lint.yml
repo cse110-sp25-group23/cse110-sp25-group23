@@ -1,0 +1,25 @@
+# Minimal code. First workflow
+
+name: Lint Code
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - run: npm ci
+
+      # || true is temporary — it stops the workflow from failing if
+      # there are linting issues. Can be removed later once code is
+      # clean.
+      - run: npx eslint . --ext .js || true
+      - run: npx stylelint "**/*.css" || true
+      - run: npx htmlhint "**/*.html" || true
