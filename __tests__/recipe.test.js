@@ -11,3 +11,7 @@ test('Test sorting function is correct', () => {
         'Vanilla Icecream'
     ]);
 });
+
+test('Should be wrong', () => {
+    expect(1 + 2).toBe(4);
+});
