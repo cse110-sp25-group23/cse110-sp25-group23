@@ -9,5 +9,12 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "rules": {}
+    "rules": {
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-unused-vars": "error",
+        "no-console": "off"
+    }
 }
