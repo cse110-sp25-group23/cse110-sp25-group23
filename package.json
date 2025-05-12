@@ -17,6 +17,9 @@
   },
   "jest": {
     "transform": {},
-    "verbose": true
+    "verbose": true,
+    "testMatch": [
+      "**/?(*.)+(test).js"
+    ]
   }
 }
