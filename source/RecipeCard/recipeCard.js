@@ -5,11 +5,14 @@ class RecipeCard extends HTMLElement {
         this.attachShadow({ mode: "open" });
     }
 set data(recipeData) {
+    if(!recipeData) return;
+    this._data = recipeData;
     // Create content inside the shadow DOM
     this.shadowRoot.innerHTML = `
       <h2>${recipeData.name}</h2>
       <p>Author: ${recipeData.author}</p>
       <img src="${recipeData.image}" alt="${recipeData.name}" style="width:100px;height:auto;">
+      <p>Tags: </p>
       <ul>
         ${recipeData.tags.map(tag => `<li>${tag}</li>`).join('')}
       </ul>
@@ -24,45 +27,8 @@ set data(recipeData) {
 
 customElements.define('recipe-card', RecipeCard);
 
-function create_card() {
-    const recipeName     = document.getElementById('recipeName').value;
-    const authorName     = document.getElementById('authorName').value;
-    const image          = document.getElementById('image').value;
-    const predefinedTag  = document.getElementById('tagsDropdown').value;
-    const customTag      = document.getElementById('customTag').value;
-    const ingredients    = document.getElementById('ingredients').value;
-    const recipe         = document.getElementById('recipe').value;
-
-    //generate array of tags
-    const tagsArray = [];
-    if(predefinedTag) {
-        tagsArray.push(predefinedTag);
-    }
-    if(customTag) {
-        //split custom tags by comma and place tags into array
-        const customTags = 
-        customTag.split(',')                                                    //split by comma
-        .map(tag => tag.trim())                                                 //trim whitespace
-        .filter(Boolean)                                                        //filter out empty strings
-        .map(tag => tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase());  //captialize custom tags to match predefined tags
-        tagsArray.push(...customTags);
-    }
-
-    const recipeCard = document.createElement('recipe-card');
-
-    recipeCard.data = {
-        name: recipeName,
-        author: authorName,
-        image: image,
-        tags: tagsArray,
-        ingredients: ingredients,
-        steps: recipe
-    };
-
-    document.getElementById('cardsContainer').appendChild(recipeCard);
-
-    return recipeCard;
-}
+//removed createCard()
+// Moved it to storage and is now initFormHandler
 
 function update_card(shadowRoot, hostElement, recipeData){
     const editButton = document.createElement('button');
@@ -151,6 +117,13 @@ function update_card(shadowRoot, hostElement, recipeData){
             } else {
                 hostElement.data = originalData;
             }
+
+            let localRecipes = getRecipesFromStorage();
+            const index = localRecipes.findIndex(r => JSON.stringify(r) === JSON.stringify(originalData));
+            if (index !== -1) {
+                localRecipes[index] = finalData;
+                saveRecipesToStorage(localRecipes);
+            }
         });
     });
 }
@@ -159,8 +132,51 @@ function update_card(shadowRoot, hostElement, recipeData){
 function delete_card(shadowRoot, hostElement) {
     const deleteButton = shadowRoot.querySelector('.delete-btn');
     if(deleteButton) {
-        deleteButton.addEventListener('click', () => {
+        deleteButton.addEventListener('click', () => {            
+            //update local storage
+            let recipeString = localStorage.getItem('recipes');
+            //turn the recipesString into an array
+            console.log(`${hostElement}`);
+            console.log(`${recipeString}`);
+            let recipes = [];
+            if (recipeString != null) {
+                recipes = JSON.parse(recipeString);
+            }
+
+            const deletedRecipe = hostElement._data;
+
+            // filter the recipes array so it contains every recipe besides the one to delete
+            recipes = recipes.filter(recipe =>
+                !(recipe.name === deletedRecipe.name &&
+                    recipe.author === deletedRecipe.author &&
+                    recipe.ingredients === deletedRecipe.ingredients &&
+                    recipe.steps === deletedRecipe.steps
+                )
+            );
+
+            localStorage.setItem('recipes', JSON.stringify(recipes));
+
             hostElement.remove();
         });
     }
+}
+
+function addRecipesToDocument(recipes) {
+    //or document.getElementById('cardsContainer')
+	const container = document.querySelector('main');    
+
+	for (let i = 0; i < recipes.length; i++) {
+		let recipeCard = document.createElement('recipe-card');
+		recipeCard.data = recipes[i];
+		container.appendChild(recipeCard);
+	}
+}
+
+/**
+ * Takes in a recipe array, converts it to a JSON string, and then
+ * saves it to 'recipes' in localStorage
+ * @param {Array<Object>} recipes An array of recipes
+ */
+function saveRecipesToStorage(recipes) {
+	localStorage.setItem('recipes', JSON.stringify(recipes));
 }

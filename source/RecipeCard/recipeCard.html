@@ -3,28 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="recipeCard.js" defer></script>
+    <script src="recipeCard.js" type="module"></script>
+    <script src="../LocalStorage/storage.js" type="module"></script>
     <title>Recipe Card</title>
 </head>
 <body>
     <h1>Create a Recipe Card!</h1>
 
-    <div>
-        <input id ="recipeName" placeholder="Recipe Name">
-        <input id ="authorName" placeholder="Author Name">
-        <input id ="image" placeholder="Image File">
-        <select id="tagsDropdown">
-            <option value="">Select a Tag</option>
-            <option value="Easy">Easy</option>
-            <option value="Advanced">Advanced</option>
-            <option value="Pro">Pro</option>
-        </select>
-        <input id ="customTag" placeholder="Custom Tags (comma separated)">
-        <textarea id ="ingredients" placeholder="Ingredients"></textarea>
-        <textarea id ="recipe" placeholder="Recipe"></textarea>
-        <button onclick="create_card()">Create Recipe Card</button>   
-    </div>
-
-    <div id="cardsContainer"></div>
+    <form id="new-recipe">
+        <label for="name"> 
+            Recipe Name:
+            <input type="text" name="name" id ="recipeName" placeholder="Recipe Name" required>
+        </label>
+        <label for="author">
+            Author:
+            <input type="text" name="author" id="authorName" placeholder="Author Name" required>
+        </label>
+        <label for="image">
+            Image:
+            <input type="file" name="image" id="image" accept="image/*" required>
+        </label>
+        <label for="tags">
+            Tags: 
+            <select name="difficulty" id="tagsDropdown">
+                <option value="">Select a Tag</option>
+                <option value="Easy">Easy</option>
+                <option value="Advanced">Advanced</option>
+                <option value="Pro">Pro</option>
+            </select>
+            <input name="tags" id="customTag" placeholder="Custom Tag">
+        </label>
+        <label for="ingredients">
+            Ingredients: 
+            <textarea name="ingredients" id="ingredients" placeholder="Ingredients" cols="38" rows="2" required></textarea>    
+        </label>
+        <label for="steps">
+            Steps:
+            <textarea name="steps" id="steps" placeholder="Recipe Steps" cols="38" rows="5" required></textarea>
+        </label>
+        <button type="submit">Create Recipe</button> 
+    </form>
+    
+    <!-- Adds search bar -->
+    <search-bar>
+        <input type = "search" placeholder="Search">
+    </search-bar>
+    
+    <main id="cardsContainer"></main>
 </body>
 </html>
