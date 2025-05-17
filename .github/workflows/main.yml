@@ -1,25 +1,32 @@
-name: CI Checks
+# Github Actions workflow to run the following CI checks: 
+# unit tests, linting, and documentation generation
 
+#runs the workflow on any push to any branch
+#also runs when any PR is opened or updated
 on: [push, pull_request]
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
 
+  test:
+    name: Run Unit Tests (Jest)
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install Dependencies
         run: npm install
-
-      - name: Run Unit Tests (Jest)
+      - name: Run Tests
         run: npm test
 
+  lint:
+    name: Run Linters (ESLint, Stylelint, HTMLHint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm install
       - name: Run ESLint
         run: npm run lint
-
       - name: Run Stylelint
         run: npm run stylelint
-
       - name: Run HTMLHint
         run: npm run htmlhint

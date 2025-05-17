@@ -1,0 +1,16 @@
+{
+  "source": {
+    "include": ["source"],
+    "exclude": ["__tests__"],
+    "includePattern": ".js$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true,
+    "readme": "./README.md",
+    "template": "templates/default"
+  },
+  "plugins": []
+}
+
