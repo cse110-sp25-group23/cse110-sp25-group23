@@ -4,7 +4,10 @@ function init() {
 	let recipes = getRecipesFromStorage();
 	addRecipesToDocument(recipes);
     // adds event listeners to form elements
-	initFormHandler();               
+	initFormHandler();    
+	
+	//adds search
+	initSearch();
 }
 
 /**
@@ -88,4 +91,46 @@ function initFormHandler() {
 		};
 		reader.readAsDataURL(imgFile);
 	}); 
+}
+
+//search function
+function initSearch(){
+	//get input from search-bar
+	const searchInput = document.querySelector('search-bar input[type="search"]');
+
+	//If there is no input return
+	if(!searchInput){
+		return;
+	}
+
+	
+	searchInput.addEventListener('input', (query) => {
+		//remove spaces and convert all text to lowercase
+		const trimmedQuery = query.target.value.trim().toLowerCase();
+		const cards = document.querySelectorAll('recipe-card');
+		
+		//loop over each card
+		cards.forEach(card =>  {
+			//get all data from each card
+			const { name, author, difficulty, tags, ingredients, steps } = card._data;
+			
+			/**
+			* Creates one string with all the text from all data
+			* .filter(x => x) Remvoves any null values, empty strings, and undefined values
+			* 
+			* .join(' ') creates one large string with a space between every field 
+			* Ex. the strings "name" and "author" becomes one string "name, author"
+			*/
+			const haystack = [ name, author, difficulty, tags, ingredients, steps ].filter(x => x)
+				.join(' ')		//Combines all data into one string
+				.toLowerCase(); //Lowecase for all data
+
+			//display card if the text is in the input
+			if (haystack.includes(trimmedQuery)) {
+				card.style.display = '';
+			} else {
+				card.style.display = 'none';
+			}
+		});
+	});
 }
