@@ -17,3 +17,8 @@ It will look something like this (NOTE: this is the rough HTML mockup/outline of
 
 Users will be able to view all of their recipes in a "My Recipes" section of the site, which we currently have planned will list out all their recipes on a shelf design of some sort.
 
+## Update
+
+
+## Delete
+
