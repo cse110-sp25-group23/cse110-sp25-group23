@@ -2,7 +2,14 @@
 
 ## Create 
 
-We plan on having a "Create Card" section which allows the users to name the card, add the ingredients, add an image for their card, add the tags they want to associate with their card, and the steps they want to note down for their recipe. It will look something like this (NOTE: this is the rough HTML mockup/outline of how it is going to appear):
+We plan on having a "Create Card" section, which allows the users to:
+- Name the card
+- Add the ingredients
+- Add an image for their card
+- Add the tags they want to associate with their card
+- Add the cooking steps they want to note down for their recipe.
+
+It will look something like this (NOTE: this is the rough HTML mockup/outline of how it is going to appear):
 
 ![image](https://github.com/user-attachments/assets/543b1830-72f2-4204-a13b-6b6963dadab5)
 
