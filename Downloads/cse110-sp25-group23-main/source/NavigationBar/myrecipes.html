@@ -75,79 +75,22 @@ change if needed - Kelvin-->
         border-radius: 5px;
         cursor: pointer;
         font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
     }
 
     .import-form button:hover {
         background-color: #ff6c04;
     }
 
-    .import-form button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-
     .error-message {
         color: red;
         margin: 10px 0;
         display: none;
-        padding: 10px;
-        background-color: #ffebee;
-        border-radius: 5px;
     }
 
     .success-message {
         color: green;
         margin: 10px 0;
         display: none;
-        padding: 10px;
-        background-color: #e8f5e9;
-        border-radius: 5px;
-    }
-
-    .loading-spinner {
-        display: none;
-        width: 20px;
-        height: 20px;
-        border: 3px solid #ffffff;
-        border-radius: 50%;
-        border-top-color: transparent;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .recipe-preview {
-        margin-top: 20px;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        display: none;
-    }
-
-    .recipe-preview img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 5px;
-    }
-
-    .recipe-preview h3 {
-        margin: 10px 0;
-    }
-
-    .recipe-preview .ingredients {
-        margin: 10px 0;
-    }
-
-    .recipe-preview .ingredients li {
-        margin: 5px 0;
     }
 </style>
 
@@ -163,48 +106,13 @@ change if needed - Kelvin-->
         <h2>Import Recipe</h2>
         <p>Enter a recipe URL to import it into your collection:</p>
         <input type="url" id="recipeUrl" placeholder="https://www.example.com/recipe" required>
-        <button id="importButton" onclick="importRecipe()">
-            <span id="buttonText">Import Recipe</span>
-            <div id="loadingSpinner" class="loading-spinner"></div>
-        </button>
+        <button onclick="importRecipe()">Import Recipe</button>
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
-        
-        <div id="recipePreview" class="recipe-preview">
-            <h3 id="previewTitle"></h3>
-            <img id="previewImage" src="" alt="Recipe preview">
-            <div class="ingredients">
-                <h4>Ingredients:</h4>
-                <ul id="previewIngredients"></ul>
-            </div>
-        </div>
     </div>
 
     <script type="module">
         import { importRecipeFromUrl, saveImportedRecipe } from '../recipeImporter.js';
-
-        const button = document.getElementById('importButton');
-        const buttonText = document.getElementById('buttonText');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const recipePreview = document.getElementById('recipePreview');
-        
-        function setLoading(isLoading) {
-            button.disabled = isLoading;
-            buttonText.textContent = isLoading ? 'Importing...' : 'Import Recipe';
-            loadingSpinner.style.display = isLoading ? 'block' : 'none';
-        }
-
-        function showRecipePreview(recipe) {
-            document.getElementById('previewTitle').textContent = recipe.title;
-            document.getElementById('previewImage').src = recipe.image;
-            
-            const ingredientsList = document.getElementById('previewIngredients');
-            ingredientsList.innerHTML = recipe.ingredients
-                .map(ing => `<li>${ing.amount} ${ing.unit} ${ing.name}</li>`)
-                .join('');
-            
-            recipePreview.style.display = 'block';
-        }
 
         window.importRecipe = async function() {
             const urlInput = document.getElementById('recipeUrl');
@@ -214,22 +122,16 @@ change if needed - Kelvin-->
             try {
                 errorMessage.style.display = 'none';
                 successMessage.style.display = 'none';
-                recipePreview.style.display = 'none';
                 
-                setLoading(true);
                 const recipe = await importRecipeFromUrl(urlInput.value);
-                const savedRecipe = saveImportedRecipe(recipe);
+                saveImportedRecipe(recipe);
                 
                 successMessage.textContent = `Successfully imported "${recipe.title}"!`;
                 successMessage.style.display = 'block';
                 urlInput.value = '';
-                
-                showRecipePreview(savedRecipe);
             } catch (error) {
                 errorMessage.textContent = error.message;
                 errorMessage.style.display = 'block';
-            } finally {
-                setLoading(false);
             }
         };
     </script>
