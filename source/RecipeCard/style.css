@@ -1,0 +1,150 @@
+/* ==== Base Styles ==== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f6f1;
+    color: #333;
+    padding: 20px;
+    max-width: 1300px;
+    margin: auto;
+}
+
+h1,
+h2 {
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* ==== Layout ==== */
+.layout-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* Left Panel */
+.form-section {
+    flex: 0 0 320px;
+}
+
+/* Right Panel - Recipe Cards */
+main#cardsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    flex: 1;
+    margin-top: 10px;
+}
+
+recipe-card {
+    flex: 1 1 250px;
+    max-width: 280px;
+}
+
+/* ==== Recipe Form ==== */
+form#new-recipe {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+form#new-recipe label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+form#new-recipe input[type="text"],
+form#new-recipe input[type="file"],
+form#new-recipe select,
+form#new-recipe textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form#new-recipe textarea {
+    resize: vertical;
+}
+
+form#new-recipe button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form#new-recipe button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* ==== Meal Builder & Meals Section ==== */
+#meal-builder,
+#meals-display {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+#meal-builder input,
+#meal-builder button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 6px;
+    width: calc(100% - 12px);
+    box-sizing: border-box;
+}
+
+#meal-list>div {
+    margin-bottom: 5px;
+}
+
+#meal-list button {
+    margin-right: 10px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #2196F3;
+    color: white;
+    cursor: pointer;
+}
+
+#meal-list button:hover {
+    background-color: #1976D2;
+}
+
+#show-all-btn {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 7px 15px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+#show-all-btn:hover {
+    background-color: #ec971f;
+}
+
+/* ==== Utility Elements ==== */
+search-bar input[type="search"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
