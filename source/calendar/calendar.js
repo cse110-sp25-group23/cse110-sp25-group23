@@ -56,11 +56,13 @@ function renderCalendar(date) {
       // Check if any recipe in localStorage matches this date
       for (let k in localStorage) {
         if (/^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' ')) {
-          recipe = localStorage.getItem(k);
-          break;
+          const stored = localStorage.getItem(k).split(';');
+          recipes.push(...stored);
         }
       }
-
+      
+      // renders multiple recipes in the cell
+      const recipeHtml = recipes.map(r => `<div class="note">${r}</div>`).join('');
       calendarGrid.innerHTML += `<div class="day" data-date="${dateKey}">
         ${i}${recipe ? `<div class="note">${recipe}</div>` : ''}
       </div>`;
