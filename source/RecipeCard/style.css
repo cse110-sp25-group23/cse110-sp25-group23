@@ -15,31 +15,24 @@ h2 {
     padding-bottom: 5px;
 }
 
-/* ==== Layout ==== */
+/* ==== Layout for top section ==== */
 .layout-wrapper {
     display: flex;
-    align-items: flex-start;
     gap: 30px;
     margin-top: 20px;
+    align-items: flex-start;
 }
 
-/* Left Panel */
-.form-section {
-    flex: 0 0 320px;
-}
-
-/* Right Panel - Recipe Cards */
-main#cardsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+/* Left panel */
+.form-column {
     flex: 1;
-    margin-top: 10px;
+    min-width: 300px;
 }
 
-recipe-card {
-    flex: 1 1 250px;
-    max-width: 280px;
+/* Right panel */
+.meal-column {
+    flex: 1;
+    min-width: 300px;
 }
 
 /* ==== Recipe Form ==== */
@@ -72,6 +65,7 @@ form#new-recipe textarea {
 
 form#new-recipe textarea {
     resize: vertical;
+    min-height: 60px;
 }
 
 form#new-recipe button[type="submit"] {
@@ -88,10 +82,10 @@ form#new-recipe button[type="submit"]:hover {
     background-color: #45a049;
 }
 
-/* ==== Meal Builder & Meals Section ==== */
+/* ==== Meal Builder & Meals ==== */
 #meal-builder,
 #meals-display {
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 10px;
@@ -99,12 +93,28 @@ form#new-recipe button[type="submit"]:hover {
 }
 
 #meal-builder input,
-#meal-builder button {
+#meal-builder button,
+#meal-name {
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 6px;
-    width: calc(100% - 12px);
+    width: 100%;
     box-sizing: border-box;
+}
+
+#start-meal-btn,
+#save-meal-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#start-meal-btn:hover,
+#save-meal-btn:hover {
+    background-color: #1976D2;
 }
 
 #meal-list>div {
@@ -140,11 +150,50 @@ form#new-recipe button[type="submit"]:hover {
     background-color: #ec971f;
 }
 
-/* ==== Utility Elements ==== */
+/* ==== Recipe Card Selection for Meal Creation ==== */
+#selectable-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.selectable-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.selectable-card input[type="checkbox"] {
+    margin-bottom: 5px;
+}
+
+/* ==== Bottom Section: Cards ==== */
+main#cardsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+recipe-card {
+    flex: 1 1 250px;
+    max-width: 280px;
+}
+
+/* ==== Search Bar ==== */
 search-bar input[type="search"] {
     width: 100%;
     padding: 8px;
     margin-top: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+recipe-card.selectable {
+    outline: 2px dashed #4caf50;
+}
+
+recipe-card.selectable[selected] {
+    border: 2px solid #4caf50;
 }

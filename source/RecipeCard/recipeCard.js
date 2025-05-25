@@ -1,7 +1,5 @@
 /**
  * Custom element that displays and manages a recipe card
- * Allows for rendering, editing and the deletion of a recipe
- * stored locally.
  */
 class RecipeCard extends HTMLElement {
     constructor() {
@@ -9,40 +7,30 @@ class RecipeCard extends HTMLElement {
         this.attachShadow({ mode: "open" });
     }
 
-    /**
-     * Sets and renders the content for the recipe card
-     * @param {Object} recipeData - Data for recipe
-     */
     set data(recipeData) {
         if (!recipeData) return;
         this._data = recipeData;
 
-        // Create content inside the shadow DOM
         this.shadowRoot.innerHTML = `
-            <h2>${recipeData.name}</h2>
-            <p>Author: ${recipeData.author}</p>
-            <img src="${recipeData.image}" alt="${recipeData.name}" style="width:100px;height:auto;">
-            <p>Tags: </p>
-            <ul>
-                ${recipeData.tags.map(tag => `<li>${tag}</li>`).join('')}
-            </ul>
-            <p>Ingredients: ${recipeData.ingredients}</p>
-            <p>Steps: ${recipeData.steps}</p>
-            <button class='delete-btn'>Delete</button>
-        `;
+      <h2>${recipeData.name}</h2>
+      <p>Author: ${recipeData.author}</p>
+      <img src="${recipeData.image}" alt="${recipeData.name}" style="width:100px;height:auto;">
+      <p>Tags:</p>
+      <ul>${recipeData.tags.map(tag => `<li>${tag}</li>`).join('')}</ul>
+      <p>Ingredients: ${recipeData.ingredients}</p>
+      <p>Steps: ${recipeData.steps}</p>
+      <button class='delete-btn'>Delete</button>
+    `;
 
-        // Initialize delete and update logic
         delete_card(this.shadowRoot, this);
         update_card(this.shadowRoot, this, recipeData);
     }
 }
 
-// Define the custom recipe card element
 customElements.define('recipe-card', RecipeCard);
 
 /**
- * Allows for users to edit/update recipe card through an edit 
- * and save button
+ * Enables editing a recipe card
  */
 function update_card(shadowRoot, hostElement, recipeData) {
     const editButton = document.createElement('button');
@@ -55,26 +43,24 @@ function update_card(shadowRoot, hostElement, recipeData) {
         const predefinedSelectedTags = originalData.tags.filter(t => predefinedTags.includes(t));
         const customTags = originalData.tags.filter(t => !predefinedTags.includes(t));
 
-        // Build UI for editing predefined and custom tags
         const tagInputs = predefinedTags.map(tag => `
-            <label>
-                <input type="checkbox" class="edit-tag-checkbox" value="${tag}" ${predefinedSelectedTags.includes(tag) ? 'checked' : ''}>${tag}
-            </label><br>
-        `).join('');
+      <label>
+        <input type="checkbox" class="edit-tag-checkbox" value="${tag}" ${predefinedSelectedTags.includes(tag) ? 'checked' : ''}>${tag}
+      </label><br>`).join('');
 
         shadowRoot.innerHTML = `
-            <label>Name: <input type="text" value="${originalData.name}" class="edit-name"></label><br>
-            <label>Author: <input type="text" value="${originalData.author}" class="edit-author"></label><br>
-            <label>Image: <input type="text" value="${originalData.image}" class="edit-image"></label><br>
-            <fieldset>
-                <legend>Tags:</legend>
-                ${tagInputs}
-                <label>Custom Tags: <input type="text" class="edit-custom-tags" value="${customTags.join(', ')}"></label>
-            </fieldset>
-            <label>Ingredients: <textarea class="edit-ingredients">${originalData.ingredients}</textarea></label><br>
-            <label>Recipe: <textarea class="edit-recipe">${originalData.recipe}</textarea></label><br>
-            <button class="save-btn">Save</button>
-        `;
+      <label>Name: <input type="text" value="${originalData.name}" class="edit-name"></label><br>
+      <label>Author: <input type="text" value="${originalData.author}" class="edit-author"></label><br>
+      <label>Image: <input type="text" value="${originalData.image}" class="edit-image"></label><br>
+      <fieldset>
+        <legend>Tags:</legend>
+        ${tagInputs}
+        <label>Custom Tags: <input type="text" class="edit-custom-tags" value="${customTags.join(', ')}"></label>
+      </fieldset>
+      <label>Ingredients: <textarea class="edit-ingredients">${originalData.ingredients}</textarea></label><br>
+      <label>Recipe: <textarea class="edit-recipe">${originalData.recipe}</textarea></label><br>
+      <button class="save-btn">Save</button>
+    `;
 
         shadowRoot.querySelector('.save-btn').addEventListener('click', () => {
             const checkedTags = [...shadowRoot.querySelectorAll('.edit-tag-checkbox')]
@@ -115,7 +101,7 @@ function update_card(shadowRoot, hostElement, recipeData) {
 }
 
 /**
- * Allows users to delete a recipe card 
+ * Delete logic for recipe card
  */
 function delete_card(shadowRoot, hostElement) {
     const deleteButton = shadowRoot.querySelector('.delete-btn');
@@ -134,7 +120,7 @@ function delete_card(shadowRoot, hostElement) {
 }
 
 /**
- * Takes an array of recipes and renders <recipe-card> elements to <main>
+ * Render all recipes to <main>
  */
 function addRecipesToDocument(recipes) {
     const container = document.querySelector('main');
@@ -146,17 +132,12 @@ function addRecipesToDocument(recipes) {
     });
 }
 
-/**
- * Saves recipes array to localStorage
- */
 function saveRecipesToStorage(recipes) {
     localStorage.setItem('recipes', JSON.stringify(recipes));
 }
 
-// === 🍽️ Meal Builder by Tag ===
-
 /**
- * On load: show all recipes + meals
+ * Initial load: render everything
  */
 window.addEventListener('DOMContentLoaded', () => {
     const recipes = JSON.parse(localStorage.getItem('recipes')) || [];
@@ -165,26 +146,88 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Tag-based meal creation: saves tag reference only
+ * Show all recipes button
  */
 document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('create-meal-from-tag-btn');
-    if (!btn) return;
+    const showAllBtn = document.getElementById('show-all-btn');
+    if (!showAllBtn) return;
 
-    btn.addEventListener('click', () => {
-        const tag = document.getElementById('tag-input').value.trim().toLowerCase();
-        const mealName = document.getElementById('meal-name').value.trim();
-        if (!tag || !mealName) return alert("Please enter both a tag and a meal name.");
+    showAllBtn.addEventListener('click', () => {
+        const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
+        addRecipesToDocument(allRecipes);
+    });
+});
+
+/**
+ * Start meal creation — make existing cards selectable
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const startBtn = document.getElementById('start-meal-btn');
+    const saveBtn = document.getElementById('save-meal-btn');
+    const mealNameInput = document.getElementById('meal-name');
+    const creatorDiv = document.getElementById('meal-creator');
+
+    startBtn.addEventListener('click', () => {
+        creatorDiv.style.display = 'block';
+
+        const allCards = document.querySelectorAll('recipe-card');
+        allCards.forEach((card, index) => {
+            card.classList.add('selectable');
+
+            // Only add checkbox if not already added
+            if (!card.shadowRoot.querySelector('.meal-checkbox')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'card-checkbox-container';
+                wrapper.style.textAlign = 'center';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'meal-checkbox';
+                checkbox.dataset.name = card._data.name;
+
+                wrapper.appendChild(checkbox);
+                card.shadowRoot.prepend(wrapper);
+            }
+        });
+    });
+
+    saveBtn.addEventListener('click', () => {
+        const mealName = mealNameInput.value.trim();
+        if (!mealName) return alert("Please enter a meal name.");
+
+        const recipeCards = document.querySelectorAll('recipe-card');
+        const selected = [];
+
+        recipeCards.forEach(card => {
+            const checkbox = card.shadowRoot.querySelector('.meal-checkbox');
+            if (checkbox && checkbox.checked) {
+                selected.push(checkbox.dataset.name);
+            }
+        });
+
+        if (selected.length === 0) return alert("Please select at least one recipe.");
 
         const meals = JSON.parse(localStorage.getItem('meals')) || {};
-        meals[mealName] = tag;  // Save the tag only
+        meals[mealName] = selected;
         localStorage.setItem('meals', JSON.stringify(meals));
+
+        // Reset UI
+        mealNameInput.value = '';
+        creatorDiv.style.display = 'none';
+
+        const allCards = document.querySelectorAll('recipe-card');
+        allCards.forEach(card => {
+            card.classList.remove('selectable');
+            const checkboxContainer = card.shadowRoot.querySelector('.card-checkbox-container');
+            if (checkboxContainer) checkboxContainer.remove();
+        });
+
         displayMeals();
     });
 });
 
 /**
- * Displays all meal buttons; clicking filters recipes by associated tag
+ * Render all meals and attach event listeners
  */
 function displayMeals() {
     const container = document.getElementById('meal-list');
@@ -195,19 +238,14 @@ function displayMeals() {
         const wrapper = document.createElement('div');
         wrapper.style.marginBottom = '5px';
 
-        // Meal View Button
         const viewBtn = document.createElement('button');
         viewBtn.textContent = name;
         viewBtn.addEventListener('click', () => {
-            const tag = meals[name].toLowerCase();
             const recipes = JSON.parse(localStorage.getItem('recipes')) || [];
-            const filtered = recipes.filter(r =>
-                r.tags.some(t => t.toLowerCase() === tag)
-            );
+            const filtered = recipes.filter(r => meals[name].includes(r.name));
             addRecipesToDocument(filtered);
         });
 
-        // 🗑️ Delete Button
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '🗑️';
         deleteBtn.style.marginLeft = '6px';
@@ -224,13 +262,3 @@ function displayMeals() {
         container.appendChild(wrapper);
     }
 }
-document.addEventListener('DOMContentLoaded', () => {
-    const showAllBtn = document.getElementById('show-all-btn');
-    if (!showAllBtn) return;
-
-    showAllBtn.addEventListener('click', () => {
-        const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
-        addRecipesToDocument(allRecipes);
-    });
-});
-
