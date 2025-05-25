@@ -231,7 +231,7 @@ assignForm.addEventListener('submit', (event) => {
 // when clicked on day in month view, go to day view of that day
 calendarGrid.addEventListener('click', (e) => {
   const dayEl = e.target.closest('.day');
-  if (dayEl && currentView === 'month' && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
+  if (dayEl && currentView === 'month' && !e.target.classList.contains('delete-recipe')) {
     const dateStr = dayEl.dataset.date;
     if (dateStr) {
       const [y, m, d] = dateStr.split('-');
@@ -272,10 +272,10 @@ function getRecipeBlockHtml(recipeName) {
     // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
 }
 
-// Delete recipe
+// Delete recipe handler
 document.addEventListener('click', (e) => {
   if (e.target.classList.contains('delete-recipe')) {
-    e.stopImmediatePropagation(); // stops all other handlers for this event
+    e.stopPropagation();
     const note = e.target.closest('.note-block, .note');
     const recipeName = note.querySelector('.recipe-name').textContent;
     const parentDayOrSlot = note.closest('.day') || note.closest('.time-slot');
@@ -283,7 +283,13 @@ document.addEventListener('click', (e) => {
     let key;
     if (parentDayOrSlot.classList.contains('day')) {
       const dateKey = parentDayOrSlot.dataset.date;
-      key = `${dateKey} ${recipeName}`;
+      // In month view, find the exact key by checking all localStorage keys with that date prefix
+      for (let k in localStorage) {
+        if (k.startsWith(dateKey) && localStorage.getItem(k).split(';').includes(recipeName)) {
+          key = k;
+          break; // found 
+        }
+      }
     } else if (parentDayOrSlot.classList.contains('time-slot')) {
       key = parentDayOrSlot.dataset.datetime;
     }
