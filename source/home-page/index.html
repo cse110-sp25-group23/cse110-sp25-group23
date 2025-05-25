@@ -7,49 +7,55 @@
   <link rel="stylesheet" href="styles.css"></link>
 </head>
 <body>
-  <header class="header">
-    <div class="menu-icon">&#9776;</div>
-    <input type="text" placeholder="Find a recipe" class="search-bar" id="searchInput" />
-    <div class="profile-box">TA</div>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <header class="header" role="banner">
+    <button class="menu-icon" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <input type="text" placeholder="Find a recipe" class="search-bar" id="searchInput" aria-label="Search recipes" />
+    
+    <!-- Dark Mode Toggle Button -->
+    <button id="darkModeToggle" aria-label="Toggle dark mode">🌜</button>
+    
+    <div class="profile-box" role="button" tabindex="0" aria-label="Profile menu">TA</div>
   </header>
 
-  <section class="card-section" id="recipeSection">
-    <div class="card" id="recipeCard">
-      <h2 id="recipeTitle"></h2>
-      <p id="prepTime"></p>
-      <p id="cookTime"></p>
-      <p class="tags" id="recipeTags"></p>
-      <div style="position: relative;">
-        <img id="recipeImage" src="" alt="Recipe Image">
-        <div class="hover-mask" id="addToCollection">+</div>
+  <main id="main-content" role="main">
+    <section class="card-section" id="recipeSection" aria-label="Recipe cards">
+      <div class="card" id="recipeCard" role="article">
+        <h2 id="recipeTitle"></h2>
+        <p id="prepTime" aria-label="Preparation time"></p>
+        <p id="cookTime" aria-label="Cooking time"></p>
+        <p class="tags" id="recipeTags" aria-label="Recipe tags"></p>
+        <div style="position: relative;">
+          <img id="recipeImage" src="" alt="Recipe Image" role="img">
+          <button class="hover-mask" id="addToCollection" aria-label="Add to collection">+</button>
+        </div>
+        <button class="arrow left" id="prevBtn" aria-label="Previous recipe">&#8592;</button>
+        <button class="arrow right" id="nextBtn" aria-label="Next recipe">&#8594;</button>
       </div>
-      <div class="arrow left" id="prevBtn">&#8592;</div>
-      <div class="arrow right" id="nextBtn">&#8594;</div>
-    </div>
 
-    <div class="collections" id="collectionList"></div>
-    <div class="collections" id="moreCollections" style="display:none;"></div>
-    <div id="showMoreBtn" style="text-align: center; margin: 10px;"></div>
-  </section>
+      <div class="collections" id="collectionList" role="list" aria-label="Recipe collections"></div>
+      <div class="collections" id="moreCollections" style="display:none;" role="list" aria-label="More recipe collections"></div>
+      <button id="showMoreBtn" style="text-align: center; margin: 10px;" aria-label="Show more collections">Show More</button>
+    </section>
+  </main>
 
-  <nav class="nav-bar">
-    <a class="nav-item selected" href="index.html">
+  <nav class="nav-bar" role="navigation" aria-label="Main navigation">
+    <a class="nav-item selected" href="index.html" aria-current="page">
       <img src="images/home.png" alt="Home" class="nav-icon">
-    <!-- added-->
     </a>
     <a class="nav-item" href="shop.html">
       <img src="images/shop.png" alt="Shop" class="nav-icon">
     </a>
     <a class="nav-item" href="../calendar/calendar.html">
-<!--    <a class="nav-item" href="calendar.html"> -->
       <img src="images/calendar.png" alt="Calendar" class="nav-icon">
     </a>
     <a class="nav-item" href="../RecipeCard/recipeCard.html">
-      <img src="images/shelf.png" alt="Stats" class="nav-icon">
+      <img src="images/shelf.png" alt="Recipe shelf" class="nav-icon">
     </a>
   </nav>
 
-  <div id="popupContainer" style="display:none"></div>
+  <div id="popupContainer" style="display:none" role="dialog" aria-modal="true"></div>
   <script src="script.js"></script>
 </body>
 </html>
