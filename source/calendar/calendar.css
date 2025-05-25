@@ -1,9 +1,47 @@
 /* calendar.css */
 
+/* default styling  */
 * {
   font-family: Helvetica;
+  background-color: #f7f5ef;
   color: black;
   font-size: 12pt;
+}
+
+/* main nav bar styling */
+.main-nav {
+  background-color: #ffe49e;
+  font-family: Arial;
+  padding: 10px 20px;
+}
+
+.main-nav a {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: #fff3cc;
+  text-decoration: none;
+  color: black;
+  margin-right: 10px;
+}
+
+.main-nav a:hover {
+  background: #fcefb2;
+  border-radius: 10px;
+}
+
+.nav-icon {
+  mix-blend-mode: multiply;
+  width: 20px;      
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* Add recipe styling */ 
+.add-recipe {
+  font-family: Arial;
+  padding: 10px 20px;
 }
 
 /* Container for the full calendar component */
@@ -13,23 +51,27 @@
   padding: 1rem 8px;
   box-sizing: border-box;
   font-family: sans-serif;
+  /* background: #f7f5ef; */
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* background-color: #ffe49e; */
 }
 
 .calendar-header h2 {
   font-size: 36px;
   font-style: bold;
   font-family: 'Arial Narrow Bold';
+  /* background-color: #ffe49e; */
 }
 
 /* Row displaying the days of the week (Sun, Mon, ...) */
 .calendar-days{
   display: grid;
+  /* background: #ffe49e; */
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
   text-align: center;
@@ -51,6 +93,8 @@
   width: 100%;
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;
+  /* background: #f7f5ef; */
+
 }
 
 /* Default style for each cell in the calendar */
@@ -60,12 +104,15 @@
   position: relative;
   box-sizing: border-box;
   overflow-wrap: break-word;
+  background: white;
 }
 
 .calendar-toggle {
+  /* background-color: #fff3cc; */
   display: flex;
   justify-content: center;
   margin: 10px 0;
+  padding: 10px 20px;
   gap: 10px;
 }
 
@@ -77,17 +124,24 @@
   background: #f9f9f9;
   cursor: pointer;
   font-weight: bold;
+  font-family: 'Arial';
 }
 
-/* Highlight the active toggle button */
-.calendar-toggle button.active {
-  background-color: #d0e0ff;
-  border-color: #4a90e2;
+/* Hover effect for toggle buttons */
+.calendar-toggle button:hover {
+  background-color: #fcefb2;
 }
+
+.calendar-toggle button:active {
+  background-color: #fcefb2;
+  font-family: Arial;
+  font-style: oblique;
+}
+
 
 /* Day cells styling */
 .day {
-  background-color: #fff;
+  background: white;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -95,7 +149,7 @@
 
 /* Hover effect for day cells */
 .day:hover {
-  background-color: #f0f0f0;
+  background-color: #fcefb2;
 }
 
 /* Make each month view cell a square using aspect ratio */
