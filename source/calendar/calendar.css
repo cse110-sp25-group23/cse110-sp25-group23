@@ -8,36 +8,6 @@
   font-size: 12pt;
 }
 
-/* main nav bar styling */
-.main-nav {
-  background-color: #ffe49e;
-  font-family: Arial;
-  padding: 10px 20px;
-}
-
-.main-nav a {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: #fff3cc;
-  text-decoration: none;
-  color: black;
-  margin-right: 10px;
-}
-
-.main-nav a:hover {
-  background: #fcefb2;
-  border-radius: 10px;
-}
-
-.nav-icon {
-  mix-blend-mode: multiply;
-  width: 20px;      
-  height: 20px;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-
 /* Add recipe styling */ 
 #assign-form {
   font-family: Arial;
@@ -349,6 +319,61 @@
   position: relative;
   z-index: 1; 
 }
+
+/* === NAV BAR === */
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffe49e;
+  font-family: Arial;
+  padding: 10px 20px;
+}
+
+.main-nav a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: #fff3cc;
+  text-decoration: none;
+  color: black;
+}
+
+.main-nav input[type="text"] {
+  width: 100%;
+  max-width: 300px;
+  margin-left: auto;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.main-nav a:hover {
+  background: #fcefb2;
+  border-radius: 10px;
+}
+
+.nav-icon {
+  mix-blend-mode: multiply;
+  width: 20px;      
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.main-nav .search-bar {
+  max-width: 300px;
+  margin-left: auto; 
+}
+
+
+
 
 /* DEBUGGING */
 
