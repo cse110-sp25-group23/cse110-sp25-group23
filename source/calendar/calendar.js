@@ -245,3 +245,21 @@ document.querySelectorAll('.day').forEach(dayEl => {
     }
   });
 });
+
+// search bar for recipes
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('search-input');
+  if (!searchInput) {
+    console.error('Search input element not found!');
+    return;
+  }
+
+  searchInput.addEventListener('input', (event) => {
+    const query = event.target.value.toLowerCase();
+    const notes = document.querySelectorAll('.note-block, .note');
+    notes.forEach(note => {
+      note.style.display = note.textContent.toLowerCase().includes(query) ? '' : 'none';
+    });
+  });
+});
+
