@@ -161,13 +161,28 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Start meal creation — make existing cards selectable
  */
+
+/** state for editing the meal cards */
+let editingMealName = null;
+let originalSelectedRecipes = [];
+
+const saveMealBtn = document.getElementById('save-meal-btn')
+const mealNameInput = document.getElementById('meal-name');
+const creatorDiv = document.getElementById('meal-creator');
+const saveEditsBtn = document.getElementById('save-edits-btn');
+
 document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-meal-btn');
     const saveBtn = document.getElementById('save-meal-btn');
-    const mealNameInput = document.getElementById('meal-name');
-    const creatorDiv = document.getElementById('meal-creator');
 
     startBtn.addEventListener('click', () => {
+
+        //block new creation starting when editing
+        if(editingMealName !== null) {
+            alert("Please finish editing the current meal before creating another one.");
+            return;
+        }
+
         creatorDiv.style.display = 'block';
 
         const allCards = document.querySelectorAll('recipe-card');
@@ -224,6 +239,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
         displayMeals();
     });
+
+    /**
+     * Save edits 
+     * Validates and updates newly inputted selections
+     */
+    saveEditsBtn.addEventListener('click', () => {
+        
+        const currentMealName = mealNameInput.value.trim();
+
+        if(!currentMealName) {
+            return alert("Please enter a meal name.");
+        }
+
+        const recipeCards = document.querySelectorAll('recipe-card');
+        const selected = [];
+
+        recipeCards.forEach(card => {
+            const checkbox = card.shadowRoot.querySelector('.meal-checkbox');
+            if (checkbox && checkbox.checked) {
+                selected.push(checkbox.dataset.name);
+            }
+        });
+
+        if (selected.length === 0){
+            return alert("Please select at least one recipe.");
+        }
+        
+        if(currentMealName !== editingMealName) {
+            mealNameInput.value = currentMealName;
+        }
+
+        const originalSet = new Set(originalSelectedRecipes);
+        const selectedSet = new Set(selected);
+
+        let selectionUpdated = false;
+        
+        const isSameSize = originalSet.size === selectedSet.size;
+        const hasSameItems = [...selectedSet].every(item => originalSet.has(item))
+
+        selectionUpdated = !(isSameSize && hasSameItems);
+        const meals = JSON.parse(localStorage.getItem('meals')) || {};
+
+        if (editingMealName !== currentMealName) {
+            delete meals[editingMealName];
+        }
+
+        meals[currentMealName] = selected;
+        localStorage.setItem('meals', JSON.stringify(meals));
+
+        // Reset UI
+        mealNameInput.value = '';
+        creatorDiv.style.display = 'none';
+        saveEditsBtn.style.display ='none';
+        saveMealBtn.style.display = 'none';
+        editingMealName = null;
+        originalSelectedRecipes = [];
+
+        const allCards = document.querySelectorAll('recipe-card');
+        allCards.forEach(card=> {
+            card.classList.remove('selectable');
+            const checkboxContainer = card.shadowRoot.querySelector('.card-checkbox-container');
+            if (checkboxContainer) {
+                checkboxContainer.remove();
+            }
+            const checkbox = card.shadowRoot.querySelector('.meal-checkbox');
+            if(checkbox) {
+                checkbox.checked = false;
+            }
+        });
+        
+        //refresh UI
+        displayMeals();
+    }); 
+    
+    displayMeals();
 });
 
 /**
@@ -245,6 +335,56 @@ function displayMeals() {
             const filtered = recipes.filter(r => meals[name].includes(r.name));
             addRecipesToDocument(filtered);
         });
+    
+    /**
+     * Editing portion for recipe cards
+     * loads recipes with checkboxes --> preselects current recipes already in the meal
+     */
+        const editBtn = document.createElement('button');
+        editBtn.textContent = '✏️';
+        editBtn.style.marginLeft = '6px';
+        editBtn.addEventListener('click', () => {
+            mealNameInput.value = name;
+            editingMealName = name;
+
+            const allRecipes = JSON.parse(localStorage.getItem('recipes') || []);
+            addRecipesToDocument(allRecipes);
+
+            const updatedMeals = JSON.parse(localStorage.getItem('meals') || {});
+            originalSelectedRecipes = [...updatedMeals[name]];
+
+            const allCards = document.querySelectorAll('recipe-card');
+            allCards.forEach(card => {
+                card.classList.add('selectable');
+                
+                const existingWrapper = card.shadowRoot.querySelector('.card-checkbox-container');
+                if(existingWrapper) {
+                    existingWrapper.remove();
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'card-checkbox-container';
+                wrapper.style.textAlign = 'center';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'meal-checkbox';
+                checkbox.dataset.name = card._data.name;
+                
+                checkbox.checked = originalSelectedRecipes.includes(checkbox.dataset.name);
+
+                wrapper.appendChild(checkbox);
+                card.shadowRoot.prepend(wrapper);
+            
+        
+            });
+
+            //UI 
+            creatorDiv.style.display = 'block';
+            saveEditsBtn.style.display = 'inline-block';
+            saveMealBtn.style.display = 'none'
+            
+        });
 
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '🗑️';
@@ -258,10 +398,13 @@ function displayMeals() {
         });
 
         wrapper.appendChild(viewBtn);
+        wrapper.appendChild(editBtn);
         wrapper.appendChild(deleteBtn);
         container.appendChild(wrapper);
-    }
+        }
 }
+  
+
 const form = document.getElementById('new-recipe');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
