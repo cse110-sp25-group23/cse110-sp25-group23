@@ -386,13 +386,13 @@
 
 /* === EDIT/DELETE RECIPES === */
 .note-block .edit-recipe, .note .edit-recipe {
-  top: 2px;
-  left: 2px;
+  top: 3px;
+  left: 3px;
 }
 
 .note-block .delete-recipe, .note .delete-recipe {
-  top: 2px;
-  right: 2px;
+  top: 3px;
+  right: 3px;
 }
 
 .note-block:hover button, .note:hover button {
@@ -410,13 +410,13 @@
 }
 
 .note-block .edit-recipe {
-  top: 2px;
-  left: 2px;
+  top: 3px;
+  left: 3px;
 }
 
 .note-block .delete-recipe {
-  top: 2px;
-  right: 2px;
+  top: 3px;
+  right: 3px;
 }
 
 /* Show on hover */
