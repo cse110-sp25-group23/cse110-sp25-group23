@@ -235,7 +235,8 @@
 /* Show label only in day view */
 .calendar-day-label.day-view {
   display: block;
-  font-family: 'Arial Narrow Bold';
+  font-family: 'Arial';
+  font-weight: bold;
   font-size: 28px;
 }
 
@@ -244,6 +245,25 @@
 /* WEEK view layout: 1 label column + 7 days */
 .calendar-grid.week-view {
   grid-template-columns: 50px repeat(7, 1fr);
+}
+
+
+/* Recipe block in week and day view */
+.note {
+  aspect-ratio: 1/1;
+  flex: 0 0 auto;
+  background-color: #ffe49e !important; /* force color to show */
+  border-radius: 4px;
+  border: 1px solid #d4a03d !important; /* force border to show */
+  font-size: 1rem;
+  margin: 1px 0; 
+  padding: 1px 2px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  max-height: 48px; 
 }
 
 /* === TIME STRUCTURE for day/week views === */
