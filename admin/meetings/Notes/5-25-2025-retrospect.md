@@ -11,9 +11,9 @@
 - [x] Kelvin  
 - [ ] Sarah  
 - [x] Anu  
-- [ ] Rain  
-- [ ] Luis  
-- [ ] Thanh  
+- [x] Rain  
+- [x] Luis  
+- [x] Thanh  
 - [ ] Niroop  
 - [x] Manan  
 - [x] Anna  
