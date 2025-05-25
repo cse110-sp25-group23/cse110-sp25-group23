@@ -96,10 +96,11 @@
   background-color: #fcefb2;
 }
 
-.calendar-toggle button:active {
+.calendar-toggle button.active {
   background-color: #fcefb2;
   font-family: Arial;
   font-style: oblique;
+  border: 2px solid #d4a03d;
 }
 
 

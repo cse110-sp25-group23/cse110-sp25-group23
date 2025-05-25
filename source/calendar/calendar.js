@@ -11,9 +11,21 @@ const nextBtn = document.getElementById('next-month');
 let currentDate = new Date();
 let currentView = 'month';
 
+// highlight the active toggle button
+function highlightActiveToggle() {
+  document.querySelectorAll('.calendar-toggle button').forEach(button => {
+    if (button.dataset.view === currentView) {
+      button.classList.add('active');
+    } else {
+      button.classList.remove('active');
+    }
+  });
+}
+
 // renders calendar based on the current view
 // fills in cells using data from localStorage 
 function renderCalendar(date) {
+  highlightActiveToggle();
   // Reset calendar content and update view-specific class names
   calendarGrid.innerHTML = '';
   calendarGrid.classList.remove('day-view', 'week-view', 'month-view');
@@ -166,15 +178,10 @@ nextBtn.addEventListener('click', () => {
   renderCalendar(currentDate);
 });
 
-// View Toggle Buttons to switch between day, week, and month 
+// view toggle buttons to switch between day, week, and month 
 document.querySelectorAll('.calendar-toggle button').forEach(btn => {
   btn.addEventListener('click', () => {
     currentView = btn.dataset.view;
-
-    // update button styling
-    document.querySelectorAll('.calendar-toggle button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
     renderCalendar(currentDate); // re-render based on selected view
   });
 });
@@ -241,7 +248,6 @@ calendarGrid.addEventListener('click', (e) => {
     }
   }
 });
-
 
 
 // search bar for recipes
@@ -348,4 +354,7 @@ document.addEventListener('click', (e) => {
     // TODO: render the recipe card view
   }
 });
+
+
+
 
