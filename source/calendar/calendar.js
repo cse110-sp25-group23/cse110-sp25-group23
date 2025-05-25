@@ -231,7 +231,7 @@ assignForm.addEventListener('submit', (event) => {
 // when clicked on day in month view, go to day view of that day
 calendarGrid.addEventListener('click', (e) => {
   const dayEl = e.target.closest('.day');
-  if (dayEl && currentView === 'month') {
+  if (dayEl && currentView === 'month' && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
     const dateStr = dayEl.dataset.date;
     if (dateStr) {
       const [y, m, d] = dateStr.split('-');
@@ -241,6 +241,7 @@ calendarGrid.addEventListener('click', (e) => {
     }
   }
 });
+
 
 
 // search bar for recipes
@@ -265,15 +266,16 @@ function getRecipeBlockHtml(recipeName) {
   return `
     <div class="note-block">
       <span class="recipe-name">${recipeName}</span>
-      <button class="edit-recipe" title="Edit">&#9998;</button> <!-- pencil icon -->
       <button class="delete-recipe" title="Delete">&times;</button> <!-- X icon -->
     </div>`;
+
+    // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
 }
 
 // Delete recipe
 document.addEventListener('click', (e) => {
   if (e.target.classList.contains('delete-recipe')) {
-    e.stopPropagation();
+    e.stopImmediatePropagation(); // stops all other handlers for this event
     const note = e.target.closest('.note-block, .note');
     const recipeName = note.querySelector('.recipe-name').textContent;
     const parentDayOrSlot = note.closest('.day') || note.closest('.time-slot');
@@ -292,7 +294,7 @@ document.addEventListener('click', (e) => {
       const updatedArray = existing.split(';');
       const indexToRemove = updatedArray.indexOf(recipeName);
       if (indexToRemove !== -1) {
-        updatedArray.splice(indexToRemove, 1); // 🟢 remove only one instance
+        updatedArray.splice(indexToRemove, 1); // remove only one instance
       }
 
       if (updatedArray.length) {
@@ -308,36 +310,36 @@ document.addEventListener('click', (e) => {
 
 
 
-// Edit recipe
-document.addEventListener('click', (e) => {
-  if (e.target.classList.contains('edit-recipe')) {
-    e.stopPropagation();
-    const note = e.target.closest('.note-block');
-    const oldRecipeName = note.querySelector('.recipe-name').textContent;
-    const newRecipeName = prompt('Edit recipe name:', oldRecipeName);
-    if (!newRecipeName) return;
+// // Edit recipe
+// document.addEventListener('click', (e) => {
+//   if (e.target.classList.contains('edit-recipe')) {
+//     e.stopPropagation();
+//     const note = e.target.closest('.note-block');
+//     const oldRecipeName = note.querySelector('.recipe-name').textContent;
+//     const newRecipeName = prompt('Edit recipe name:', oldRecipeName);
+//     if (!newRecipeName) return;
 
-    const parentDay = note.closest('.day');
-    const dateKey = parentDay.dataset.date;
-    const oldKey = `${dateKey} ${oldRecipeName}`;
-    const newKey = `${dateKey} ${newRecipeName}`;
+//     const parentDay = note.closest('.day');
+//     const dateKey = parentDay.dataset.date;
+//     const oldKey = `${dateKey} ${oldRecipeName}`;
+//     const newKey = `${dateKey} ${newRecipeName}`;
 
-    const data = localStorage.getItem(oldKey);
-    localStorage.removeItem(oldKey);
-    localStorage.setItem(newKey, data);
+//     const data = localStorage.getItem(oldKey);
+//     localStorage.removeItem(oldKey);
+//     localStorage.setItem(newKey, data);
 
-    renderCalendar(currentDate);
-  }
-});
+//     renderCalendar(currentDate);
+//   }
+// });
 
 
 // view recipe on card click
 document.addEventListener('click', (e) => {
   const note = e.target.closest('.note-block');
-  if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
+  // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
+  if (note && !e.target.classList.contains('delete-recipe')) {
     const recipeName = note.querySelector('.recipe-name').textContent;
     // TODO: render the recipe card view
-    console.log('Open recipe card for:', recipeName);
   }
 });
 
