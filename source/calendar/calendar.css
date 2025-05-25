@@ -51,27 +51,23 @@
   padding: 1rem 8px;
   box-sizing: border-box;
   font-family: sans-serif;
-  /* background: #f7f5ef; */
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: #ffe49e; */
 }
 
 .calendar-header h2 {
   font-size: 36px;
   font-style: bold;
   font-family: 'Arial Narrow Bold';
-  /* background-color: #ffe49e; */
 }
 
 /* Row displaying the days of the week (Sun, Mon, ...) */
 .calendar-days{
   display: grid;
-  /* background: #ffe49e; */
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
   text-align: center;
@@ -93,8 +89,6 @@
   width: 100%;
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;
-  /* background: #f7f5ef; */
-
 }
 
 /* Default style for each cell in the calendar */
