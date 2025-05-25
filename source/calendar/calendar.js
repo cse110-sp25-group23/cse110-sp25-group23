@@ -52,7 +52,7 @@ function renderCalendar(date) {
     // fill in actual day cells
     for (let i = 1; i <= daysInMonth; i++) {
       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-      let recipe = '';
+      let recipes = [];
       // Check if any recipe in localStorage matches this date
       for (let k in localStorage) {
         if (/^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' ')) {
@@ -61,11 +61,13 @@ function renderCalendar(date) {
         }
       }
       
-      // renders first 2-3 recipes in the cell
-      const recipeHtml = recipes.slice(0, 3).map(r => `<div class="note">${r}</div>`).join('');
+      // renders first 2-3 recipes in the cell as blocks
+      const recipeHtml = recipes.slice(0, 3).map(r => `<div class="note-block">${r}</div>`).join('');
       calendarGrid.innerHTML += `<div class="day" data-date="${dateKey}">
-        ${i}${recipe ? `<div class="note">${recipe}</div>` : ''}
+        <div class="day-number">${i}</div>
+        <div class="notes-container">${recipeHtml}</div>
       </div>`;
+
     }
 
   // WEEK VIEW 
@@ -208,8 +210,15 @@ assignForm.addEventListener('submit', (event) => {
   const [y, m, d] = date.split("-");
   const key = `${y}-${m}-${d} ${time}`;
   
-  // Save recipe name to that date-time key
-  localStorage.setItem(key, recipeName);
+  // Save multiple recipes separated by ;
+  const existing = localStorage.getItem(key);
+  if (existing) {
+    if (!existing.split(';').includes(recipeName)) {
+      localStorage.setItem(key, existing + ';' + recipeName);
+    }
+  } else {
+    localStorage.setItem(key, recipeName);
+  }
 
   // Refresh the calendar view to reflect changes
   renderCalendar(currentDate);
