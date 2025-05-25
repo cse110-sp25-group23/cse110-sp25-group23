@@ -39,9 +39,9 @@
 }
 
 /* Add recipe styling */ 
-.add-recipe {
+#assign-form {
   font-family: Arial;
-  padding: 10px 20px;
+  padding: 6px 20px;
 }
 
 /* Container for the full calendar component */
@@ -329,4 +329,6 @@
   position: relative;
   z-index: 1; 
 }
+
+/* DEBUGGING */
 
