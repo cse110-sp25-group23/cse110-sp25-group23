@@ -61,8 +61,8 @@ function renderCalendar(date) {
         }
       }
       
-      // renders multiple recipes in the cell
-      const recipeHtml = recipes.map(r => `<div class="note">${r}</div>`).join('');
+      // renders first 2-3 recipes in the cell
+      const recipeHtml = recipes.slice(0, 3).map(r => `<div class="note">${r}</div>`).join('');
       calendarGrid.innerHTML += `<div class="day" data-date="${dateKey}">
         ${i}${recipe ? `<div class="note">${recipe}</div>` : ''}
       </div>`;
