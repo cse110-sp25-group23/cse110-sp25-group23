@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping List</title>
+  <link rel="stylesheet" href="/styles/global.css">
+</head>
+<body>
+  <h1>Your Shopping List</h1>
+  <ul id="cart"></ul>
+  <button id="clear">Clear cart</button>
+  <script type="module">
+    import { Cart } from '/scripts/cart.js';
+    const ul = document.getElementById('cart');
+    function render(){
+      ul.innerHTML = '';
+      Cart.list().forEach(({id,name,qty,unit})=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<label><input type="checkbox"> ${qty||''} ${unit||''} ${name}</label>
+                        <button data-rm="${id}">✕</button>`;
+        ul.append(li);
+      });
+    }
+    ul.addEventListener('click', e => {
+      if (e.target.matches('button[data-rm]'))
+        Cart.remove(e.target.dataset.rm);
+      if (e.target.matches('input[type=checkbox]'))
+        e.target.closest('li').classList.toggle('hidden', e.target.checked);
+    });
+    document.getElementById('clear').onclick = Cart.clear;
+    document.addEventListener('cart:update', render);
+    render();
+  </script>
+</body>
+</html>
