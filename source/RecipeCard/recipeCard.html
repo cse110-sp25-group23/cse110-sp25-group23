@@ -66,6 +66,19 @@
                     <input type="text" id="meal-name" placeholder="Enter meal name" required />
                     <button id="save-meal-btn">Save Meal</button>
                     <button id="save-edits-btn" style="display:none;">Save Changes</button>
+                    
+                    <label for="serving-size-dropdown">Serving Size:</label>
+                        <select id="serving-size-dropdown">
+                        <option value="" selected>Select...</option>
+                        <option value="1">1 person</option>
+                        <option value="2">2 people</option>
+                        <option value="2-4">2–4 people</option>
+                        <option value="4-6">4–6 people</option>
+                        <option value="6+">6+ people</option>
+                        <option value="custom">Custom</option>
+                        </select>
+                    <input type="text" id="custom-serving-size" placeholder="e.g. 2 adults + 3 kids" style="display: none;" />
+
                 </div>
             </section>
 

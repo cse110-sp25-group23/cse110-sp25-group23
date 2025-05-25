@@ -204,6 +204,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.shadowRoot.prepend(wrapper);
             }
         });
+        const sizeDropdown = document.getElementById('serving-size-dropdown');
+        const customSizeInput = document.getElementById('custom-serving-size');
+        sizeDropdown.addEventListener('change', () => {
+            if (sizeDropdown.value === 'custom') {
+                customSizeInput.style.display = 'inline-block';
+            } else {
+                customSizeInput.style.display = 'none';
+                customSizeInput.value = '';
+            }
+        });
     });
 
     saveBtn.addEventListener('click', () => {
@@ -222,8 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (selected.length === 0) return alert("Please select at least one recipe.");
 
+        const servingSize = 'N/A'
         const meals = JSON.parse(localStorage.getItem('meals')) || {};
-        meals[mealName] = selected;
+        meals[mealName] = {
+            recipes: selected,
+            serves: servingSize
+        }
         localStorage.setItem('meals', JSON.stringify(meals));
 
         // Reset UI
@@ -245,8 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
      * Validates and updates newly inputted selections
      */
     saveEditsBtn.addEventListener('click', () => {
-        
         const currentMealName = mealNameInput.value.trim();
+        const sizeDropdown = document.getElementById('serving-size-dropdown');
+        const customSizeInput = document.getElementById('custom-serving-size');
 
         if(!currentMealName) {
             return alert("Please enter a meal name.");
@@ -265,7 +280,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selected.length === 0){
             return alert("Please select at least one recipe.");
         }
-        
+
+
+        let servingSize = sizeDropdown.value;
+        if (servingSize === 'custom') {
+            servingSize = customSizeInput.value.trim();
+        }
         if(currentMealName !== editingMealName) {
             mealNameInput.value = currentMealName;
         }
@@ -285,7 +305,10 @@ document.addEventListener('DOMContentLoaded', () => {
             delete meals[editingMealName];
         }
 
-        meals[currentMealName] = selected;
+        meals[currentMealName] = {
+            recipes: selected,
+            serves: servingSize
+        }
         localStorage.setItem('meals', JSON.stringify(meals));
 
         // Reset UI
@@ -312,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //refresh UI
         displayMeals();
     }); 
-    
+
     displayMeals();
 });
 
@@ -332,7 +355,7 @@ function displayMeals() {
         viewBtn.textContent = name;
         viewBtn.addEventListener('click', () => {
             const recipes = JSON.parse(localStorage.getItem('recipes')) || [];
-            const filtered = recipes.filter(r => meals[name].includes(r.name));
+            const filtered = recipes.filter(r => meals[name].recipes.includes(r.name));
             addRecipesToDocument(filtered);
         });
     
@@ -347,11 +370,27 @@ function displayMeals() {
             mealNameInput.value = name;
             editingMealName = name;
 
+            const sizeDropdown = document.getElementById('serving-size-dropdown');
+            const customSizeInput = document.getElementById('custom-serving-size');
+
+            const updatedMeals = JSON.parse(localStorage.getItem('meals') || {});
+            const serves = updatedMeals[name].serves || '';
+            const dropdownOption = Array.from(sizeDropdown.options).find(opt => opt.value === serves);
+
+            if (dropdownOption) {
+                sizeDropdown.value = serves;
+                customSizeInput.style.display = 'none';
+                customSizeInput.value = '';
+            } else {
+                sizeDropdown.value = 'custom';
+                customSizeInput.style.display = 'inline-block';
+                customSizeInput.value = serves;
+            }
+
             const allRecipes = JSON.parse(localStorage.getItem('recipes') || []);
             addRecipesToDocument(allRecipes);
 
-            const updatedMeals = JSON.parse(localStorage.getItem('meals') || {});
-            originalSelectedRecipes = [...updatedMeals[name]];
+            originalSelectedRecipes = [...updatedMeals[name].recipes];
 
             const allCards = document.querySelectorAll('recipe-card');
             allCards.forEach(card => {
@@ -444,4 +483,5 @@ form.addEventListener('submit', (e) => {
     addRecipesToDocument(recipes);
 
     form.reset();
+    document.getElementById('tagsDropdown').value = '';
 });
