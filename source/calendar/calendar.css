@@ -136,11 +136,16 @@
 /* Day cells styling */
 .day {
   cursor: pointer;
-  transition: background 0.2s ease;
+  /* transition: background 0.1s ease; */
 }
 
 /* Hover effect for day cells */
 .day:hover {
+  background-color: #fcefb2;
+}
+
+/* ensure everything inside also switches to the hover color */
+.day:hover * {
   background-color: #fcefb2;
 }
 
@@ -159,11 +164,11 @@
 
 /* Recipe blocks in month view */
 .note-block {
-  aspect-ratio: 1/1;
+  aspect-ratio: 1/1 fixed;
   flex: 0 0 auto;
-  background: #ffe49e;
+  background-color: #ffe49e !important; /* force color to show */
   border-radius: 4px;
-  border: 1px solid #d4a03d;
+  border: 1px solid #d4a03d !important; /* force border to show */
   font-size: 0.7rem;
   margin: 1px 0; 
   padding: 1px 2px;
@@ -172,7 +177,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
-  max-height: 25px; 
+  max-height: 30px; 
 }
 
 
