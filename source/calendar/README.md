@@ -7,3 +7,8 @@ This is the documentation for the Calendar feature. - Anna
 **Notes:**
 - [ ] Need to fix the hover fctn for week and day.
 - [ ] create current day/week/month toggle?
+
+**HEX Codes Used:**
+- soft yellow: #fcefb2
+- darker yellow: #ffe49e
+- background: #f7f5ef
