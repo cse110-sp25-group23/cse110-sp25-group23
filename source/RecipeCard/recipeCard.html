@@ -11,59 +11,57 @@
 </head>
 
 <body>
+    <div class="main-layout">
+        <!-- LEFT COLUMN -->
+        <div class="left-panel">
+            <div class="search-section">
+                <input id="search-input" type="search" placeholder="Search Recipes..." />
+                <button id="search-btn">Search</button>
+            </div>
 
-    <!-- Top section layout: Create Recipe + Meal Builder side by side -->
-    <div class="layout-wrapper">
-        <!-- Left: Create Recipe -->
-        <div class="form-column">
-            <h1>Create a Recipe Card!</h1>
-
+            <h1>Create Recipe Card</h1>
             <form id="new-recipe">
-                <label for="name">
-                    Recipe Name:
-                    <input type="text" name="name" id="recipeName" placeholder="Recipe Name" required />
+                <label>
+                    Name:
+                    <input type="text" id="recipeName" required />
                 </label>
-                <label for="author">
+                <label>
                     Author:
-                    <input type="text" name="author" id="authorName" placeholder="Author Name" required />
+                    <input type="text" id="authorName" required />
                 </label>
-                <label for="image">
+                <label>
                     Image:
-                    <input type="file" name="image" id="image" accept="image/*" required />
+                    <input type="file" id="image" accept="image/*" required />
                 </label>
-                <label for="tags">
+                <label>
                     Tags:
-                    <select name="difficulty" id="tagsDropdown">
+                    <select id="tagsDropdown">
                         <option value="">Select a Tag</option>
                         <option value="Easy">Easy</option>
                         <option value="Advanced">Advanced</option>
                         <option value="Pro">Pro</option>
                     </select>
-                    <input name="tags" id="customTag" placeholder="Custom Tag" />
+                    <input type="text" id="customTag" placeholder="Custom Tag" />
                 </label>
-                <label for="ingredients">
+                <label>
                     Ingredients:
-                    <textarea name="ingredients" id="ingredients" placeholder="Ingredients" required></textarea>
+                    <textarea id="ingredients" required></textarea>
                 </label>
-                <label for="steps">
+                <label>
                     Steps:
-                    <textarea name="steps" id="steps" placeholder="Recipe Steps" required></textarea>
+                    <textarea id="steps" required></textarea>
                 </label>
                 <button type="submit">Create Recipe</button>
             </form>
-
-            <search-bar>
-                <input type="search" placeholder="Search" />
-            </search-bar>
         </div>
 
-        <!-- Right: Meal Builder -->
-        <div class="meal-column">
-            <section id="meal-builder">
-                <h2>Create a Custom Meal</h2>
-                <button id="start-meal-btn">Start Creating Meal</button>
+        <!-- MIDDLE COLUMN -->
+        <div class="middle-panel">
+            <button id="show-all-btn">Show All Recipes</button>
 
-                <!-- No new card container here — use existing cards -->
+            <section id="meal-builder">
+                <h2>Create Custom Meal</h2>
+                <button id="start-meal-btn">Start Creating Meal</button>
                 <div id="meal-creator" style="display: none;">
                     <input type="text" id="meal-name" placeholder="Enter meal name" required />
                     <button id="save-meal-btn">Save Meal</button>
@@ -73,14 +71,14 @@
             <section id="meals-display">
                 <h2>Meals</h2>
                 <div id="meal-list"></div>
-                <button id="show-all-btn">Show All Recipes</button>
             </section>
         </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-panel">
+            <main id="cardsContainer"></main>
+        </div>
     </div>
-
-    <!-- Bottom: Recipe Cards (shown always, reused during meal selection) -->
-    <main id="cardsContainer"></main>
-
 </body>
 
 </html>

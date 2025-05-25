@@ -4,7 +4,7 @@ body {
     background-color: #f9f6f1;
     color: #333;
     padding: 20px;
-    max-width: 1300px;
+    max-width: 1600px;
     margin: auto;
 }
 
@@ -15,33 +15,50 @@ h2 {
     padding-bottom: 5px;
 }
 
-/* ==== Layout for top section ==== */
-.layout-wrapper {
-    display: flex;
+/* ==== Main Layout Grid ==== */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
     gap: 30px;
-    margin-top: 20px;
     align-items: flex-start;
 }
 
-/* Left panel */
-.form-column {
-    flex: 1;
+/* ==== Left Panel (Search + Form) ==== */
+.left-panel {
     min-width: 300px;
 }
 
-/* Right panel */
-.meal-column {
-    flex: 1;
-    min-width: 300px;
+.search-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-/* ==== Recipe Form ==== */
+.search-section input[type="search"] {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-section button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-section button:hover {
+    background-color: #218838;
+}
+
 form#new-recipe {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 20px;
-    margin-bottom: 30px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
@@ -82,14 +99,33 @@ form#new-recipe button[type="submit"]:hover {
     background-color: #45a049;
 }
 
-/* ==== Meal Builder & Meals ==== */
+/* ==== Middle Panel (Meal Builder) ==== */
+.middle-panel {
+    min-width: 300px;
+}
+
+#show-all-btn {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#show-all-btn:hover {
+    background-color: #ec971f;
+}
+
 #meal-builder,
 #meals-display {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
+    background-color: #fff;
     border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 #meal-builder input,
@@ -117,10 +153,6 @@ form#new-recipe button[type="submit"]:hover {
     background-color: #1976D2;
 }
 
-#meal-list>div {
-    margin-bottom: 5px;
-}
-
 #meal-list button {
     margin-right: 10px;
     margin-bottom: 5px;
@@ -136,21 +168,32 @@ form#new-recipe button[type="submit"]:hover {
     background-color: #1976D2;
 }
 
-#show-all-btn {
-    background-color: #f0ad4e;
-    color: white;
-    padding: 7px 15px;
-    border: none;
-    border-radius: 5px;
-    margin-top: 15px;
-    cursor: pointer;
+/* ==== Right Panel (Cards) ==== */
+.right-panel {
+    display: flex;
+    flex-direction: column;
 }
 
-#show-all-btn:hover {
-    background-color: #ec971f;
+main#cardsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-/* ==== Recipe Card Selection for Meal Creation ==== */
+recipe-card {
+    flex: 1 1 250px;
+    max-width: 280px;
+}
+
+recipe-card.selectable {
+    outline: 2px dashed #4caf50;
+}
+
+recipe-card.selectable[selected] {
+    border: 2px solid #4caf50;
+}
+
+/* ==== Selectable Card Styling ==== */
 #selectable-cards {
     display: flex;
     flex-wrap: wrap;
@@ -166,34 +209,4 @@ form#new-recipe button[type="submit"]:hover {
 
 .selectable-card input[type="checkbox"] {
     margin-bottom: 5px;
-}
-
-/* ==== Bottom Section: Cards ==== */
-main#cardsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-top: 30px;
-}
-
-recipe-card {
-    flex: 1 1 250px;
-    max-width: 280px;
-}
-
-/* ==== Search Bar ==== */
-search-bar input[type="search"] {
-    width: 100%;
-    padding: 8px;
-    margin-top: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-recipe-card.selectable {
-    outline: 2px dashed #4caf50;
-}
-
-recipe-card.selectable[selected] {
-    border: 2px solid #4caf50;
 }

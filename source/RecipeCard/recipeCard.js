@@ -262,3 +262,43 @@ function displayMeals() {
         container.appendChild(wrapper);
     }
 }
+const form = document.getElementById('new-recipe');
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('recipeName').value.trim();
+    const author = document.getElementById('authorName').value.trim();
+    const imageInput = document.getElementById('image');
+    const image = imageInput.files[0]
+        ? URL.createObjectURL(imageInput.files[0])
+        : '';
+    const tag = document.getElementById('tagsDropdown').value;
+    const customTag = document.getElementById('customTag').value.trim();
+    const ingredients = document.getElementById('ingredients').value.trim();
+    const steps = document.getElementById('steps').value.trim();
+
+    if (!name || !author || !image || !ingredients || !steps) {
+        alert("Please fill out all required fields.");
+        return;
+    }
+
+    const tags = [];
+    if (tag) tags.push(tag);
+    if (customTag) tags.push(customTag);
+
+    const newRecipe = {
+        name,
+        author,
+        image,
+        tags,
+        ingredients,
+        steps
+    };
+
+    const recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+    recipes.push(newRecipe);
+    saveRecipesToStorage(recipes);
+    addRecipesToDocument(recipes);
+
+    form.reset();
+});
