@@ -226,3 +226,22 @@ assignForm.addEventListener('submit', (event) => {
   // Optionally reset form
   assignForm.reset();
 });
+
+
+// when clicked on day in month view, go to day view of that day
+document.querySelectorAll('.day').forEach(dayEl => {
+  dayEl.addEventListener('click', () => {
+    const dateStr = dayEl.dataset.date;
+    if (dateStr) {
+      // Convert string to Date object
+      const [y, m, d] = dateStr.split('-');
+      currentDate = new Date(y, parseInt(m) - 1, d);
+
+      // Switch to day view
+      currentView = 'day';
+
+      // Re-render calendar in day view
+      renderCalendar(currentDate);
+    }
+  });
+});
