@@ -372,6 +372,13 @@
   margin-left: auto; 
 }
 
+.search-bar {
+  flex: 1; 
+  display: flex;
+  justify-content: flex-end; 
+}
+
+
 
 
 
