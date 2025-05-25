@@ -62,7 +62,7 @@ function renderCalendar(date) {
       }
       
       // renders first 2-3 recipes in the cell as blocks
-      const recipeHtml = recipes.slice(0, 3).map(r => `<div class="note-block">${r}</div>`).join('');
+      const recipeHtml = recipes.slice(0, 3).map(r => getRecipeBlockHtml(r)).join('');
       calendarGrid.innerHTML += `<div class="day" data-date="${dateKey}">
         <div class="day-number">${i}</div>
         <div class="notes-container">${recipeHtml}</div>
@@ -103,7 +103,7 @@ function renderCalendar(date) {
         slot.dataset.datetime = key;
 
         const recipe = localStorage.getItem(key);
-        if (recipe) slot.innerHTML = `<div class="note">${recipe}</div>`;
+        if (recipe) slot.innerHTML = getRecipeBlockHtml(recipe);
 
         calendarGrid.appendChild(slot);
       }
@@ -132,7 +132,7 @@ function renderCalendar(date) {
       slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
 
       const recipe = localStorage.getItem(slot.dataset.datetime);
-      if (recipe) slot.innerHTML = `<div class="note">${recipe}</div>`;
+      if (recipe) slot.innerHTML = getRecipeBlockHtml(recipe);
 
       calendarGrid.appendChild(slot);
     }
@@ -261,5 +261,86 @@ document.addEventListener('DOMContentLoaded', () => {
       note.style.display = note.textContent.toLowerCase().includes(query) ? '' : 'none';
     });
   });
+});
+
+// 
+function getRecipeBlockHtml(recipeName) {
+  return `
+    <div class="note-block">
+      <span class="recipe-name">${recipeName}</span>
+      <button class="edit-recipe" title="Edit">&#9998;</button> <!-- pencil icon -->
+      <button class="delete-recipe" title="Delete">&times;</button> <!-- X icon -->
+    </div>`;
+}
+
+// Delete recipe
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('delete-recipe')) {
+    e.stopPropagation();
+    const note = e.target.closest('.note-block, .note');
+    const recipeName = note.querySelector('.recipe-name').textContent;
+    const parentDayOrSlot = note.closest('.day') || note.closest('.time-slot');
+
+    let key;
+    if (parentDayOrSlot.classList.contains('day')) {
+      const dateKey = parentDayOrSlot.dataset.date;
+      key = `${dateKey} ${recipeName}`;
+    } else if (parentDayOrSlot.classList.contains('time-slot')) {
+      key = parentDayOrSlot.dataset.datetime;
+    }
+
+    // Remove only one occurrence of the recipe from storage
+    const existing = localStorage.getItem(key);
+    if (existing) {
+      const updatedArray = existing.split(';');
+      const indexToRemove = updatedArray.indexOf(recipeName);
+      if (indexToRemove !== -1) {
+        updatedArray.splice(indexToRemove, 1); // 🟢 remove only one instance
+      }
+
+      if (updatedArray.length) {
+        localStorage.setItem(key, updatedArray.join(';'));
+      } else {
+        localStorage.removeItem(key);
+      }
+    }
+
+    renderCalendar(currentDate);
+  }
+});
+
+
+
+// Edit recipe
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('edit-recipe')) {
+    e.stopPropagation();
+    const note = e.target.closest('.note-block');
+    const oldRecipeName = note.querySelector('.recipe-name').textContent;
+    const newRecipeName = prompt('Edit recipe name:', oldRecipeName);
+    if (!newRecipeName) return;
+
+    const parentDay = note.closest('.day');
+    const dateKey = parentDay.dataset.date;
+    const oldKey = `${dateKey} ${oldRecipeName}`;
+    const newKey = `${dateKey} ${newRecipeName}`;
+
+    const data = localStorage.getItem(oldKey);
+    localStorage.removeItem(oldKey);
+    localStorage.setItem(newKey, data);
+
+    renderCalendar(currentDate);
+  }
+});
+
+
+// view recipe on card click
+document.addEventListener('click', (e) => {
+  const note = e.target.closest('.note-block');
+  if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
+    const recipeName = note.querySelector('.recipe-name').textContent;
+    // TODO: render the recipe card view
+    console.log('Open recipe card for:', recipeName);
+  }
 });
 
