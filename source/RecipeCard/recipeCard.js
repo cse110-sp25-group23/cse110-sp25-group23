@@ -51,6 +51,7 @@ function update_card(shadowRoot, hostElement, recipeData) {
         shadowRoot.innerHTML = `
       <label>Name: <input type="text" value="${originalData.name}" class="edit-name"></label><br>
       <label>Author: <input type="text" value="${originalData.author}" class="edit-author"></label><br>
+      <label>Image: <input type="file" accept="image/*" class="edit-image"></label><br>
       <label>Image: <input type="text" value="${originalData.image}" class="edit-image"></label><br>
       <fieldset>
         <legend>Tags:</legend>
@@ -170,6 +171,8 @@ const saveMealBtn = document.getElementById('save-meal-btn')
 const mealNameInput = document.getElementById('meal-name');
 const creatorDiv = document.getElementById('meal-creator');
 const saveEditsBtn = document.getElementById('save-edits-btn');
+const sizeDropdown = document.getElementById('serving-size-dropdown');
+const customSizeInput = document.getElementById('custom-serving-size');
 
 document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-meal-btn');
@@ -184,6 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         creatorDiv.style.display = 'block';
+        saveMealBtn.style.display = 'inline-block'
+        saveEditsBtn.style.display = 'none'
 
         const allCards = document.querySelectorAll('recipe-card');
         allCards.forEach((card, index) => {
@@ -232,7 +237,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (selected.length === 0) return alert("Please select at least one recipe.");
 
-        const servingSize = 'N/A'
+        let servingSize = sizeDropdown.value;
+        if (servingSize === 'custom') {
+            servingSize = customSizeInput.value.trim() || 'N/A'
+        }
         const meals = JSON.parse(localStorage.getItem('meals')) || {};
         meals[mealName] = {
             recipes: selected,
@@ -260,8 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     saveEditsBtn.addEventListener('click', () => {
         const currentMealName = mealNameInput.value.trim();
-        const sizeDropdown = document.getElementById('serving-size-dropdown');
-        const customSizeInput = document.getElementById('custom-serving-size');
+
 
         if(!currentMealName) {
             return alert("Please enter a meal name.");
@@ -374,7 +381,7 @@ function displayMeals() {
             const customSizeInput = document.getElementById('custom-serving-size');
 
             const updatedMeals = JSON.parse(localStorage.getItem('meals') || {});
-            const serves = updatedMeals[name].serves || '';
+            const serves = updatedMeals[name].serves ?? '';
             const dropdownOption = Array.from(sizeDropdown.options).find(opt => opt.value === serves);
 
             if (dropdownOption) {
@@ -483,5 +490,4 @@ form.addEventListener('submit', (e) => {
     addRecipesToDocument(recipes);
 
     form.reset();
-    document.getElementById('tagsDropdown').value = '';
 });
