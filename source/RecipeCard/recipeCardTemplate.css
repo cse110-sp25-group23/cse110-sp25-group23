@@ -54,7 +54,11 @@ body {
   
   /* Recipe card will flip when hovered over with mouse */
   
-  .flip-card:hover .flip-card-inner {
+  /*.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }*/
+
+  .flip-card.flipped .flip-card-inner {
     transform: rotateY(180deg);
   }
   

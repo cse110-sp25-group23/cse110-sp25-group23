@@ -39,6 +39,18 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const cards = document.querySelectorAll('.flip-card');
+          
+              cards.forEach(card => {
+                card.addEventListener('click', () => {
+                  card.classList.toggle('flipped');
+                });
+              });
+            });
+        </script>
     
 
     
