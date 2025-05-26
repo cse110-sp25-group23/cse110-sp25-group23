@@ -135,6 +135,9 @@ body {
     text-decoration: none;
     color: black;
     transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   
   }
   .nav-icon {
