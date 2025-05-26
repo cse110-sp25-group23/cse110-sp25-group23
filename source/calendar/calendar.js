@@ -114,8 +114,12 @@ function renderCalendar(date) {
         slot.className = 'time-slot';
         slot.dataset.datetime = key;
 
-        const recipe = localStorage.getItem(key);
-        if (recipe) slot.innerHTML = getRecipeBlockHtml(recipe);
+        const recipes = localStorage.getItem(key);
+        if (recipes) {
+          const recipeList = recipes.split(';');
+          slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
+        }
+
 
         calendarGrid.appendChild(slot);
       }
@@ -143,8 +147,13 @@ function renderCalendar(date) {
       slot.className = 'time-slot';
       slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
 
-      const recipe = localStorage.getItem(slot.dataset.datetime);
-      if (recipe) slot.innerHTML = getRecipeBlockHtml(recipe);
+      const recipes = localStorage.getItem(slot.dataset.datetime);
+      if (recipes) {
+        const recipeList = recipes.split(';');
+        slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
+      }
+
+
 
       calendarGrid.appendChild(slot);
     }
