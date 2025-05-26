@@ -367,11 +367,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  max-height: 150px;
+  max-height: 75px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 0 2px; /* optional, small horizontal padding */
+  padding: 0 2px;
   box-sizing: border-box;
   overflow: hidden;
   border: none;
@@ -425,4 +425,11 @@
 
 
 /* DEBUGGING */
+
+/* Limit month view to show only first two recipe cards */
+.calendar-grid.month-view .notes-container .note-block:nth-of-type(n+3) {
+  display: none;
+}
+
+
 
