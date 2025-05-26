@@ -195,7 +195,7 @@
 
 
 /* Recipe blocks in month view */
-.note-block {
+.note-block, .note {
   aspect-ratio: 1/1 fixed;
   flex: 0 0 auto;
   background-color: #ffe49e !important; /* force color to show */
@@ -212,6 +212,12 @@
   line-height: 1.2;
   max-height: 30px; 
   cursor: pointer;
+}
+
+/* Recipe block in week and day view */
+.note {
+  font-size: 1rem;
+  max-height: 48px; 
 }
 
 .recipe-name {
@@ -278,24 +284,24 @@
   grid-template-columns: 50px repeat(7, 1fr);
 }
 
-
-/* Recipe block in week and day view */
-.note {
-  aspect-ratio: 1/1;
-  flex: 0 0 auto;
-  background-color: #ffe49e !important; /* force color to show */
-  border-radius: 4px;
-  border: 1px solid #d4a03d !important; /* force border to show */
-  font-size: 1rem;
-  margin: 1px 0; 
-  padding: 1px 2px;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  max-height: 48px; 
+/* In week view, display recipe blocks in the same hour slot side by side */
+.calendar-grid.week-view .time-slot {
+  display: flex;
+  flex-direction: row;
+  gap: 2px; 
+  align-items: center; 
+  justify-content: flex-start; 
+  padding: 2px;
+  position: relative;
 }
+
+.calendar-grid.week-view .note {
+  position: absolute;
+  left: 2px; 
+  height: 20px; 
+  width: calc(100% - 15px);
+}
+
 
 /* === TIME STRUCTURE for day/week views === */
 
@@ -389,16 +395,19 @@
   left: 3px;
 } */
 
-.note-block .delete-recipe, .note .delete-recipe {
+.note-block .delete-recipe, 
+.note .delete-recipe {
   top: 3px;
   right: 3px;
 }
 
-.note-block:hover button, .note:hover button {
+.note-block:hover button, 
+.note:hover button {
   display: block;
 }
 
-.note-block button {
+.note-block button, 
+.note button {
   position: absolute;
   background: transparent;
   border: none;
@@ -430,6 +439,8 @@
 .calendar-grid.month-view .notes-container .note-block:nth-of-type(n+3) {
   display: none;
 }
+
+
 
 
 

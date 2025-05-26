@@ -114,11 +114,30 @@ function renderCalendar(date) {
         slot.className = 'time-slot';
         slot.dataset.datetime = key;
 
-        const recipes = localStorage.getItem(key);
-        if (recipes) {
-          const recipeList = recipes.split(';');
-          slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
+        // clear slot content
+        slot.innerHTML = '';
+        slot.style.position = 'relative'; // to position recipe blocks absolutely
+
+        // find all recipes for this hour
+        for (let k in localStorage) {
+          if (k.startsWith(`${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`)) {
+            const [_, __, ___, time] = k.split(/[- :]/);
+            const hourInKey = parseInt(time);
+            const minuteInKey = parseInt(k.split(':')[1]);
+            if (hourInKey === h) {
+              const recipes = localStorage.getItem(k).split(';');
+              recipes.forEach(r => {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.innerHTML = `<span class="recipe-name">${r}</span><button class="delete-recipe" title="Delete">&times;</button>`;
+                note.style.position = 'absolute';
+                note.style.top = `${(minuteInKey / 60) * 100}%`; // position based on minute
+                slot.appendChild(note);
+              });
+            }
+          }
         }
+
 
 
         calendarGrid.appendChild(slot);
