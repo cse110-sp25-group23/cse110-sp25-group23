@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recipe App</title>
+  <title>Ramsay Recipes</title>
   <link rel="stylesheet" href="styles.css"></link>
 </head>
+
 <body>
   <header class="header">
-    <div class="menu-icon">&#9776;</div>
+  <!--<div class="menu-icon">&#9776;</div>-->  
+    <img id="Websitelogo" src="images/logo.png" alt="Ramsay Logo">
     <input type="text" placeholder="Find a recipe" class="search-bar" id="searchInput" />
-    <div class="profile-box">TA</div>
+    
+    <div class="profile-section">
+      <img id="profile-pic" src="images/av1.png" alt="Profile" onclick="toggleAvatarPanel()" />   
+     
+      <!-- Avatar selection (hidden by default) -->
+      <div id="avatar-panel" class="avatar-options" style="display: none;">
+        <img class="avatar" src="images/av1.png" alt="Avatar 1" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av2.png" alt="Avatar 2" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av3.png" alt="Avatar 3" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av4.png" alt="Avatar 4" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av5.png" alt="Avatar 5" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av6.png" alt="Avatar 6" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av7.png" alt="Avatar 7" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av8.png" alt="Avatar 8" onclick="setAvatar(this.src)" />
+        <img class="avatar" src="images/av9.png" alt="Avatar 9" onclick="setAvatar(this.src)" />
+      </div>
+    </div>
   </header>
 
   <section class="card-section" id="recipeSection">
