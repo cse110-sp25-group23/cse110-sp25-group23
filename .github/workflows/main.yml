@@ -39,9 +39,6 @@ jobs:
         run: npm run htmlhint || touch htmlhint.failed
         continue-on-error: true
 
-      - name: Generate JSDoc
-        run: npm run jsdoc
-
       - name: Fail job if any linter failed
         run: |
           if [ -f eslint.failed ] || [ -f stylelint.failed ] || [ -f htmlhint.failed ]; then
