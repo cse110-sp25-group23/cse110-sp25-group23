@@ -4,6 +4,7 @@
  * stored locally.
  */
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
+import { getRecipeCardTemplateCSS } from '../RecipeCard/recipeCardTemplateCSS.js';
 
 class RecipeCard extends HTMLElement {
     constructor() {
@@ -17,22 +18,72 @@ class RecipeCard extends HTMLElement {
     set data(recipeData) {
         if(!recipeData) return;
         this._data = recipeData;
-        // Create content inside the shadow DOM
-        this.shadowRoot.innerHTML = `
-        <h2>${recipeData.name}</h2>
-        <p>Author: ${recipeData.author}</p>
-        <img src="${recipeData.image}" alt="${recipeData.name}" style="width:100px;height:auto;">
-        <p>Tags: </p>
-        <ul>
-            ${recipeData.tags.map(tag => `<li>${tag}</li>`).join('')}
-        </ul>
-        <p>Ingredients: ${recipeData.ingredients}</p>
-        <p>Steps: ${recipeData.steps}</p>
-        <button class='delete-btn'>Delete</button>
-        <p>Time Estimate: ${recipeData.timeEstimate}</p>
+
+        // Create and append <style> element to our current card component
+        const style = document.createElement('style');
+        style.textContent = getRecipeCardTemplateCSS();
+        this.shadowRoot.appendChild(style);
+
+        // Create outer container and add content inside its shadow DOM
+        const container = document.createElement('div');
+        container.classList.add('card-container');
+
+        //div containers added for ingredients and tags to make future css styling easier
+        container.innerHTML = `
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <img src="${recipeData.image}" alt="${recipeData.name}" style="width:200px;height:200px;" class="recipe-image">
+                    <h3>${recipeData.name}</h3>
+                    <p>Author: ${recipeData.author}</p>
+                    <div class="ingredients-class">
+                        <p>Ingredients:</p>
+                        <ul>
+                            ${recipeData.ingredients.map(ing => `<li>${ing.name}${ing.unit ? ' - ' + ing.unit : ''}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="tags-class">
+                        <p>Tags: </p>
+                        ${recipeData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}                    
+                    </div>
+                </div>
+                <div class="flip-card-back">
+                    <div class="steps-class">
+                        <p>Steps: </p>
+                        <ol>
+                            ${recipeData.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>                    
+                    </div>
+                    <p>Time Estimate: ${recipeData.timeEstimate}</p>
+                </div>
+            </div>
+        </div>
         `;
 
-    // Initialize delete and update logic
+        //add this div container to shadow root
+        this.shadowRoot.appendChild(container);
+
+        /* Structure of our recipe-card
+        <recipe-card ....>
+            <style>
+                //imported
+            </style>
+            <div class="card-container">
+                <div class="flip-card">
+                    //all the inner stuff
+                </div>
+            </div>
+        </recipe-card>
+        */
+
+        //add the JS script for toggling card flip here. Since .flip-card is in shadow DOM
+        //we can't look for it or toggle it anywhere else but here
+        const flipCard = container.querySelector('.flip-card');
+        flipCard.addEventListener('click', () => {
+            flipCard.classList.toggle('flipped');
+        });
+    
+        // Initialize delete and update logic
         delete_card(this.shadowRoot,this);
         update_card(this.shadowRoot, this, recipeData);
     }   
@@ -159,7 +210,10 @@ function update_card(shadowRoot, hostElement, recipeData){
  * @param {*} hostElement - recipe-card custom element
  */
 function delete_card(shadowRoot, hostElement) {
-    const deleteButton = shadowRoot.querySelector('.delete-btn');
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    shadowRoot.appendChild(deleteButton);
+
     if(deleteButton) {
         deleteButton.addEventListener('click', () => {            
             //update local storage
