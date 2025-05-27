@@ -209,12 +209,3 @@ function addRecipesToDocument(recipes) {
 		container.appendChild(recipeCard);
 	}
 }
-
-/**
- * Takes in a recipe array, converts it to a JSON string, and then
- * saves it to 'recipes' in localStorage
- * @param {Array<Object>} recipes An array of recipes
- */
-function saveRecipesToStorage(recipes) {
-	localStorage.setItem('recipes', JSON.stringify(recipes));
-}
