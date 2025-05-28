@@ -143,7 +143,7 @@ function update_card(shadowRoot, hostElement, recipeData){
             ${editCustomTags}
         </fieldset>
         <label>Ingredients: <textarea class ="edit-ingredients" cols="30" placeholder="Format: \nMilk - 2 cups">${originalData.ingredients.map(i => `${i.name} - ${i.unit || ''}`).join('\n')}</textarea></label><br>
-        <label>Steps: <textarea class="edit-recipe" placeholder="Step1 \nStep2">${originalData.steps ? originalData.steps.join('\n') : ''}</textarea></label><br>
+        <label>Steps: <textarea class="edit-steps" placeholder="Step1 \nStep2">${originalData.steps ? originalData.steps.join('\n') : ''}</textarea></label><br>
         <button class="save-btn">Save</button>
         `;
         
@@ -175,7 +175,7 @@ function update_card(shadowRoot, hostElement, recipeData){
                 })
                 .filter(obj => obj); 
 
-            const editedSteps = shadowRoot.querySelector('.edit-recipe').value;
+            const editedSteps = shadowRoot.querySelector('.edit-steps').value;
             const savedSteps = editedSteps
                 .split('\n')
                 .map(step => step.trim())

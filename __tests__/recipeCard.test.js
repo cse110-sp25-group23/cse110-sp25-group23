@@ -121,7 +121,7 @@ describe('Editing Card', () => {
     expect(card.shadowRoot.querySelector('.save-btn')).toBeInstanceOf(HTMLButtonElement);
   });
 
-  test('Changing something in the card leads to a change in how the card is displayed and stored in LocalStorage', () => {
+  test('Changing things in card leads to a change in how the card is displayed and stored in LocalStorage', () => {
     //Add test recipe to local storage and html
     saveRecipesToStorage([testRecipe]);
     document.querySelector('main').append(card);
@@ -138,17 +138,39 @@ describe('Editing Card', () => {
     const nameInput = card.shadowRoot.querySelector('.edit-name');
     nameInput.value = 'Belgain Waffle';
 
+    //Change Steps
+    const stepsInput = card.shadowRoot.querySelector('.edit-steps');
+    stepsInput.value = 'Mix\nCook\nEat';
+
+    //Change Ingredients
+    const ingredientsInput = card.shadowRoot.querySelector('.edit-ingredients');
+    ingredientsInput.value = 'Flour - 1 cup\nEggs-2';
+
     //Save Recipe
     const saveBtn = card.shadowRoot.querySelector('.save-btn');
     expect(saveBtn).toBeInstanceOf(HTMLButtonElement);
     saveBtn.click();
 
-    // After hitting save, the displayed name should change
+    // After hitting save, displayed name, steps, and ingredients should change
     expect(card.shadowRoot.querySelector('h3').textContent)
         .toBe('Belgain Waffle');
 
-    // Name for the test recipe should also be changed in local storage
+    const displayedIngredients = Array.from(card.shadowRoot.querySelectorAll('.ingredients-class li')).map(li => li.textContent);
+    expect(displayedIngredients).toEqual(['Flour - 1 cup', 'Eggs - 2']);
+            
+    const displayedSteps = Array.from(card.shadowRoot.querySelectorAll('.steps-class li')).map(li => li.textContent);
+    expect(displayedSteps).toEqual(['Mix', 'Cook', 'Eat']);
+
+    // All these fields should also be changed in local storage
     const stored = JSON.parse(localStorage.getItem('recipes'));
     expect(stored[0].name).toBe('Belgain Waffle');
-    });
+
+    expect(stored[0].ingredients).toEqual([
+      { name: 'Flour', unit: '1 cup' },
+      { name: 'Eggs', unit: '2' }
+    ]);
+
+    expect(stored[0].steps).toEqual(['Mix', 'Cook', 'Eat']);
+    
+  });
 });
