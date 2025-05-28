@@ -8,3 +8,6 @@ Notes from Weekly Meetings
 - [Sprint Review Meeting 1 (5/18/25)](Notes/5-18-2025-review.md)
 - [Sprint Retrospective Meeting 1 (5/18/25)](Notes/5-18-2025-Retrospective.md)
 - [Sprint Meeting 2 (5/21/25)](Notes/5-21-2025.md)
+- [Sprint Review Meeting 2 (5/18/25)](Notes/5-25-25-review.md)
+- [Sprint Retrospective Meeting 2 (5/18/25)](Notes/5-25-25-retrospect-meeting.md)
+- [Sprint Meeting 3 (5/21/25)](Notes/5-28-2025.md)
