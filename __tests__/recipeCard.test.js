@@ -1,5 +1,7 @@
 //Import js files for recipe card and local storage
 import '../source/RecipeCard/recipeCard.js';
+import { addRecipesToDocument, saveRecipesToStorage } from '../source/LocalStorage/storage.js';
+
 
 describe('Recipe Card Creator and Deletion', () => {
     //Create Recipe Card
@@ -8,7 +10,11 @@ describe('Recipe Card Creator and Deletion', () => {
     author: 'Luis',
     image: '/waffles.png',
     tags: ['Easy','Breakfast'],
-    ingredients: ['Flour', 'Eggs', 'Milk'],
+    ingredients: [
+      { name: 'Flour', unit: '1 cup' },
+      { name: 'Eggs', unit: '2' },
+      { name: 'Milk', unit: '1/2 cup' }
+    ],
     steps: ['Mix', 'Cook'],
     timeEstimate: '15 min'
   };
@@ -86,7 +92,11 @@ describe('Editing Card', () => {
     author: 'Luis',
     image: '/waffles.png',
     tags: ['Easy','Breakfast'],
-    ingredients: ['Flour', 'Eggs', 'Milk'],
+    ingredients: [
+      { name: 'Flour', unit: '1 cup' },
+      { name: 'Eggs', unit: '2' },
+      { name: 'Milk', unit: '1/2 cup' }
+    ],    
     steps: ['Mix', 'Cook'],
     timeEstimate: '15 min'
   };

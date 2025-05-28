@@ -141,8 +141,8 @@ function update_card(shadowRoot, hostElement, recipeData){
             ${editPredefinedTags}
             ${editCustomTags}
         </fieldset>
-        <label>Ingredients: <textarea class ="edit-ingredients">${originalData.ingredients}</textarea></label><br>
-        <label>Recipe: <textarea class="edit-recipe">${originalData.recipe}</textarea></label><br>
+        <label>Ingredients: <textarea class ="edit-ingredients" cols="30" placeholder="Format: \nMilk - 2 cups">${originalData.ingredients.map(i => `${i.name} - ${i.unit || ''}`).join('\n')}</textarea></label><br>
+        <label>Steps: <textarea class="edit-recipe" placeholder="Step1 \nStep2">${originalData.steps ? originalData.steps.join('\n') : ''}</textarea></label><br>
         <button class="save-btn">Save</button>
         `;
         
@@ -165,6 +165,20 @@ function update_card(shadowRoot, hostElement, recipeData){
 
             const allEditedTags = checkedTags.concat(savedCustomTags);
         
+            //need to handle ingredients and steps since both are stringified arrays
+            const editedIngredients = shadowRoot.querySelector('.edit-ingredients').value;
+            const savedIngredients = editedIngredients.split('\n')
+                .map(line => {
+                    const [name, unit] = line.split('-').map(s => s.trim());
+                    return name ? { name, unit: unit || '' } : null;
+                })
+                .filter(obj => obj); 
+
+            const editedSteps = shadowRoot.querySelector('.edit-recipe').value;
+            const savedSteps = editedSteps
+                .split('\n')
+                .map(step => step.trim())
+                .filter(step => step.length > 0);
 
             const updatedData = {
                 name: shadowRoot.querySelector('.edit-name').value,
@@ -172,8 +186,8 @@ function update_card(shadowRoot, hostElement, recipeData){
                 image: shadowRoot.querySelector('.edit-image').value,
                 timeEstimate: shadowRoot.querySelector('.edit-time').value,
                 tags: allEditedTags,
-                ingredients: shadowRoot.querySelector('.edit-ingredients').value,
-                recipe: shadowRoot.querySelector('.edit-recipe').value
+                ingredients: savedIngredients,
+                steps: savedSteps
             };
 
         //Updating logic --> compare new data with original to check for changes
@@ -188,7 +202,9 @@ function update_card(shadowRoot, hostElement, recipeData){
                 }
             }
 
+            shadowRoot.innerHTML = '';
             if (hasChanges) {
+                
                 hostElement.data = finalData;
             } else {
                 hostElement.data = originalData;
