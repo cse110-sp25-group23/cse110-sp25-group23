@@ -105,6 +105,7 @@ customElements.define('recipe-card', RecipeCard);
 function update_card(shadowRoot, hostElement, recipeData){
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
+    editButton.classList.add('edit-btn');
     shadowRoot.appendChild(editButton);
 
     editButton.addEventListener('click', () => {
@@ -228,6 +229,7 @@ function update_card(shadowRoot, hostElement, recipeData){
 function delete_card(shadowRoot, hostElement) {
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
+    deleteButton.classList.add('delete-btn');
     shadowRoot.appendChild(deleteButton);
 
     if(deleteButton) {
@@ -248,8 +250,8 @@ function delete_card(shadowRoot, hostElement) {
             recipes = recipes.filter(recipe =>
                 !(recipe.name === deletedRecipe.name &&
                     recipe.author === deletedRecipe.author &&
-                    recipe.ingredients === deletedRecipe.ingredients &&
-                    recipe.steps === deletedRecipe.steps
+                    JSON.stringify(recipe.ingredients) === JSON.stringify(deletedRecipe.ingredients) &&
+                    JSON.stringify(recipe.steps) === JSON.stringify(deletedRecipe.steps)
                 )
             );
 
