@@ -40,7 +40,7 @@ describe('Recipe Card Creator and Deletion', () => {
     const tags = Array.from(sr.querySelectorAll('.tags-class span')).map(el => el.textContent);
     expect(tags).toEqual(['Easy','Breakfast']);
     const ingredients = Array.from(sr.querySelectorAll('.ingredients-class li')).map(el => el.textContent);
-    expect(ingredients).toEqual(['Flour', 'Eggs', 'Milk']);
+    expect(ingredients).toEqual(['Flour - 1 cup', 'Eggs - 2', 'Milk - 1/2 cup']);
     const steps = Array.from(sr.querySelectorAll('.steps-class li')).map(el => el.textContent);
     expect(steps).toEqual(['Mix', 'Cook']);
     expect(sr.textContent).toContain('15 min');
