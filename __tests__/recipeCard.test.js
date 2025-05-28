@@ -8,8 +8,8 @@ describe('Recipe Card Creator and Deletion', () => {
     author: 'Luis',
     image: '/waffles.png',
     tags: ['Easy','Breakfast'],
-    ingredients: 'Flour, Eggs, Milk',
-    steps: 'Mix & cook',
+    ingredients: ['Flour', 'Eggs', 'Milk'],
+    steps: ['Mix', 'Cook'],
     timeEstimate: '15 min'
   };
 
@@ -28,15 +28,16 @@ describe('Recipe Card Creator and Deletion', () => {
 
     //check each attribute
     const sr = card.shadowRoot;
-    expect(sr.querySelector('h2').textContent).toBe('waffles');
+    expect(sr.querySelector('h3').textContent).toBe('Waffles');
     expect(sr.querySelector('p').textContent).toContain('Luis');
     expect(sr.querySelector('img').getAttribute('src')).toBe('/waffles.png');
-    const tags = Array.from(sr.querySelectorAll('li')).map(el => el.textContent);
+    const tags = Array.from(sr.querySelectorAll('.tags-class span')).map(el => el.textContent);
     expect(tags).toEqual(['Easy','Breakfast']);
-    expect(sr.textContent).toContain('Flour, Eggs, Milk');
-    expect(sr.textContent).toContain('Mix & cook');
+    const ingredients = Array.from(sr.querySelectorAll('.ingredients-class li')).map(el => el.textContent);
+    expect(ingredients).toEqual(['Flour', 'Eggs', 'Milk']);
+    const steps = Array.from(sr.querySelectorAll('.steps-class li')).map(el => el.textContent);
+    expect(steps).toEqual(['Mix', 'Cook']);
     expect(sr.textContent).toContain('15 min');
-    expect(sr.querySelector('.delete-btn')).toBeInstanceOf(HTMLButtonElement);
   });
 
   test('Delete Button Removes the Card From LocalStorage and from html', () => {
@@ -73,7 +74,7 @@ describe('Recipe Card Creator and Deletion', () => {
     expect(cards).toHaveLength(2);
 
     //Each card should have its own data, check to make sure the names of each card is rendered correctly
-    const renderedNames = Array.from(cards).map(c => c.shadowRoot.querySelector('h2').textContent);
+    const renderedNames = Array.from(cards).map(c => c.shadowRoot.querySelector('h3').textContent);
     expect(renderedNames).toEqual(['A','B']);
   });
 });
@@ -85,8 +86,8 @@ describe('Editing Card', () => {
     author: 'Luis',
     image: '/waffles.png',
     tags: ['Easy','Breakfast'],
-    ingredients: 'Flour, Eggs, Milk',
-    steps: 'Mix & cook',
+    ingredients: ['Flour', 'Eggs', 'Milk'],
+    steps: ['Mix', 'Cook'],
     timeEstimate: '15 min'
   };
 
@@ -133,7 +134,7 @@ describe('Editing Card', () => {
     saveBtn.click();
 
     // After hitting save, the displayed name should change
-    expect(card.shadowRoot.querySelector('h2').textContent)
+    expect(card.shadowRoot.querySelector('h3').textContent)
         .toBe('Belgain Waffle');
 
     // Name for the test recipe should also be changed in local storage

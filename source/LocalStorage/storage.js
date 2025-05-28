@@ -223,7 +223,7 @@ function initFormHandler() {
 			steps,
 			tags,
 			timeEstimate
-		}
+		};
 
 		//If User is Using URL, get image url 
 		if(urlInput){
