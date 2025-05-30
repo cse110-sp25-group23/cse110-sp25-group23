@@ -1,0 +1,4 @@
+/* Dummy file for triggering Stylelint in CI */
+body {
+  color: red;
+}

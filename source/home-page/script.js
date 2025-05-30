@@ -1,4 +1,3 @@
-
 const recipes = [
   {
     title: 'Banana Bread',
@@ -128,6 +127,28 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
   if (matches.length > 0) {
     index = recipes.indexOf(matches[0]);
     updateRecipe();
+  }
+});
+
+// Dark Mode Implementation
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+const darkModePreference = localStorage.getItem('darkMode');
+
+// Apply dark mode on page load if preference is set
+if (darkModePreference === 'enabled') {
+  body.classList.add('dark-mode');
+}
+
+// Toggle dark mode on button click
+darkModeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark-mode');
+
+  // Save preference to local storage
+  if (body.classList.contains('dark-mode')) {
+    localStorage.setItem('darkMode', 'enabled');
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
   }
 });
 

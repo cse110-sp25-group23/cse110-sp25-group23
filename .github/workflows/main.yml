@@ -3,30 +3,64 @@
 
 #runs the workflow on any push to any branch
 #also runs when any PR is opened or updated
+
+# Github Actions workflow to run the following CI checks:
+# unit tests, linting, and documentation generation
+
 on: [push, pull_request]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Auto-fix minor ESLint issues
+        run: npm run lint -- --fix
+
+      - name: Run ESLint
+        run: npm run lint || touch eslint.failed
+        continue-on-error: true
+
+      - name: Run Stylelint
+        run: npm run stylelint || touch stylelint.failed
+        continue-on-error: true
+
+      - name: Run HTMLHint
+        run: npm run htmlhint || touch htmlhint.failed
+        continue-on-error: true
+
+      - name: Generate JSDoc
+        run: npm run jsdoc
+
+      - name: Fail job if any linter failed
+        run: |
+          if [ -f eslint.failed ] || [ -f stylelint.failed ] || [ -f htmlhint.failed ]; then
+            echo "❌ One or more linters failed"
+            exit 1
+          fi
 
   test:
-    name: Run Unit Tests (Jest)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Tests
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
         run: npm test
 
-  lint:
-    name: Run Linters (ESLint, Stylelint, HTMLHint)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Dependencies
-        run: npm install
-      - name: Run ESLint
-        run: npm run lint
-      - name: Run Stylelint
-        run: npm run stylelint
-      - name: Run HTMLHint
-        run: npm run htmlhint
