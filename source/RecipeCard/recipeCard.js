@@ -262,22 +262,3 @@ function delete_card(shadowRoot, hostElement) {
     }
 }
 
-
-/**
- * Takes as input an array of recipes and for each one creates a
- * new <recipe-card> element, adds the recipe data to the card
- * using element.data = {...}, and then appends the new recipe
- * to the container (<main>)
- * @param {Array<Object>} recipes An array of recipes
- */
-
-function addRecipesToDocument(recipes) {
-    //or document.getElementById('cardsContainer')
-	const container = document.querySelector('main');    
-
-	for (let i = 0; i < recipes.length; i++) {
-		let recipeCard = document.createElement('recipe-card');
-		recipeCard.data = recipes[i];
-		container.appendChild(recipeCard);
-	}
-}
