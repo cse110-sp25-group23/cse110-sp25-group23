@@ -5,7 +5,7 @@
  */
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
 
-class RecipeCard extends HTMLElement {
+export class RecipeCard extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
@@ -51,7 +51,7 @@ customElements.define('recipe-card', RecipeCard);
  * @param {*} hostElement - recipe-card custom element
  * @param {*} recipeData  - Original data object 
  */
-function update_card(shadowRoot, hostElement, recipeData){
+export function update_card(shadowRoot, hostElement, recipeData){
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
     shadowRoot.appendChild(editButton);
@@ -158,7 +158,7 @@ function update_card(shadowRoot, hostElement, recipeData){
  * @param {*} shadowRoot  - Shadow DOM of a recipe card
  * @param {*} hostElement - recipe-card custom element
  */
-function delete_card(shadowRoot, hostElement) {
+export function delete_card(shadowRoot, hostElement) {
     const deleteButton = shadowRoot.querySelector('.delete-btn');
     if(deleteButton) {
         deleteButton.addEventListener('click', () => {            
@@ -208,13 +208,4 @@ function addRecipesToDocument(recipes) {
 		recipeCard.data = recipes[i];
 		container.appendChild(recipeCard);
 	}
-}
-
-/**
- * Takes in a recipe array, converts it to a JSON string, and then
- * saves it to 'recipes' in localStorage
- * @param {Array<Object>} recipes An array of recipes
- */
-function saveRecipesToStorage(recipes) {
-	localStorage.setItem('recipes', JSON.stringify(recipes));
 }

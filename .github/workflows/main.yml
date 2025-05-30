@@ -24,7 +24,8 @@ jobs:
         run: npm ci
 
       - name: Auto-fix minor ESLint issues
-        run: npm run lint -- --fix
+        run: npm run lint -- --fix  
+        continue-on-error: true
 
       - name: Run ESLint
         run: npm run lint || touch eslint.failed
@@ -63,4 +64,37 @@ jobs:
 
       - name: Run unit tests
         run: npm test
+
+  document:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate JSDoc
+        run: npm run jsdoc
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: run Prettier
+        run: npm run prettier
+        continue-on-error: true
 

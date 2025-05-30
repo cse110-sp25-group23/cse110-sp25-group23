@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Navigation</title>
+  <style>
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: rgb(255, 242, 224);
+      background-image: url(images/bg.png);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .profile-section {
+        position: static;
+        text-align: center;
+    }
+  
+  #profile-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #1a2969;
+    cursor: pointer;
+  }
+
+  #profile-pic:hover{
+    transform: scale(1.2);
+    transition: all 0.3s ease; 
+  }
+  
+  .avatar-options {
+    position: absolute;
+
+  top: 100px; /* places it directly below the profile image */
+  left: 1800px; /* centers it under the profile pic */
+  transform: translateX(-50%); /* exact centering */
+  display: none; /* hidden by default */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+    /* display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .avatar:hover {
+    transform: scale(1.1);
+  }
+  
+    /* Shared */
+    header, nav {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Desktop Navigation */
+    .desktop-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 32px;
+      background-color: #fc9e87;
+      border-bottom: 1px solid #ccc;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .desktop-nav .logo img {
+      height: 50px;
+    }
+    .desktop-nav .logo img:hover {
+      transform: scale(1.1);
+    }
+    .desktop-nav .search-bar{
+      flex-grow: 1;
+      margin: 0 24px;
+      padding: 14px 16px;
+      border: 1px solid #ccc;
+      border-radius: 50px; 
+      font-size: 16px;
+      min-width: 200px;
+      font-style: italic;
+      font-weight: bold;
+      
+    }
+
+    .desktop-nav .nav-tabs {
+      display: flex;
+      gap: 30px;
+    }
+
+    .desktop-nav .nav-tabs a {
+      text-decoration: none;
+      color: #333;
+      /* font-weight: bold; */
+      font-size: 20px;
+      padding: 5px 5px;  
+      
+    }
+
+    .desktop-nav .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .desktop-nav .profile-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #ccc;
+      cursor: pointer;
+    }
+
+    .desktop-nav .profile-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      
+    }
+
+    .desktop-nav .cart img {
+      height: 32px;
+    }
+
+    /* Mobile Navigation */
+    .mobile-nav {
+      display: none;
+      justify-content: space-around;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #ffe49e;
+      padding: 10px 0;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-nav a img {
+      height: 26px;
+      
+    }
+
+    nav a:hover{
+        /* border: 1px solid rgb(125, 170, 97); */
+        /* transform: scale(1.2); */
+        background-color: #cd7c68;
+        border-radius: 10px;
+        transition: all 0.3s ease; 
+
+    }
+
+    /* Responsive Rules */
+    @media (max-width: 768px) {
+      .desktop-nav {
+        display: none;
+      }
+
+      .mobile-nav {
+        display: flex;
+      }
+    
+      
+    }
+    .Themes {
+width: 100%;
+}
+
+h1{
+/* display: inline-block; */
+  text-align: center;
+  font-size: 3rem;  
+  margin-top: 40px;
+  font-weight: bold;
+  color: #000000;
+  font-family: 'Georgia', serif;
+}
+
+/* recipe stuff below */
+.recipe-card {
+    width: 300px;
+  height: 365px;  
+  display: flex;
+  flex-direction: column;
+  background: rgb(255, 247, 221);
+  border-radius: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  max-width: 300px;
+  font-family: sans-serif;
+  transition: transform 0.2s ease;
+  border: 4px solid #000000;
+  
+}
+
+.recipe-card:hover {
+  transform: scale(1.03);
+}
+
+.recipe-img {
+  width: 90%;
+
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10%; 
+  border: 2px solid #000000;
+  /* border-radius: 50%; */
+  /*plate vs. square*/
+  margin-top: 12.5px;   /* moves it down */
+  margin-left: 12.5px;  /* moves it right */
+}
+
+.recipe-content {
+  padding: 15px;
+}
+
+.recipe-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-family: Apple Chancery, cursive;
+  margin: 0 0 10px;
+  color: #000000;
+  text-align: center;
+}
+
+.recipe-meta {
+  font-size: 1rem;
+  color: #000000;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.recipe-tags {
+  font-size: 0.9 rem;
+  color: #000000;
+  text-align: center;
+}
+
+.recipe-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* plate section */
+.category-plates {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      padding: 40px 20px;
+    }
+
+    .plate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100px;
+      text-align: center;
+    }
+
+    .plate img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #ff00a2;
+      transition: transform 0.3s ease;
+    }
+
+    .plate img:hover {
+      transform: scale(1.1);
+      border-color: #b0b2ff;
+    }
+
+    .plate p {
+        font-size: 1.5rem;
+    font-weight: 900;
+    font-family: Apple Chancery, cursive;
+      margin-top: 8px;
+      /* font-size: 0.85rem; */
+      /* font-weight: bold; */
+      /* text-transform: uppercase; */
+      color: #222;
+    }
+
+    #seeMoreBtn {
+  display: block;
+  margin: 30px auto;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color:  #fc9e87;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: 2px solid #1a2969;
+  
+}
+
+#seeMoreBtn:hover {
+  background-color:  #fc9e87;
+  transform: scale(1.1);
+}
+
+/* add footer */
+
+/*add blog*/
+.blog-stack-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  padding: 0 20px;
+}
+
+.blog-stack {
+  flex: 1 1 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.blog-post {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  background: rgb(255, 247, 221);
+  border-radius: 50px;
+  border: 4px solid #000;
+  margin: 20px 0;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.post-img {
+  width: 240px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 30%;
+  border: 2px solid #000;
+}
+
+.post-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .blog-post {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .post-img {
+    margin-bottom: 15px;
+  }
+}
+
+    .recipe-rating {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ffc107;
+  margin-top: 8px;
+  letter-spacing: 2px;
+}
+
+#search-field-small {
+  padding: 12px 16px;
+  padding-right: 40px; /* room for button */
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  outline: none;
+  width: 1300px;
+  font-style: italic;
+}
+
+div[role="search"] {
+  position: relative;
+  display: inline-block;
+}
+
+div[role="search"] button {
+  transform: translateY(-50%) scale(1.5);
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 20%;
+  background: url('https://img.icons8.com/ios7/600/search.png') no-repeat center center;
+  background-size: 20px 20px;
+  background-color: #fc9e87;
+  cursor: pointer;
+  padding: 0;
+}
+
+div[role="search"] button:hover {
+  background-color: #d18572
+}
+</style>
+
+  </style>
+</head>
+<body>
+  <!-- Desktop Navigation -->
+  <header class="desktop-nav">
+    <a class="logo" href="home.html">
+      <img src="images/logo.png" alt="Logo">
+    </a>
+
+    <!-- <input type="text" class="search-bar" placeholder="Dish it out – what are you hungry for?"> -->
+<div role="search">
+    <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?"> 
+    <button type="submit"> </button>
+</div>
+
+
+    <nav class="nav-tabs">
+      <a href="calendar.html">Calendar</a>
+      <a href="shelf.html">Shelf</a>
+      <a href="about.html">About Us</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="cart" href="cart.html">
+        <img src="images/shop.png" alt="Cart">
+      </a>
+      <!-- <div class="profile-circle">
+        <img src="images/default-avatar.png" alt="Profile">
+      </div> -->
+      <div class="profile-section">
+        <img id="profile-pic" src="images/av1.png" alt="Profile" onclick="toggleAvatarPanel()" />     
+        <!-- Avatar selection (hidden by default) -->
+        <div id="avatar-panel" class="avatar-options" style="display: none;">
+          <img class="avatar" src="images/av1.png" alt="Avatar 1" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av2.png" alt="Avatar 2" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av3.png" alt="Avatar 3" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av4.png" alt="Avatar 4" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av5.png" alt="Avatar 5" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av6.png" alt="Avatar 6" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av7.png" alt="Avatar 7" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av8.png" alt="Avatar 8" onclick="setAvatar(this.src)" />
+          <img class="avatar" src="images/av9.png" alt="Avatar 9" onclick="setAvatar(this.src)" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav">
+    <a href="home.html">
+      <img src="images/logo.png" alt="Home">
+    </a>
+    <a href="calendar.html">
+      <img src="images/calendar.png" alt="Calendar">
+    </a>
+    <a href="shelf.html">
+      <img src="images/shelf.png" alt="Shelf">
+    </a>
+    <a href="about.html">
+      <img src="images/about.png" alt="About Us">
+    </a>
+    <a href="cart.html">
+      <img src="images/shop.png" alt="Cart">
+    </a>
+  </nav>
+
+  <h1> Ramsay's Refreshing Recipes </h1>
+  <!-- <img src="images/bg.png" class="Themes" alt="background Theme"> -->
+  
+ <!-- add stuff of recipe cards -->
+ <div class="recipe-grid" id="recipeGrid"></div>
+ <button id="seeMoreBtn" style="display: none;">See More</button>
+ <div class="blog-stack-layout">
+  <div class="blog-stack">
+    <!-- Blog Post 1 -->
+    <div class="blog-post">
+      <img src="https://www.chilipeppermadness.com/wp-content/uploads/2024/03/Thai-Peanut-Noodles-Recipe-SQ2.jpg" alt="Crispy Buffalo Tofu" class="post-img">
+      <div class="post-content">
+        <div class="post-date">May 24, 2025</div>
+        <div class="post-title">Spicy Peanut Noodle Salad</div>
+        <div class="post-summary">Cold soba noodles, crunchy veggies, and a zippy peanut-lime dressing make this salad seriously addictive. Meal-prep friendly, vegan, and ready in 15 minutes.</div>
+        <a href="#" class="read-more">Continue Reading</a>
+      </div>
+    </div>
+
+    <!-- Blog Post 2 -->
+    <div class="blog-post">
+      <img src="https://soomfoods.com/cdn/shop/articles/20211008191020-yogurt-parfait-with-chocolate-tahini-1-1_1600x.jpg?v=1685468502" alt="Yogurt Parfait" class="post-img">
+      <div class="post-content">
+        <div class="post-date">May 25, 2025</div>
+        <div class="post-title">Tropical Chia Pudding Parfaits</div>
+        <div class="post-summary">Layers of coconut chia pudding, mango puree, and crunchy granola. These parfaits are sunshine in a glass—perfect for breakfast or a light dessert.</div>
+        <a href="#" class="read-more">Continue Reading</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="category-plates">
+    <div class="plate">
+      <img src="https://hips.hearstapps.com/hmg-prod/images/chicken-quesadillas-vertical-2-668eeabf8d6ae.jpg?crop=0.8331554606901458xw:1xh;center,top&resize=980:*" alt="Quick and Easy" />
+      <p>Quick and Easy</p>
+    </div>
+    <div class="plate">
+      <img src="https://food.fnr.sndimg.com/content/dam/images/food/fullset/2016/6/12/3/FNM070116_Penne-with-Vodka-Sauce-and-Mini-Meatballs-recipe_s4x3.jpg.rend.hgtvcom.1280.1280.85.suffix/1465939620872.webp" alt="Dinner" />
+      <p>Dinner</p>
+    </div>
+    <div class="plate">
+      <img src="https://ohmyveggies.com/wp-content/uploads/2022/02/Vegan-sweet-and-sour-chickpeas-and-green-beans-6-1-500x500.jpg" alt="Vegetarian" />
+      <p>Vegetarian</p>
+    </div>
+    <div class="plate">
+      <img src="https://hips.hearstapps.com/hmg-prod/images/lemonychickenkale-1656608777.jpg?crop=0.731xw:0.487xh;0.114xw,0.297xh&resize=640:*" alt="Healthy" />
+      <p>Healthy</p>
+    </div>
+    <div class="plate">
+      <img src="https://lifemadesweeter.com/wp-content/uploads/Instant-Pot-Kung-Pao-Chicken-in-Pressure-Cooker-Photo-Recipe-Picture-Pressure-Cooker.jpg" alt="Instant Pot" />
+      <p>Instant Pot</p>
+    </div>
+    <div class="plate">
+      <img src="https://simple-veganista.com/wp-content/uploads/2014/08/best-lentil-ragu-recipe-1.jpg" alt="Vegan" />
+      <p>Vegan</p>
+    </div>
+    <div class="plate">
+      <img src="https://thecheaplazyvegan.com/wp-content/uploads/2024/01/Vegan-Salad-Meal-Prep-Recipe-3.jpg" alt="Meal Prep" />
+      <p>Meal Prep</p>
+    </div>
+    <div class="plate">
+      <img src="https://kristineskitchenblog.com/wp-content/uploads/2022/02/minestrone-soup-recipe-22.jpg" alt="Soups" />
+      <p>Soups</p>
+    </div>
+    <div class="plate">
+      <img src="https://cdn.nutritioninthekitch.com/wp-content/uploads/2021/06/IMG_0417.jpg" alt="Salads" />
+      <p>Salads</p>
+    </div>
+  </div>
+
+
+
+  <footer style="background: #fc9e87; color: #eee; padding: 50px 20px 0; font-family: sans-serif; border: 4px solid #000000;">
+    <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px;">
+  
+  
+      <!-- Resources -->
+      <div>
+        
+        <h3 style=" color:#000000;font-family: Apple Chancery, cursive">Resourceful Tools</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li style="font-family: Apple Chancery, cursive; font-size: large">Home</li>
+          <li style="font-family: Apple Chancery, cursive; font-size: large">Shelf</li>
+          <li style="font-family: Apple Chancery, cursive; font-size: large">Calendar</li>
+          <li style="font-family: Apple Chancery, cursive; font-size: large">Collections</li>
+          <li style="font-family: Apple Chancery, cursive; font-size: large">Shopping Cart</li>
+        </ul>
+      </div>
+
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+        <h2 style="
+          font-family: URW Chancery L, cursive;
+          font-size: 2rem;
+          color: #000000;
+          text-align: center;
+          margin: 0 auto;
+          width: 100%;
+        ">
+          Check out some heart-warming recipes today!
+        </h2>
+      </div>
+  
+      <!-- Stay Updated -->
+      <div style="min-width: 240px;">
+        <h3 style="color:#000000; font-family: Apple Chancery, cursive; font-size: large">Stay Updated</h3>
+        <p style="margin-bottom: 10px; font-family: Apple Chancery, cursive; font-size: large">Subscribe to our newsletter to get our latest news.</p>
+        <form style="display: flex; gap: 8px;">
+          <input type="email" placeholder="Enter email address" style="flex: 1; padding: 10px; border: none; border-radius: 4px;">
+          <button type="submit" style="background: #29c16b; border: none; padding: 10px 16px; color: white; border-radius: 4px; cursor: pointer;">Subscribe</button>
+        </form>
+      </div>
+  
+    </div>
+  
+    <!-- Social and Bottom Bar -->
+    <div style="text-align: center; padding: 30px 20px 10px; border-top: 1px solid #555; margin-top: 40px;">
+      <div style="margin-bottom: 10px; font-size: 20px;">
+        <nav class="social-nav" style="display: flex; justify-content: center; gap: 12px;">
+          <a href="shelf.html">
+            <img src="images/face.png" alt="Facebook" style="width: 28px; height: 28px;">
+          </a>
+          <a href="shelf.html">
+            <img src="images/insta.png" alt="Instagram" style="width: 28px; height: 28px;">
+          </a>
+          <a href="shelf.html">
+            <img src="images/twitter.png" alt="Twitter" style="width: 28px; height: 28px;">
+          </a>
+          <a href="shelf.html">
+            <img src="images/youtube.png" alt="Youtube" style="width: 28px; height: 28px;">
+          </a>
+          <a href="shelf.html">
+            <img src="images/linked.png" alt="Linkedin" style="width: 28px; height: 28px;">
+          </a>
+        </nav>
+      </div>
+      <div style="font-size: 0.85rem;">
+        <a href="#" style="color: #ffffff; text-decoration: none; margin: 0 10px;">Terms & Conditions</a>
+        <a href="#" style="color: #ffffff; text-decoration: none; margin: 0 10px;">Privacy Policy</a>
+      </div>
+      <p style="color: #ffffff; font-size: 0.75rem; margin-top: 10px;">© 2025 Ramsay's Refreshing Recipes. All rights credited.</p>
+    </div>
+  </footer>
+  
+  <script src="script1.js"></script>
+  
+</body>
+</html>
+
+<!-- fix avator <search> or give it settings
+    connect properly to other people's work (kelvin, anna?) 
+    make cards for home page 
+    scroll recipes and have them as a stack -->
