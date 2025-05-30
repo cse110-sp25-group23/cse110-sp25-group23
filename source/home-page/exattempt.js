@@ -22,6 +22,26 @@ const recipes = [
     image: 'https://dinnersdishesanddesserts.com/wp-content/uploads/2020/03/Strawberry-Shortcake-Pancakes-2-square.jpg'
   }
 ];
+function toggleAvatarPanel() {
+  const panel = document.getElementById('avatar-panel');
+  panel.style.display = (panel.style.display === 'none') ? 'grid' : 'none';
+}
+
+function setAvatar(src) {
+  document.getElementById('profile-pic').src = src;
+  localStorage.setItem('selectedAvatar', src);
+  document.getElementById('avatar-panel').style.display = 'none';
+}
+
+// Load saved avatar
+window.onload = () => {
+  const saved = localStorage.getItem('selectedAvatar');
+  if (saved) {
+    document.getElementById('profile-pic').src = saved;
+  }
+};
+
+
 
 let index = 0;
 let collections = JSON.parse(localStorage.getItem('collections')) || { Favorites: [] };
