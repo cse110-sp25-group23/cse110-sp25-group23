@@ -6,7 +6,7 @@
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
 import { getRecipeCardTemplateCSS } from '../RecipeCard/recipeCardTemplateCSS.js';
 
-class RecipeCard extends HTMLElement {
+export class RecipeCard extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
@@ -102,7 +102,7 @@ customElements.define('recipe-card', RecipeCard);
  * @param {*} hostElement - recipe-card custom element
  * @param {*} recipeData  - Original data object 
  */
-function update_card(shadowRoot, hostElement, recipeData){
+export function update_card(shadowRoot, hostElement, recipeData){
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
     editButton.classList.add('edit-btn');
@@ -231,6 +231,7 @@ function delete_card(shadowRoot, hostElement) {
     deleteButton.textContent = 'Delete';
     deleteButton.classList.add('delete-btn');
     shadowRoot.appendChild(deleteButton);
+
 
     if(deleteButton) {
         deleteButton.addEventListener('click', () => {            
