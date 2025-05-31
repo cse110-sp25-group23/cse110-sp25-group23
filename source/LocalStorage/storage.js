@@ -72,6 +72,7 @@ function initFormHandler() {
 	const ingredientsArray = [];
 
 	const ingredientInput = document.getElementById('ingredientInput');
+	const ingredientUnitInput = document.getElementById('ingredientUnitInput');
 	const addIngredientBtn = document.getElementById('addIngredientBtn');
 	const ingredientsList = document.getElementById('ingredientsList');
 
@@ -164,7 +165,12 @@ function initFormHandler() {
 		}
 	});
 
-
+	ingredientUnitInput.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			addIngredientBtn.click();
+		}
+	});
 
 	form.addEventListener('submit', (event) => {
 		//prevent page from reloading
@@ -223,7 +229,7 @@ function initFormHandler() {
 			steps,
 			tags,
 			timeEstimate
-		}
+		};
 
 		//If User is Using URL, get image url 
 		if(urlInput){
@@ -342,5 +348,6 @@ function toggleInputs() {
 
 export {
   addRecipesToDocument,
+  getRecipesFromStorage,
   saveRecipesToStorage
 };
