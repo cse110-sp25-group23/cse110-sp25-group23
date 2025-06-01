@@ -16,7 +16,7 @@ export class RecipeCard extends HTMLElement {
      * @param {Object} recipeData - Data for recipe
      */
     set data(recipeData) {
-        if(!recipeData) return;
+        if (!recipeData) return;
         this._data = recipeData;
 
         // Create and append <style> element to our current card component
@@ -82,11 +82,11 @@ export class RecipeCard extends HTMLElement {
         flipCard.addEventListener('click', () => {
             flipCard.classList.toggle('flipped');
         });
-    
+
         // Initialize delete and update logic
-        delete_card(this.shadowRoot,this);
+        delete_card(this.shadowRoot, this);
         update_card(this.shadowRoot, this, recipeData);
-    }   
+    }
 }
 
 // Define the custom recipe card element
@@ -102,18 +102,18 @@ customElements.define('recipe-card', RecipeCard);
  * @param {*} hostElement - recipe-card custom element
  * @param {*} recipeData  - Original data object 
  */
-export function update_card(shadowRoot, hostElement, recipeData){
+export function update_card(shadowRoot, hostElement, recipeData) {
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
     editButton.classList.add('edit-btn');
     shadowRoot.appendChild(editButton);
 
     editButton.addEventListener('click', () => {
-        const originalData   = { ...recipeData };
+        const originalData = { ...recipeData };
 
         //Can add more tags as we implement card (remember to edit HTML to sync)
         const predefinedTags = ["Easy", "Advanced", "Pro"];
-        const originalTags   = recipeData.tags;
+        const originalTags = recipeData.tags;
 
         //separate tags originally selected
         const predefinedSelectedTags = originalTags.filter(tag => predefinedTags.includes(tag));
@@ -146,26 +146,26 @@ export function update_card(shadowRoot, hostElement, recipeData){
         <label>Steps: <textarea class="edit-steps" placeholder="Step1 \nStep2">${originalData.steps ? originalData.steps.join('\n') : ''}</textarea></label><br>
         <button class="save-btn">Save</button>
         `;
-        
+
         const saveButton = shadowRoot.querySelector('.save-btn');
         saveButton.addEventListener('click', () => {
-        //tag handling: 
+            //tag handling: 
             //predefined tags
-            const checkedTags    = [];
-            const checkBoxedTags = shadowRoot.querySelectorAll('.edit-tag-checkbox'); 
-            
+            const checkedTags = [];
+            const checkBoxedTags = shadowRoot.querySelectorAll('.edit-tag-checkbox');
+
             checkBoxedTags.forEach(checkbox => {
-                if(checkbox.checked) {
+                if (checkbox.checked) {
                     checkedTags.push(checkbox.value);
                 }
             });
 
             //custom tags
-            const editedCustomTags =shadowRoot.querySelector('.edit-custom-tags').value;
+            const editedCustomTags = shadowRoot.querySelector('.edit-custom-tags').value;
             const savedCustomTags = editedCustomTags.split(',').map(tag => tag.trim()).filter(Boolean);
 
             const allEditedTags = checkedTags.concat(savedCustomTags);
-        
+
             //need to handle ingredients and steps since both are stringified arrays
             const editedIngredients = shadowRoot.querySelector('.edit-ingredients').value;
             const savedIngredients = editedIngredients.split('\n')
@@ -173,7 +173,7 @@ export function update_card(shadowRoot, hostElement, recipeData){
                     const [name, unit] = line.split('-').map(s => s.trim());
                     return name ? { name, unit: unit || '' } : null;
                 })
-                .filter(obj => obj); 
+                .filter(obj => obj);
 
             const editedSteps = shadowRoot.querySelector('.edit-steps').value;
             const savedSteps = editedSteps
@@ -191,12 +191,12 @@ export function update_card(shadowRoot, hostElement, recipeData){
                 steps: savedSteps
             };
 
-        //Updating logic --> compare new data with original to check for changes
+            //Updating logic --> compare new data with original to check for changes
 
             let hasChanges = false;
-            const finalData = { ...originalData};
+            const finalData = { ...originalData };
 
-            for(const key in updatedData) {
+            for (const key in updatedData) {
                 if (updatedData[key] !== originalData[key]) {
                     finalData[key] = updatedData[key];
                     hasChanges = true;
@@ -205,7 +205,7 @@ export function update_card(shadowRoot, hostElement, recipeData){
 
             shadowRoot.innerHTML = '';
             if (hasChanges) {
-                
+
                 hostElement.data = finalData;
             } else {
                 hostElement.data = originalData;
@@ -233,8 +233,8 @@ function delete_card(shadowRoot, hostElement) {
     shadowRoot.appendChild(deleteButton);
 
 
-    if(deleteButton) {
-        deleteButton.addEventListener('click', () => {            
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => {
             //update local storage
             let recipeString = localStorage.getItem('recipes');
             //turn the recipesString into an array
@@ -263,3 +263,146 @@ function delete_card(shadowRoot, hostElement) {
     }
 }
 
+// Saves all meals to localStorage as JSON
+function saveMealsToStorage(meals) {
+    localStorage.setItem('savedMeals', JSON.stringify(meals));
+}
+
+// Retrieves stored meals from localStorage (or returns an empty object if none)
+function getMealsFromStorage() {
+    const stored = localStorage.getItem('savedMeals');
+    return stored ? JSON.parse(stored) : {};
+}
+
+// Displays recipe cards in the "Meal Preview" section
+function displayMealCards(recipeDataArray) {
+    const container = document.getElementById('meal-cards-display');
+    container.innerHTML = ''; // Clear old cards
+
+    recipeDataArray.forEach(data => {
+        const card = document.createElement('recipe-card');
+        card.data = data;
+        container.appendChild(card);
+    });
+}
+
+// Used to track whether we're in "Create Meal" mode
+let mealSelectionMode = false;
+
+// Holds references to selected recipe-card elements when building a meal
+const selectedCards = new Set();
+
+// === Main App Logic (waits for DOM to be ready) ===
+document.addEventListener('DOMContentLoaded', () => {
+    // UI references
+    const createMealBtn = document.getElementById('create-meal-btn');
+    const mealControls = document.getElementById('meal-controls');
+    const cardsContainer = document.getElementById('cardsContainer');
+    const saveMealBtn = document.getElementById('save-meal-btn');
+    const mealNameInput = document.getElementById('meal-name-input');
+    const mealList = document.getElementById('meal-list');
+    const mealCardsDisplay = document.getElementById('meal-cards-display');
+
+    // Load existing meals from localStorage
+    let savedMeals = getMealsFromStorage();
+
+    // Re-render saved meal buttons
+    Object.entries(savedMeals).forEach(([mealName, recipes]) => {
+        const mealButton = document.createElement('button');
+        mealButton.textContent = mealName;
+        mealButton.classList.add('meal-btn');
+        mealButton.style.margin = '5px';
+        mealButton.addEventListener('click', () => {
+            displayMealCards(recipes);
+        });
+        mealList.appendChild(mealButton);
+    });
+
+    // === Create Meal button logic ===
+    createMealBtn.addEventListener('click', () => {
+        mealSelectionMode = true;
+        mealControls.style.display = 'block';
+
+        // Find all recipe-card elements
+        const recipeCards = cardsContainer.querySelectorAll('recipe-card');
+
+        // Add a checkbox to each one if not already wrapped
+        recipeCards.forEach((card, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'relative';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.classList.add('meal-select-checkbox');
+            checkbox.style.position = 'absolute';
+            checkbox.style.top = '10px';
+            checkbox.style.left = '10px';
+            checkbox.style.zIndex = '1000';
+            checkbox.style.transform = 'scale(1.5)';
+            checkbox.dataset.cardIndex = index;
+
+            // Track selected cards
+            checkbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    selectedCards.add(card);
+                } else {
+                    selectedCards.delete(card);
+                }
+            });
+
+            // Avoid wrapping more than once
+            if (!card.parentElement.classList.contains('meal-wrapper')) {
+                wrapper.classList.add('meal-wrapper');
+                card.replaceWith(wrapper);
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(card);
+            }
+        });
+    });
+
+    // === Save Meal button logic ===
+    saveMealBtn.addEventListener('click', () => {
+        const mealName = mealNameInput.value.trim();
+
+        // Validate meal name
+        if (!mealName) {
+            alert('Please enter a meal name.');
+            return;
+        }
+
+        // Ensure at least one card is selected
+        if (selectedCards.size === 0) {
+            alert('Please select at least one recipe card.');
+            return;
+        }
+
+        // Create deep copy of each selected card's data
+        const mealRecipeData = Array.from(selectedCards).map(card =>
+            structuredClone(card._data)
+        );
+
+        // Save to memory and localStorage
+        savedMeals[mealName] = mealRecipeData;
+        saveMealsToStorage(savedMeals);
+
+        // Create and insert meal button
+        const mealButton = document.createElement('button');
+        mealButton.textContent = mealName;
+        mealButton.classList.add('meal-btn');
+        mealButton.style.margin = '5px';
+        mealButton.addEventListener('click', () => {
+            displayMealCards(mealRecipeData);
+        });
+        mealList.appendChild(mealButton);
+
+        // Reset selection state
+        selectedCards.clear();
+        mealNameInput.value = '';
+        mealControls.style.display = 'none';
+        mealSelectionMode = false;
+
+        // Remove checkboxes and unwrap cards
+        const checkboxes = document.querySelectorAll('.meal-select-checkbox');
+        checkboxes.forEach(cb => cb.parentElement.replaceWith(cb.nextSibling));
+    });
+});
