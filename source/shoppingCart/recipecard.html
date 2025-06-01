@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recipe Card Demo</title>
+
+  <!-- Just Another Hand font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Inline CSS for the recipe card -->
+  <style>
+    body {
+      font-family: 'Just Another Hand', cursive;
+      background: #f7f7f7;
+      margin: 0;
+      height: 100vh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .cart-logo {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      cursor: pointer;
+    }
+    .recipe-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 320px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .recipe-image {
+      width: 280px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .recipe-title {
+      font-size: 1.75rem;
+      margin: 0.5rem 0 0.25rem;
+    }
+    .recipe-author {
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    .buy-ingredients {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .buy-ingredients:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <!-- Shopping cart icon (Flaticon) -->
+  <img
+    src="https://cdn-icons-png.flaticon.com/512/263/263142.png"
+    alt="Cart"
+    class="cart-logo"
+  />
+
+  <div class="recipe-card">
+    <!-- Static Unsplash tomato‐pasta image -->
+    <img
+      src="https://images.unsplash.com/photo-1512058564366-c9f2f2ff1ab4?auto=format&fit=crop&w=280&q=80"
+      alt="Tomato Pasta"
+      class="recipe-image"
+    />
+
+    <h2 class="recipe-title">Tomato Pasta</h2>
+    <p class="recipe-author">By Chef Joey</p>
+
+    <button class="buy-ingredients">Buy ingredients</button>
+  </div>
+
+  <script type="module">
+    import { Cart } from '../shoppingCart/cart.js';
+
+    // 1) The recipe data must match exactly what cart.js expects:
+    const pastaRecipe = {
+      id: 'recipe-pasta-1',
+      ingredients: [
+        { id: 'ing-spaghetti', name: 'Spaghetti',    qty: 200, unit: 'g'   },
+        { id: 'ing-tomatoes',  name: 'Tomatoes',     qty:   3, unit: ''    },
+        { id: 'ing-garlic',    name: 'Garlic cloves',qty:   2, unit: ''    },
+        { id: 'ing-olive-oil', name: 'Olive oil',    qty:   2, unit: 'tbsp'},
+      ],
+    };
+
+    document
+      .querySelector('.buy-ingredients')
+      .addEventListener('click', () => {
+        // 2) Add exactly those ingredients into localStorage
+        Cart.addRecipe(pastaRecipe);
+        // 3) Go immediately to the shopping page
+        window.location.href = '../shoppingCart/shopping.html';
+      });
+  </script>
+</body>
+</html>
