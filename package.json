@@ -16,6 +16,11 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdoc": "^4.0.4",
     "stylelint": "^16.19.1",
-    "stylelint-config-standard": "^38.0.0"
+    "stylelint-config-standard": "^38.0.0",
+    "whatwg-fetch": "^0.0.1"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "jsdom"
   }
 }
