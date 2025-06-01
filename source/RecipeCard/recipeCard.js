@@ -288,6 +288,36 @@ function displayMealCards(recipeDataArray) {
     });
 }
 
+function createMealUI(mealName, recipes) {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('meal-ui-wrapper');
+
+    const mealButton = document.createElement('button');
+    mealButton.textContent = mealName;
+    mealButton.classList.add('meal-btn');
+    mealButton.addEventListener('click', () => {
+        displayMealCards(recipes);
+    });
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.classList.add('delete-meal-btn');
+    deleteBtn.addEventListener('click', () => {
+        if (confirm(`Are you sure you want to delete the meal "${mealName}"?`)) {
+            const savedMeals = getMealsFromStorage();
+            delete savedMeals[mealName];
+            saveMealsToStorage(savedMeals);
+            wrapper.remove();
+            document.getElementById('meal-cards-display').innerHTML = '';
+        }
+    });
+
+    wrapper.appendChild(mealButton);
+    wrapper.appendChild(deleteBtn);
+    document.getElementById('meal-list').appendChild(wrapper);
+}
+
+
 // Used to track whether we're in "Create Meal" mode
 let mealSelectionMode = false;
 
@@ -310,15 +340,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Re-render saved meal buttons
     Object.entries(savedMeals).forEach(([mealName, recipes]) => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('meal-ui-wrapper');
+
         const mealButton = document.createElement('button');
         mealButton.textContent = mealName;
         mealButton.classList.add('meal-btn');
-        mealButton.style.margin = '5px';
         mealButton.addEventListener('click', () => {
             displayMealCards(recipes);
         });
-        mealList.appendChild(mealButton);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.classList.add('delete-meal-btn');
+        deleteBtn.addEventListener('click', () => {
+            // 🔥 No confirmation – delete immediately
+            delete savedMeals[mealName];
+            saveMealsToStorage(savedMeals);
+            wrapper.remove();
+
+            // Clear the preview if it was this meal
+            document.getElementById('meal-cards-display').innerHTML = '';
+        });
+
+        wrapper.appendChild(mealButton);
+        wrapper.appendChild(deleteBtn);
+        mealList.appendChild(wrapper);
     });
+
 
     // === Create Meal button logic ===
     createMealBtn.addEventListener('click', () => {
@@ -328,19 +377,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Find all recipe-card elements
         const recipeCards = cardsContainer.querySelectorAll('recipe-card');
 
-        // Add a checkbox to each one if not already wrapped
         recipeCards.forEach((card, index) => {
             const wrapper = document.createElement('div');
-            wrapper.style.position = 'relative';
+            wrapper.classList.add('meal-wrapper');
 
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.classList.add('meal-select-checkbox');
-            checkbox.style.position = 'absolute';
-            checkbox.style.top = '10px';
-            checkbox.style.left = '10px';
-            checkbox.style.zIndex = '1000';
-            checkbox.style.transform = 'scale(1.5)';
             checkbox.dataset.cardIndex = index;
 
             // Track selected cards
@@ -354,13 +397,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Avoid wrapping more than once
             if (!card.parentElement.classList.contains('meal-wrapper')) {
-                wrapper.classList.add('meal-wrapper');
                 card.replaceWith(wrapper);
                 wrapper.appendChild(checkbox);
                 wrapper.appendChild(card);
             }
         });
     });
+
 
     // === Save Meal button logic ===
     saveMealBtn.addEventListener('click', () => {
@@ -387,15 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         savedMeals[mealName] = mealRecipeData;
         saveMealsToStorage(savedMeals);
 
-        // Create and insert meal button
-        const mealButton = document.createElement('button');
-        mealButton.textContent = mealName;
-        mealButton.classList.add('meal-btn');
-        mealButton.style.margin = '5px';
-        mealButton.addEventListener('click', () => {
-            displayMealCards(mealRecipeData);
-        });
-        mealList.appendChild(mealButton);
+        createMealUI(mealName, mealRecipeData);
 
         // Reset selection state
         selectedCards.clear();
