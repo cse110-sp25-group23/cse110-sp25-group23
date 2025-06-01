@@ -263,6 +263,8 @@ function delete_card(shadowRoot, hostElement) {
     }
 }
 
+// THANHHHH PROOOOOOO
+
 // Saves all meals to localStorage as JSON
 function saveMealsToStorage(meals) {
     localStorage.setItem('savedMeals', JSON.stringify(meals));
@@ -406,3 +408,6 @@ document.addEventListener('DOMContentLoaded', () => {
         checkboxes.forEach(cb => cb.parentElement.replaceWith(cb.nextSibling));
     });
 });
+
+
+// THANHHHH PROOOOOOO
