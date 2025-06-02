@@ -28,8 +28,8 @@ export function getRecipeCardTemplateCSS() {
         .recipe-image{
             float: right;
             margin-left: auto;
-            margin-right: 40px;
-            margin-bottom: 50px;
+            margin-right: 70px;
+            margin-top: 30px;
             width: fit-content;
             border-radius: 8px;
         }
@@ -37,6 +37,33 @@ export function getRecipeCardTemplateCSS() {
         .steps-list li {
             text-align: left;
             margin-top: 20px;
+        }
+        
+        /* Favorite Button */
+        .favorite-btn {
+            position: absolute;
+            top: 5px;
+            right: 50px;
+            background-color:rgb(211, 211, 211);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 28px;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .favorite-btn.favorited {
+            background-color:rgb(249, 43, 112); 
+            color: white;
         }
 
 

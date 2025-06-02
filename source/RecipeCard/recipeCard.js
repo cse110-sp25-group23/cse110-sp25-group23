@@ -33,6 +33,7 @@ export class RecipeCard extends HTMLElement {
         <div class="flip-card">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
+                    <button class="favorite-btn ${recipeData.favorite ? 'favorited' : ''}" aria-label="Favorite">♥</button>
                     <img src="${recipeData.image}" alt="${recipeData.name}" style="width:200px;height:200px;" class="recipe-image">
                     <h3>${recipeData.name}</h3>
                     <p>Author: ${recipeData.author}</p>
@@ -76,11 +77,38 @@ export class RecipeCard extends HTMLElement {
         </recipe-card>
         */
 
-        //add the JS script for toggling card flip here. Since .flip-card is in shadow DOM
-        //we can't look for it or toggle it anywhere else but here
+        // add the JS script for toggling card flip here. Since .flip-card is in shadow DOM
+        // we can't look for it or toggle it anywhere else but here
         const flipCard = container.querySelector('.flip-card');
         flipCard.addEventListener('click', () => {
             flipCard.classList.toggle('flipped');
+        });
+
+        // add event handling for clicking the favorite button
+        const favButton = container.querySelector('.favorite-btn');
+        favButton.addEventListener('click', (e) => {
+            //prevents flipping
+            e.stopPropagation(); 
+            
+            // Toggle favorite
+            favButton.classList.toggle('favorited');
+            this._data.favorite = !this._data.favorite;
+
+            // Update localStorage
+            let localRecipes = getRecipesFromStorage();
+            //use createdAt date to determine which card has been updated
+            let index = -1;
+            for (let i = 0; i < localRecipes.length; i++) {
+                if (localRecipes[i].createdAt === this._data.createdAt) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index !== -1) {
+                localRecipes[index].favorite = this._data.favorite;
+                saveRecipesToStorage(localRecipes);
+            }
         });
     
         // Initialize delete and update logic

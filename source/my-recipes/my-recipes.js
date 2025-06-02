@@ -3,8 +3,8 @@ import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/sto
 // list of categories (Favorite and Recently-Created are properties that need to be added to storage.js)
 const categories = [
   { title: "All Recipes", filter: (r) => true },
-  //{ title: "Recently Created", filter: (r) => true, sortBy: (r) => new Date(r.createdAt)},
-  //{ title: "Favorites", filter: (r) => r.favorite },  
+  { title: "Recently Created", filter: (r) => true, sortRecent: (r) => new Date(r.createdAt)},
+  { title: "Favorites", filter: (r) => r.favorite },  
   { title: "Easy", filter: (r) => r.tags.includes("Easy") },
   { title: "Advanced", filter: (r) => r.tags.includes("Advanced") },
 ];
@@ -22,6 +22,7 @@ function init() {
 
 /**
  * Displays all cards in the specified category
+ * NOTE: possibly remove if we allow horizontal scrolling through cards
  * @param title the category name
  * @param {Array<Object>} recipes An array of recipes
  */
@@ -30,9 +31,11 @@ function showAll(title, recipes) {
   const container = document.getElementById("shelf-container");
   container.innerHTML = "";
 
+  /*
   const titleElem = document.createElement("h2");
   titleElem.textContent = `All ${title}`;
   container.appendChild(titleElem);
+  */
 
   // generate as many shelves as needed (5 per shelf, for now)
   const shelfSize = 5;
@@ -75,14 +78,13 @@ function displayShelves() {
     const shelfRecipes = recipes.filter(category.filter);
 
     // this applies solely for the RECENTLY CREATED category
-    /*
-    if (category.sortBy) {
-      shelfRecipes.sort((a, b) => category.sortBy(b) - category.sortBy(a));
+    if (category.sortRecent) {
+      shelfRecipes.sort((a, b) => category.sortRecent(b) - category.sortRecent(a));
     }
-    */
+    
 
     // limit how many recipes can be displayed on shelf to avoid overflow
-    const recipesToShow = 2;
+    const recipesToShow = 3;
     const someRecipes = shelfRecipes.slice(0, recipesToShow);
 
     // the container for this individual shelf (will contain label, img, and cards)
@@ -110,12 +112,12 @@ function displayShelves() {
     shelfDiv.appendChild(cardsContainer);
 
     // "See All" button event handling
-    if (shelfRecipes.length > recipesToShow) {
-    const seeAllBtn = document.createElement("button");
-    seeAllBtn.textContent = "See All";
-    seeAllBtn.className = "see-all-btn"; 
-    seeAllBtn.addEventListener("click", () => showAll(category.title, shelfRecipes));
-    shelfDiv.appendChild(seeAllBtn);
+    if (shelfRecipes.length >= recipesToShow) {
+        const seeAllBtn = document.createElement("button");
+        seeAllBtn.textContent = "See All";
+        seeAllBtn.className = "see-all-btn"; 
+        seeAllBtn.addEventListener("click", () => showAll(category.title, shelfRecipes));
+        shelfDiv.appendChild(seeAllBtn);
     }
 
     container.appendChild(shelfDiv);

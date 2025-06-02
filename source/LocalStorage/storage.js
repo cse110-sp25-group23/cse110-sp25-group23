@@ -172,6 +172,15 @@ function initFormHandler() {
 		}
 	});
 
+	// prevent enter key from submiting whole form when inputting things like hours, name, etc
+	form.addEventListener('keydown', (event) => {
+		const allowedIds = ['ingredientInput', 'ingredientUnitInput', 'stepInput'];
+
+		if (event.key === 'Enter' && !allowedIds.includes(event.target.id)) {
+			event.preventDefault();
+		}
+	});
+
 	form.addEventListener('submit', (event) => {
 		//prevent page from reloading
 		event.preventDefault();
@@ -183,6 +192,8 @@ function initFormHandler() {
 		const author = formData.get("author");
 		const steps = [...stepsArray];
 		const ingredients = [...ingredientsArray];
+		const favorite = false;
+		const createdAt = new Date().toISOString();
 		
 		//Time Estimate for recipe
 		const hours = parseInt(formData.get("timeHours") || "0");
@@ -228,7 +239,9 @@ function initFormHandler() {
 			ingredients,
 			steps,
 			tags,
-			timeEstimate
+			timeEstimate,
+			favorite,
+			createdAt
 		};
 
 		//If User is Using URL, get image url 
