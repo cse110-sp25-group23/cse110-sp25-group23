@@ -169,27 +169,7 @@ const recipes = [
       } 
   ];
 
-//   function renderRecipes() {
-//     const container = document.getElementById('recipeGrid');
-//     recipes.forEach(recipe => {
-//       const card = document.createElement('div');
-//       card.className = 'recipe-card';
-//       card.innerHTML = `
-//         <img src="${recipe.image}" alt="${recipe.title}" class="recipe-img" />
-//         <div class="recipe-content">
-//           <h2 class="recipe-title">${recipe.title}</h2>
-//           <p class="recipe-meta">${recipe.prep}</p>
-//           <p class="recipe-meta">${recipe.cook}</p> 
-//           <p class="recipe-tags">${recipe.tags}</p>
-
-//         </div>
-//       `;
-//       container.appendChild(card);
-//     });
-//   }
-
-//   renderRecipes();
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 2;
 let displayed = 0;
 
 function renderStars(rating) {
@@ -211,7 +191,7 @@ function renderRecipes(batch = BATCH_SIZE) {
         <h2 class="recipe-title">${recipe.title}</h2>
         <div class="recipe-rating">${renderStars(recipe.rating || 0)}</div>
         <p class="recipe-meta">${recipe.cook}</p> 
-        <p class="recipe-tags">${recipe.tags}</p>
+        <p class="recipe-tags">Tags: ${recipe.tags}</p>
       </div>
     `;
     container.appendChild(card);

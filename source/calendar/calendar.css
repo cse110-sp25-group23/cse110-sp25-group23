@@ -1,9 +1,17 @@
 /* calendar.css */
 
+/* === DEFAULT === */
 * {
   font-family: Helvetica;
+  background-color: #f7f5ef;
   color: black;
   font-size: 12pt;
+}
+
+/* Add recipe styling */ 
+#assign-form {
+  font-family: Arial;
+  padding: 6px 20px;
 }
 
 /* Container for the full calendar component */
@@ -15,57 +23,67 @@
   font-family: sans-serif;
 }
 
-.calendar-header {
+/* === NAV BAR === */
+
+.main-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #ffe49e;
+  font-family: Arial;
+  padding: 10px 20px;
 }
 
-.calendar-header h2 {
-  font-size: 36px;
-  font-style: bold;
-  font-family: 'Arial Narrow Bold';
+.main-nav a {
+  margin: 0 10px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: #fff3cc;
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
 }
 
-/* Row displaying the days of the week (Sun, Mon, ...) */
-.calendar-days{
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
+.main-nav a:hover {
+  background: #fcefb2;
+}
+
+.main-nav input[type="text"] {
   width: 100%;
-  box-sizing: border-box;
-}
-
-/* Hide day-of-week labels in 'day' view */
-.calendar-days.day-view {
-  display: none;
-}
-
-/* Core grid where calendar content (day cells or hour slots) is rendered */
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
-  width: 100%;
-  box-sizing: border-box;
-  transition: all 0.2s ease-in-out;
-}
-
-/* Default style for each cell in the calendar */
-.calendar-grid div {
+  max-width: 300px;
+  margin-left: auto;
+  padding: 4px 8px;
   border: 1px solid #ccc;
-  padding: 5px;
-  position: relative;
+  border-radius: 4px;
   box-sizing: border-box;
-  overflow-wrap: break-word;
 }
+
+.nav-icon {
+  mix-blend-mode: multiply;
+  width: 20px;      
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.main-nav .search-bar {
+  max-width: 300px;
+  margin-left: auto; 
+}
+
+.search-bar {
+  flex: 1; 
+  display: flex;
+  justify-content: flex-end; 
+}
+
+/* === CALENDAR TOGGLE === */
 
 .calendar-toggle {
   display: flex;
   justify-content: center;
   margin: 10px 0;
+  padding: 10px 20px;
   gap: 10px;
 }
 
@@ -77,25 +95,81 @@
   background: #f9f9f9;
   cursor: pointer;
   font-weight: bold;
+  font-family: 'Arial';
 }
 
-/* Highlight the active toggle button */
+.calendar-toggle button:hover, 
 .calendar-toggle button.active {
-  background-color: #d0e0ff;
-  border-color: #4a90e2;
+  background-color: #fcefb2;
+}
+
+.calendar-toggle button.active {
+  font-style: oblique;
+  border: 2px solid #d4a03d;
+}
+
+/* === CALENDAR HEADER === */
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-header h2 {
+  font-size: 36px;
+  font-style: bold;
+  font-family: 'Arial';
+}
+
+/* === CALENDAR GRID === */
+
+/* Default for displaying the whole grid component */
+.calendar-days,
+.calendar-grid {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Row displaying the days of the week (Sun, Mon, ...) */
+.calendar-days{
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* Hide day-of-week labels in 'day' view */
+.calendar-days.day-view {
+  display: none;
+}
+
+/* Core grid where calendar content (day cells or hour slots) is rendered */
+.calendar-grid {
+  grid-template-columns: repeat(7, 1fr);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Default style for each cell in the calendar */
+.calendar-grid div {
+  border: 1px solid #ccc;
+  padding: 5px;
+  position: relative;
+  overflow-wrap: break-word;
+  background: white;
 }
 
 /* Day cells styling */
 .day {
-  background-color: #fff;
-  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  /* transition: background 0.1s ease; */
 }
 
 /* Hover effect for day cells */
-.day:hover {
-  background-color: #f0f0f0;
+/* * ensures everything inside also switches to the hover color */
+.day:hover,
+.day:hover * {
+  background-color: #fcefb2;
 }
 
 /* Make each month view cell a square using aspect ratio */
@@ -103,11 +177,75 @@
   aspect-ratio: 1 / 1;
 }
 
-/* 
-.calendar-grid.week-view div {
-  max-width: 100%;
-  height: 1000px;
-} */
+
+/* Day label */
+.day-number {
+  flex: 0 0 auto;
+  font-weight: bold;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+/* == MONTH VIEW FOR THE RECIPE CARDS == */
+
+.calendar-grid.month-view .day-number {
+  font-weight: bold;
+  border: none;
+}
+
+
+/* Recipe blocks in month view */
+.note-block, .note {
+  aspect-ratio: 1/1 fixed;
+  flex: 0 0 auto;
+  background-color: #ffe49e !important; /* force color to show */
+  border-radius: 4px;
+  border: 1px solid #d4a03d !important; /* force border to show */
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin: 1px 0; 
+  padding: 1px 2px;
+  max-width: 95%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  max-height: 30px; 
+  cursor: pointer;
+}
+
+/* Recipe block in week and day view */
+.note {
+  font-size: 1rem;
+  max-height: 48px; 
+}
+
+.recipe-name {
+  background: transparent;
+}
+
+/* stack recipe blocks vertically */
+.calendar-grid.month-view .day {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+  position: relative;
+  padding: 2px;
+}
+
+
+.notes-container {
+  flex: 1 1 auto; /* fill remaining space */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%; /* ensure it uses all width of cell */
+  border: none;
+}
+
+
 
 /* === DAY VIEW Customizations === */
 
@@ -134,7 +272,8 @@
 /* Show label only in day view */
 .calendar-day-label.day-view {
   display: block;
-  font-family: 'Arial Narrow Bold';
+  font-family: 'Arial';
+  font-weight: bold;
   font-size: 28px;
 }
 
@@ -145,7 +284,27 @@
   grid-template-columns: 50px repeat(7, 1fr);
 }
 
+/* In week view, display recipe blocks in the same hour slot side by side */
+.calendar-grid.week-view .time-slot {
+  display: flex;
+  flex-direction: row;
+  gap: 2px; 
+  align-items: center; 
+  justify-content: flex-start; 
+  padding: 2px;
+  position: relative;
+}
+
+.calendar-grid.week-view .note {
+  position: absolute;
+  left: 2px; 
+  height: 20px; 
+  width: calc(100% - 15px);
+}
+
+
 /* === TIME STRUCTURE for day/week views === */
+
 /* Styles for the hour seperator */
 :root {
   --hour-height: 60px;
@@ -196,4 +355,87 @@
     font-size: 0.8rem;
     height: 60px;
   }
+}
+
+
+
+/* == ADDING RECIPES ==*/
+
+.calendar-grid.month-view .day {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.calendar-grid.month-view .day .notes-container {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 75px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 2px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: none;
+}
+
+.calendar-grid.month-view .day .day-number {
+  position: relative;
+  z-index: 1; 
+}
+
+
+/* === DELETE RECIPES (edit is gone) === */
+/* .note-block .edit-recipe, .note .edit-recipe {
+  top: 3px;
+  left: 3px;
+} */
+
+.note-block .delete-recipe, 
+.note .delete-recipe {
+  top: 3px;
+  right: 3px;
+}
+
+.note-block:hover button, 
+.note:hover button {
+  display: block;
+}
+
+.note-block button, 
+.note button {
+  position: absolute;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 0.8rem;
+  display: none; 
+  cursor: pointer;
+}
+
+/* .note-block .edit-recipe {
+  top: 3px;
+  left: 3px;
+} */
+
+.note-block .delete-recipe {
+  top: 3px;
+  right: 3px;
+}
+
+/* Show on hover */
+.note-block:hover button {
+  display: block; 
+}
+
+
+/* DEBUGGING */
+
+/* Limit month view to show only first two recipe cards */
+.calendar-grid.month-view .notes-container .note-block:nth-of-type(n+3) {
+  display: none;
 }

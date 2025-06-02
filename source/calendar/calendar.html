@@ -13,29 +13,45 @@
     <body>
         <!--Nav Bar to Other Features-->
         <nav class="main-nav">
-            <a href="../home-page/index.html">Home</a>
-<!--            <a href="home.html">Home</a>  -->
-            <a href="../RecipeCard/recipeCard.html">Recipes</a>
-            <a href="calendar.html">Meal Planner</a>
+            <a href="../home-page/index.html">
+                <img src="../home-page/images/home.png" alt="Home Icon" class="nav-icon">Home
+            </a>
+            <a href="../RecipeCard/recipeCard.html">
+                <img src="../home-page/images/shelf.png" alt="Shelf Icon" class="nav-icon">Recipes
+            </a>
+            <a href="calendar.html">
+                <img src="../home-page/images/calendar.png" alt="Calendar Icon" class="nav-icon">Meal Planner
+            </a>
+            <a href="shopping-cart.html">
+                <img src="../home-page/images/shop.png" alt="Shopping Cart Icon" class="nav-icon">Cart (TBD)
+            </a>
+
+            <!-- Search Bar for Recipes-->
+            <nav class="search-bar">
+                <input type="text" id="search-input" placeholder="Search recipes...">
+            </nav>
+
+        </nav>
+
+
+
+        <!--Add Recipe to Calendar-->
+        <nav class="add-recipes">
+            <form id="assign-form">
+            <select id="recipe-select">
+                <option value="">-- pick a recipe --</option>
+            </select>
+            <input type="date" id="recipe-date" required>
+            <input type="time" id="recipe-time" step="3600" required>
+            <button type="submit">Schedule</button>
+            </form>
         </nav>
 
         <!--Calender View Toggle-->
         <nav class="calendar-toggle">
             <button data-view="day">Day</button>
             <button data-view="week">Week</button>
-            <button data-view="month" class="active">Month</button>
-        </nav>
-
-        <!--Add Recipe to Calendar-->
-        <nav class="add-recipes">
-        <form id="assign-form">
-        <select id="recipe-select">
-            <option value="">-- pick a recipe --</option>
-            </select>
-            <input type="date" id="recipe-date" required>
-            <input type="time" id="recipe-time" step="3600" required>
-            <button type="submit">Schedule</button>
-        </form>
+            <button data-view="month">Month</button>
         </nav>
 
 
