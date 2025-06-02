@@ -54,7 +54,6 @@ export function getRecipeCardTemplateCSS() {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             align-items: center;
             justify-content: center;
-            z-index: 10;
         }
 
         .favorite-btn:hover {
