@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Your Shopping List</title>
 
+  <!-- 1. Import the “Just Another Hand” font -->
   <link
     href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap"
     rel="stylesheet"
-  >
+  />
 
+  <!-- 2. Inline CSS with larger fonts & spacing -->
   <style>
     body {
       font-family: 'Just Another Hand', cursive;
@@ -19,18 +21,18 @@
       justify-content: center;
     }
     .container {
-      max-width: 500px;
+      max-width: 600px;
       width: 100%;
     }
     h1 {
-      font-size: 2.25rem;
+      font-size: 2.5rem; /* Larger heading */
       margin-bottom: 1rem;
       text-align: center;
     }
     ul {
       list-style: none;
       padding: 0;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     li {
       display: flex;
@@ -39,46 +41,53 @@
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 6px;
-      padding: 0.75rem 1rem;
-      margin-bottom: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem; /* Larger item text */
     }
-    .remove {
-      background-color: #28a745;
-      color: #fff;
-      border: none;
-      padding: 0.4rem 0.8rem;
+    span.item-name {
+      flex: 1;
+    }
+    .item-buttons button {
+      font-size: 1rem; /* Button text */
+      padding: 0.6rem 1rem;
       border-radius: 4px;
       cursor: pointer;
-      transition: background .2s ease;
+      transition: background 0.2s ease;
+      margin-left: 0.5rem;
+    }
+    .buy-item {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+    }
+    .buy-item:hover {
+      background-color: #0056b3;
+    }
+    .remove {
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
     }
     .remove:hover {
-      background-color: #218838;
+      background-color: #c82333;
     }
     .actions {
       display: flex;
-      gap: 1rem;
       justify-content: center;
     }
     #clear {
-      background-color: #dc3545;
-    }
-    #buy-now {
-      background-color: #007bff;
-    }
-    .actions button {
+      background-color: #28a745;
       color: #fff;
       border: none;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
+      font-size: 1.25rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background .2s ease;
+      transition: background 0.2s ease;
     }
     #clear:hover {
-      background-color: #c82333;
-    }
-    #buy-now:hover {
-      background-color: #0056b3;
+      background-color: #218838;
     }
   </style>
 </head>
@@ -86,9 +95,10 @@
   <div class="container">
     <h1>Your Shopping List</h1>
     <ul id="cart"></ul>
+
+    <!-- Clear Cart button -->
     <div class="actions">
       <button id="clear">Clear cart</button>
-      <button id="buy-now">Buy now</button>
     </div>
   </div>
 
@@ -97,38 +107,72 @@
 
     const ul = document.getElementById('cart');
 
+    /**
+     * Renders all items in the cart.
+     * If qty/unit are missing, falls back to just the name.
+     * Also logs each item’s data so you can inspect if something is undefined.
+     */
     function render() {
-      ul.innerHTML = '';
-      Cart.list().forEach(({ id, name, qty, unit }) => {
+      ul.innerHTML = ''; // Clear existing list
+
+      Cart.list().forEach((item) => {
+        const { id, name, qty, unit } = item;
+
+        console.log('Rendering item from cart:', item);
+        // If name itself is missing, you’ll see “undefined” here—meaning cart.js
+        // didn’t actually store a name. That would be a separate bug to fix.
+
         const li = document.createElement('li');
         li.dataset.id = id;
+        li.dataset.name = name; // raw name used for Instacart query
+
+        // If qty or unit is missing (undefined/null/empty), we still show the name
+        const safeQty  = (qty !== undefined && qty !== null) ? qty : '';
+        const safeUnit = unit || '';
+        const displayText = safeQty
+          ? `${safeQty} ${safeUnit} ${name}`
+          : name || '(no name)';
+
         li.innerHTML = `
-          <span>${qty ? qty + ' ' + unit : ''} ${name}</span>
-          <button class="remove">Remove</button>
+          <span class="item-name">${displayText}</span>
+          <div class="item-buttons">
+            <button class="buy-item">Buy now</button>
+            <button class="remove">Remove</button>
+          </div>
         `;
         ul.append(li);
       });
     }
 
-    // remove handler
-    ul.addEventListener('click', e => {
+    // Delegate click events inside the UL
+    ul.addEventListener('click', (e) => {
+      const li = e.target.closest('li');
+      if (!li) return; // clicked outside any <li>
+
+      // 1) Remove single item
       if (e.target.matches('.remove')) {
-        const id = e.target.closest('li').dataset.id;
+        const id = li.dataset.id;
         Cart.remove(id);
+        return;
+      }
+
+      // 2) Buy this single item on Instacart
+      if (e.target.matches('.buy-item')) {
+        const rawName = li.dataset.name;
+        console.log('Redirecting to Instacart for:', rawName);
+        const query = encodeURIComponent((rawName || '').trim());
+        window.location.href = `https://www.instacart.com/store/s?k=${query}`;
       }
     });
 
-    // clear cart handler
-
+    // Clear entire cart
     document.getElementById('clear').addEventListener('click', () => {
       Cart.clear();
     });
 
-    document.getElementById('buy-now').addEventListener('click', () => {
-    });
-
+    // Re-render whenever cart changes
     document.addEventListener('cart:update', render);
-    render();
+    render(); // initial paint
   </script>
 </body>
 </html>
