@@ -36,16 +36,13 @@ export class RecipeCard extends HTMLElement {
     if (!recipeData) return;
     this._data = recipeData;
 
-    // 1) Create and append <style> element to our shadow DOM
     const style = document.createElement('style');
     style.textContent = getRecipeCardTemplateCSS();
     this.shadowRoot.appendChild(style);
 
-    // 2) Create outer container and add content inside its shadow DOM
     const container = document.createElement('div');
     container.classList.add('card-container');
 
-    // Build a UL of ingredients
     const ingredientListItems = recipeData.ingredients
       .map(
         ing =>
@@ -94,13 +91,10 @@ export class RecipeCard extends HTMLElement {
       </div>
     `;
 
-    // Append this container into the shadow root
     this.shadowRoot.appendChild(container);
 
-    // 3) Hook the “Buy ingredients” button inside this new card
     const buyBtn = container.querySelector('.buy-ingredients-btn');
     buyBtn.addEventListener('click', (e) => {
-      // Prevent the click from bubbling up and triggering the flip‐card toggle
       e.stopPropagation();
 
       // Build a “mini‐recipe” object exactly how Cart.addRecipe expects:
@@ -157,7 +151,6 @@ function delete_card(shadowRoot, hostElement) {
 
   if (deleteButton) {
     deleteButton.addEventListener('click', () => {
-      // Update localStorage by removing this recipe
       let recipes = [];
       const recipeString = localStorage.getItem('recipes');
       if (recipeString) {

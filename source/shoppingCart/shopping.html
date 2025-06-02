@@ -4,36 +4,40 @@
   <meta charset="UTF-8" />
   <title>Your Shopping List</title>
 
-  <!-- 1. Import the “Just Another Hand” font -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
     rel="stylesheet"
   />
 
-  <!-- 2. Inline CSS with larger fonts & spacing -->
   <style>
     body {
-      font-family: 'Just Another Hand', cursive;
+      font-family: 'Inter', sans-serif;
       background: #f7f7f7;
       margin: 0;
       padding: 2rem;
       display: flex;
       justify-content: center;
     }
+
     .container {
       max-width: 600px;
       width: 100%;
     }
+
     h1 {
       font-size: 2.5rem; /* Larger heading */
       margin-bottom: 1rem;
       text-align: center;
+      /* You can optionally bump up the weight for the heading: */
+      font-weight: 600;
     }
+
     ul {
       list-style: none;
       padding: 0;
       margin-bottom: 1.5rem;
     }
+
     li {
       display: flex;
       justify-content: space-between;
@@ -44,10 +48,13 @@
       padding: 1rem 1.5rem;
       margin-bottom: 0.75rem;
       font-size: 1.25rem; /* Larger item text */
+      font-weight: 400;
     }
+
     span.item-name {
       flex: 1;
     }
+
     .item-buttons button {
       font-size: 1rem; /* Button text */
       padding: 0.6rem 1rem;
@@ -55,27 +62,34 @@
       cursor: pointer;
       transition: background 0.2s ease;
       margin-left: 0.5rem;
+      font-weight: 600;
     }
+
     .buy-item {
       background-color: #007bff;
       color: #fff;
       border: none;
     }
+
     .buy-item:hover {
       background-color: #0056b3;
     }
+
     .remove {
       background-color: #dc3545;
       color: #fff;
       border: none;
     }
+
     .remove:hover {
       background-color: #c82333;
     }
+
     .actions {
       display: flex;
       justify-content: center;
     }
+
     #clear {
       background-color: #28a745;
       color: #fff;
@@ -85,7 +99,9 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.2s ease;
+      font-weight: 600;
     }
+
     #clear:hover {
       background-color: #218838;
     }
@@ -124,7 +140,7 @@
 
         const li = document.createElement('li');
         li.dataset.id = id;
-        li.dataset.name = name; // raw name used for Instacart query
+        li.dataset.name = name; 
 
         // If qty or unit is missing (undefined/null/empty), we still show the name
         const safeQty  = (qty !== undefined && qty !== null) ? qty : '';
