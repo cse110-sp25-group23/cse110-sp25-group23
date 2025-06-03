@@ -1,9 +1,16 @@
+main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 0.5em;
+    padding: 0.5em;
+    justify-items: center;
+}
+
+
 body {
     background-image: url("wood-texture.jpg");
     background-size: cover;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
+    
 }
 
 
@@ -23,6 +30,7 @@ body {
     border-radius: 8px;
 }
 
+
 .steps-list li {
     text-align: left;
     margin-top: 20px;
@@ -33,37 +41,46 @@ body {
 
 .flip-card {
     background-color: transparent;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
     height: 300px;
     border-radius: 16px;
     overflow: hidden;
     perspective: 1000px;
     margin: 1rem;
-  }
+    will-change: transform;
+}
   
   /*For positioning front and back side of card */
   
-  .flip-card-inner {
+.flip-card-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    transition: 1s;
+    transition: transform 1s, border 0.3s ease 1s, box-shadow 0.3s ease 1s;
     transform-style: preserve-3d;
-    border-radius: 16px;
-  }
+}
   
   /* Recipe card will flip when hovered over with mouse */
   
+.flip-card:hover {
+    transform: scale(1.05);
+    border: 2px solid white;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5); /* optional glow effect */
+    z-index: 1; /* optional: brings hovered card to front if overlapping */
+}
+
+
   /*.flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
   }*/
 
-  .flip-card.flipped .flip-card-inner {
-    transform: rotateY(180deg);
-  }
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg) scale(1.05);
+}
   
   
-  .flip-card-front, .flip-card-back {
+.flip-card-front, .flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -72,19 +89,39 @@ body {
     border-radius: 16px;
     background-image: url("old-paper-texture.avif");
     background-size: 500px 300px;
-  }
+}
   
   
-  .flip-card-front {
+.flip-card-front {
     background-color: bisque;
     padding: 20px;
-  }
+    overflow: hidden;
+}
   
   
-  .flip-card-back {
+.flip-card-back {
     background-color:aqua;
     transform: rotateY(180deg);
     
     text-align: center;
     overflow: scroll;
-  }
+}
+
+/*Ingredient Scroll Function*/
+
+.ingredients-scroll {
+    max-height: 120px; /* adjust as needed */
+    max-width: 230px;
+    overflow-y: scroll;
+    padding-right: 0.5em; /* optional: avoids cutting off scrollbar */
+    border: 1px solid black;
+}
+
+.ingredients-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ingredients-scroll::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}

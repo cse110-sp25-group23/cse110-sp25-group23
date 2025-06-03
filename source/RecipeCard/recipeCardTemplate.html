@@ -22,6 +22,19 @@
                     <p>Recipe Name</p>
                     <p>Author</p>
                     <p>Ingredients</p>
+                    <div class="ingredients-scroll">
+                        <ul>
+                            <li>Ingredient #1 -- 2 tsp</li>
+                            <li>Ingredient #2 -- 2 tbsp</li>
+                            <li>Ingredient #3 -- 2 cups</li>
+                            <li>Ingredient #4 -- 2 L</li>
+                            <li>Ingredient #5 -- 2 mL</li>
+                            <li>Ingredient #6 -- 2 quarts</li>
+                            <li>Ingredient #7 -- 2 mg</li>
+                            <li>Ingredient #8 -- 2 kg</li>
+                            <!-- Add more to test scrolling -->
+                        </ul>
+                    </div>
                     <p class = "tags-class">Tags</p>
                     </div>
                     <div class="flip-card-back">
@@ -46,7 +59,13 @@
           
               cards.forEach(card => {
                 card.addEventListener('click', () => {
+                  card.classList.add('is-flipping');  
+
                   card.classList.toggle('flipped');
+
+                  setTimeout(() => {
+                    card.classList.remove('is-flipping');
+                  }, 1000); // Match your CSS transition duration
                 });
               });
             });
@@ -69,6 +88,20 @@
             </div>
         </div>
         
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                <p>Recipe Name</p>
+                <p>Author</p>
+                <img src = "oreo-pie.jpg" alt = "oreo pie" style ="width: 100px; height: 100px" class = "recipe-image">
+                <p>Tags</p>
+                </div>
+                <div class="flip-card-back">
+                <p>Ingredients</p>
+                <p>Steps</p>
+                </div>
+            </div>
+        </div>
         
     </main>
    

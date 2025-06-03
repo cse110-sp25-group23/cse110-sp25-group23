@@ -1,17 +1,46 @@
-/* Some styling for the form to make everything less condensed */
-form {
-  display: flex;
-  flex-wrap: wrap;          
-  gap: 1rem;                
-  align-items: flex-end;    
+/*Card flip animation */
+
+.flip-card {
+  background-color: transparent;
+  width: 300px;
+  height: 200px;
+  border: 1px solid #f1f1f1;
+  perspective: 1000px;
+  transition: transform 0.3s ease;
 }
 
-form label {
-  display: flex;
-  flex-direction: column;
-  font-weight: bold;
+/*For positioning front and back side of card */
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: 1s;
+  transform-style: preserve-3d;
 }
 
-h1{
-  color: black;
+/* Recipe card will flip when hovered over with mouse */
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+
+.flip-card-front {
+  background-color: bisque;
+}
+
+
+.flip-card-back {
+  background-color:aqua;
+  transform: rotateY(180deg);
 }

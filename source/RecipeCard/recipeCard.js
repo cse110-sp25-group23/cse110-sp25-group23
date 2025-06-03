@@ -5,10 +5,31 @@
  */
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
 
+
+
+
 class RecipeCard extends HTMLElement {
     constructor() {
         super();
-        this.attachShadow({ mode: "open" });
+        let shadowElement = this.attachShadow({ mode: "open" });
+
+        let info = document.createElement('info');
+
+        let styling = document.createElement('styling');
+
+        styling.textContent = 
+            `* {
+                font-family: sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            
+        `;
+
+
+        shadowElement.append(info);
+        shadowElement.append(styling);
     }
     /**
      * Sets and renders the content for the recipe card
@@ -16,9 +37,12 @@ class RecipeCard extends HTMLElement {
      */
     set data(recipeData) {
         if(!recipeData) return;
+
+        let infoRef = this.shadowRoot.querySelector('info');
+
         this._data = recipeData;
         // Create content inside the shadow DOM
-        this.shadowRoot.innerHTML = `
+        info.innerHTML = `
         <h2>${recipeData.name}</h2>
         <p>Author: ${recipeData.author}</p>
         <img src="${recipeData.image}" alt="${recipeData.name}" style="width:100px;height:auto;">
@@ -29,7 +53,7 @@ class RecipeCard extends HTMLElement {
         <p>Ingredients: ${recipeData.ingredients}</p>
         <p>Steps: ${recipeData.steps}</p>
         <button class='delete-btn'>Delete</button>
-        <p>Time Estimate: ${recipeData.timeEstimate}</p>
+        <p>${recipeData.timeEstimate}</p>
         `;
 
     // Initialize delete and update logic
