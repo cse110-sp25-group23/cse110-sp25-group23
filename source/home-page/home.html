@@ -1,24 +1,31 @@
 <!--
   TO DO LIST: 
+  Local storage for calendarly daily meals (coordinate for the day) like various local storages but also can be an array of 365 days?
   DOCUMENTATION ON JS
+  insert mobilenavigation bar as well as part of nav-bar
   ARIA tags
   Failure points
-  footer
   organize css file (remove tags I ended up deleting)
   end to end testing
   unit testing
   fix the navigation bar and screen sizes
-  Clean image folder
   On calendar page, center the days in the week lab and secondly apply font decided and fix the week to day selection?, 
   search bar for calendar page functionality; 
   Search bar functionality on nav bar
   local storage coordination
   change niroops css file to my-recipe.css (uniformed)
   pick a recipe bar implementation on calendar
-  delete kevin's old navigation bar folder - done 
   Do read-me for navigation and update calendar read me as well
-  nav-bar.js implementation after luis confirms it
+  nav-bar.js implementation - work with niroop
+  add plus signs
+
+  DONE:
+    delete kevin's old navigation bar folder - done 
+    Clean image folder - done
+  footer (bold/weight) - done
+
 -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -56,6 +63,7 @@
         <!-- text tabs -->
         <a href="../calendar/calendar.html">Calendar</a>
         <a href="shelf.html">Shelf</a>
+        <a href="shelf.html">Create</a>
         <a class="cart" href="shop.html">
           <img src="images/shop.png" alt="shopping cart">
         </a>
@@ -67,7 +75,7 @@
       <a href="home.html">
         <img src="images/home.png" alt="Home">
       </a>
-      <a href="calendar.html">
+      <a href="../calendar/calendar.html">
         <img src="images/calendar.png" alt="Calendar">
       </a>
       <a href="shelf.html">
@@ -97,8 +105,14 @@
       <div id="favorites-list" class="favorites-container"></div>
     </div>
 
-    <footer>
-
+      <footer class="site-footer">
+        <div class="footer-links">
+          <a href="home.html">Home</a>
+          <a href="../RecipeCard/shelf.html">Shelf</a>
+          <a href="../calendar/calendar.html">Calendar</a>
+          <a href="cart.html">Shopping Cart</a>
+        </div>
+        <p class="footer-message">Check out some heart-warming recipes today!</p>    
     </footer>
     <script src="home.js"></script>
   </body>

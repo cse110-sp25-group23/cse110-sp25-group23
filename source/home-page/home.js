@@ -1,4 +1,5 @@
-//
+/* Local storage for calendarly daily meals (coordinate for the day) 
+like various local storages but also can be an array of recipes array of 365 days? */
 const meals = JSON.parse(localStorage.getItem("todaysMeals")) || {
     breakfast: "Avocado Toast with Eggs",
     lunch: "",

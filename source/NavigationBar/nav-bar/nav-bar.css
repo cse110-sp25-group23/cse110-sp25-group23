@@ -122,9 +122,10 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    background-color: var(--accent);
+    background-color: var(--card-bg);
     border: 10px solid var(--red);
     gap: 30px;
+    border-radius: 2rem;
   }
   
   .desktop-nav .nav-tabs a {
