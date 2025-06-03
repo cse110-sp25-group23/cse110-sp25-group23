@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe App</title>
+  <link rel="stylesheet" href="styles.css"></link>
+  <script src="../RecipeCard/recipeCard.js" type="module"></script>
+  <script src="my-recipes.js" type="module"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="menu-icon">&#9776;</div>
+    <input type="text" placeholder="Find a recipe" class="search-bar" id="searchInput" />
+    <div class="profile-box">TA</div>
+  </header>
+  <h1> My Recipes</h1>
+  <div class="dropdown">
+    <button class="dropbtn">+ Create</button>
+    <div id="myDropdown" class="dropdown-content">
+      <a href="../RecipeCard/recipeCard.html">New Recipe</a>
+      <a href="#../home-page/shop.html">New Meal</a>
+    </div>
+  </div>
+
+  <!--TODO: add - Filter By: Favorite, Difficlty, tag1, tag2, etc... or maybe the search bar is enough-->
+
+  <!--Will be filled in with individual shelves-->
+  <div id="shelf-container"></div>
+
+  <nav class="nav-bar">
+    <a class="nav-item" href="../home-page/index.html">
+      <img src="../home-page/images/home.png" alt="Home" class="nav-icon">
+    <!-- added-->
+    </a>
+    <a class="nav-item" href="../home-page/shop.html">
+      <img src="../home-page/images/shop.png" alt="Shop" class="nav-icon">
+    </a>
+    <a class="nav-item" href="../calendar/calendar.html">
+<!--    <a class="nav-item" href="calendar.html"> -->
+      <img src="../home-page/images/calendar.png" alt="Calendar" class="nav-icon">
+    </a>
+    <a class="nav-item selected" href="../my-recipes/my-recipes.html">
+      <img src="../home-page/images/shelf.png" alt="Stats" class="nav-icon">
+    </a>
+  </nav>
+
+  <div id="popupContainer" style="display:none"></div>
+  <!-- <script src="script.js"></script>  -->
+</body>
+</html>
+
