@@ -1,4 +1,3 @@
-
 :root {
   --bg-color: #faeac1;
   --accent: #e9dab4;
@@ -15,19 +14,15 @@ body {
   margin: 0;
   padding: 2rem;
   text-align: center;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
-h1 {
-  color: var(--card-bg);
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-}
 .cart img{
   margin-left: 0px;
   height: 150px;
 }
-
-
 
 .meal-card, .cart-summary {
   background-color: var(--card-bg);
@@ -75,29 +70,6 @@ h1 {
   background-color: var(--red);
 } /*end*/
 
-.post-img {
-  width: 240px;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 30%;
-  border: 2px solid #000;
-}
-
-.post-content {
-flex: 1;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-}
-
-.recipe-rating {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #ffc107;
-  margin-top: 8px;
-  letter-spacing: 2px;
-}
-
 #search-field-small {
   /* max-width: 700px; */
   align-self:center;
@@ -141,12 +113,6 @@ div[role="search"] button:hover {
 }
 
 
-h1 {
-  color: #1a2969;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-}
-
 .meal-card {
   background-color: var(--red);
   border-radius: 15px;
@@ -156,7 +122,6 @@ h1 {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 5px solid var(--card-bg);
 }
-
 
 .meal-card h2 {
   font-size: 1.5rem;
@@ -209,14 +174,6 @@ h1 {
 color: var(--text-dark);
 }
 
-body {
-  margin: 0;
-  font-family: var(--font), Arial;
-  background-color: var(--bg-color);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
 
 #favorites-list img {  
   width: 100%;
@@ -226,52 +183,6 @@ body {
   border-top-right-radius: 10px;
 }
 
-
-.profile-section {
-  position: static;
-  text-align: center;
-}
-
-#profile-pic {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid #1a2969;
-  cursor: pointer;
-}
-
-#profile-pic:hover{
-  transform: scale(1.2);
-  transition: all 0.3s ease; 
-}
-
-.avatar-options {
-  position: absolute;
-
-  top: 100px; /* places it directly below the profile image */
-  left: 1800px; /* centers it under the profile pic */
-  transform: translateX(-50%); /* exact centering */
-  display: none; /* hidden by default */
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  background: #fff;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.avatar:hover {
-  transform: scale(1.1);
-}
 
 /* Shared */
 header, nav {
@@ -325,27 +236,6 @@ header, nav {
   
 }
 
-.desktop-nav .nav-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.desktop-nav .profile-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid #ccc;
-  cursor: pointer;
-}
-
-.desktop-nav .profile-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  
-}
 
 .desktop-nav .cart img {
   height: 32px;
@@ -401,7 +291,9 @@ h1{
   margin-top: 40px;
   font-weight: bold;
   color: #000000;
-  font-family: var(--font), Arial;
+  font-family: var(--font);
+  margin-bottom: 2rem;
+
 }
 
 .nav-tabs {

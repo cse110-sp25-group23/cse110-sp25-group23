@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importer</title>
+    <!-- recipeImporter.css Style sheet connected-->
+    <link rel="stylesheet" href="recipeImport.css">
+
+    <!-- Inter font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <!-- Pacifier font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Desktop Navigation -->
+    <header class="desktop-nav">
+        <nav class="nav-tabs">
+          <a class="logo" href="home.html">
+            <img src="images/logo.png" alt="Logo">
+          </a>
+          <h1 id="brand">Cooklection </h1>
+          <div role="search">
+            <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?"> </input>
+            <button type="submit"> </button>
+          </div>
+          
+          <!-- text tabs -->
+          <a href="../calendar/calendar.html">Calendar</a>
+          <a href="shelf.html">Shelf</a>
+          <a href="shelf.html">Create</a>
+          <a class="cart" href="shop.html">
+            <img src="images/shop.png" alt="shopping cart">
+          </a>
+        </nav>
+      </header>
+  
+      <!-- Mobile Navigation -->
+      <nav class="mobile-nav">
+        <a href="home.html">
+          <img src="images/home.png" alt="Home">
+        </a>
+        <a href="calendar.html">
+          <img src="images/calendar.png" alt="Calendar">
+        </a>
+        <a href="shelf.html">
+          <img src="images/shelf.png" alt="Shelf">
+        </a>
+        <a href="cart.html">
+          <img src="images/shop.png" alt="Cart">
+        </a>
+      </nav>
+  
+    <div class="import-form">
+        <h2>Import Recipe</h2>
+        <p>Enter a recipe URL to import it into your collection:</p>
+        <input type="url" id="recipeUrl" placeholder="https://www.example.com/recipe" required>
+        <button id="importButton">Import Recipe</button>
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+    </div>
+
+    <div id="importedRecipeDisplay" style="display: none;" class="import-form">
+        <h2>Imported Recipe Preview</h2>
+        <h3 id="recipeTitle"></h3>
+        <img id="recipeImage" src="" alt="Recipe Image" style="max-width: 100%; height: auto;">
+        <h4>Ingredients:</h4>
+        <ul id="recipeIngredients"></ul>
+        <h4>Instructions:</h4>
+        <ol id="recipeInstructions"></ol>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-links">
+          <a href="home.html">Home</a>
+          <a href="../RecipeCard/shelf.html">Shelf</a>
+          <a href="../calendar/calendar.html">Calendar</a>
+          <a href="cart.html">Shopping Cart</a>
+        </div>
+        <p class="footer-message">Check out some heart-warming recipes today!</p>    
+    </footer>
+
+    <script type="module" src="recipeImport.js"> </script>
+</body>
+</html>
