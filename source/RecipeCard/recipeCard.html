@@ -1,125 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../home-page/styles.css"></link>
-    <link rel = "stylesheet" href="recipeCard.css">
+    <title>Recipe Card</title>
+    <link rel="stylesheet" href="../home-page/styles.css">
+    </link>
+    <link rel="stylesheet" href="recipeCard.css">
     <script src="recipeCard.js" type="module"></script>
     <script src="../LocalStorage/storage.js" type="module"></script>
-    <title>Recipe Card</title>
+    <script src="mealPlanner.js" type="module"></script>
 </head>
+
 <body>
     <h1>Create a Recipe Card!</h1>
 
 
     <form id="new-recipe">
         <fieldset>
-            <!-- Recipe Name/Title -->
-            <label for="name">
-                Recipe Name:
-                <input type="text" name="name" id ="recipeName" placeholder="Recipe Name" required>
-            </label>
+          <!-- Recipe Name/Title -->
+          <label for="name">
+              Recipe Name:
+              <input type="text" name="name" id="recipeName" placeholder="Recipe Name" required>
+          </label>
 
-
-            <!-- Author Name -->
-            <label for="author">
-                Author:
-                <input type="text" name="author" id="authorName" placeholder="Author Name" required>
-            </label>
+          <!-- Author Name -->
+          <label for="author">
+              Author:
+              <input type="text" name="author" id="authorName" placeholder="Author Name" required>
+          </label>
         </fieldset>
-       
+
         <!-- Radio Buttons for image input type (radio buttons can only have one option selected) -->
         <fieldset id="image">
-            <legend>Add Recipe Image</legend>
+          <legend>Add Recipe Image</legend>
+          <input type="radio" name="imageSource" value="file" id="imageSourceFile" checked>
+          <label for="imageSourceFile">Upload file<label>
 
+          <div class="file-input">
+              <input type="file" name="imageFile" id="imageFile" accept="image/*">
+          </div>
 
-            <input type="radio" name="imageSource" value="file" id="imageSourceFile" checked>
-            <label for="imageSourceFile">Upload file</label>
-
-
-            <div class="file-input">
-                <input type="file" name="imageFile" id="imageFile" accept="image/*">
-            </div>
-
-
-           
-            <input type="radio" name="imageSource" value="url" id="imageSourceURL">
-            <label for="imageSourceURL">Image URL</label>    
-           
-            <div class="url-input">
-                <input type="url" name="imageURL" id="imageURL" placeholder="Image URL">
-            </div>
+          <input type="radio" name="imageSource" value="url" id="imageSourceURL">
+          <label for="imageSourceURL">Image URL</label> 
+            
+          <div class="url-input">
+            <input type="url" name="imageURL" id="imageURL" placeholder="Image URL">
+          </div>
         </fieldset>
 
-
-
-
-       
         <fieldset>
-            <!-- Custom and Predefined Tags (Predefined tags = Difficulty and displays as an option list) -->
-            <label for="tags">
-                Tags:
-                <select name="difficulty" id="tagsDropdown">
-                    <option value="">Select a Tag</option>
-                    <option value="Easy">Easy</option>
-                    <option value="Advanced">Advanced</option>
-                    <option value="Pro">Pro</option>
-                </select>
-                <input name="tags" id="customTag" placeholder="Custom Tag">
-            </label>
-           
-            <!-- Ingredients Input -->
-            <label for="ingredientInput">
-                Ingredients:
-                <div class="ingredient-row">
-                    <input type="text" id="ingredientInput" placeholder="Ingredient name">
-                    <input type="text" id="ingredientUnitInput" placeholder="e.g. 2 tbsp, 100g, 1 cup">
-                    <button type="button" id="addIngredientBtn">Add Ingredient</button>
-                </div>
-            </label>
-           
-            <ul id="ingredientsList"></ul>
+          <!-- Custom and Predefined Tags (Predefined tags = Difficulty and displays as an option list) -->
+          <label for="tags">
+              Tags:
+              <select name="difficulty" id="tagsDropdown">
+                  <option value="">Select a Tag</option>
+                  <option value="Easy">Easy</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Pro">Pro</option>
+              </select>
+              <input name="tags" id="customTag" placeholder="Custom Tag">
+          </label>          
 
-            <!-- Steps Input -->
-            <label for="stepInput">
-                Steps:
-                <div class="step-row">
-                    <input type="text" id="stepInput" placeholder="Enter a step">
-                    <button type="button" id="addStepBtn">Add Step</button>
-                </div>
-            </label>
-            <ol id="stepsList"></ol>
+          <!-- Ingredients Input -->
+          <div class="ingredient-row">
+              <input type="text" id="ingredientInput" placeholder="Ingredient name">
+              <input type="text" id="ingredientUnitInput" placeholder="e.g. 2 tbsp, 100g, 1 cup">
+              <button type="button" id="addIngredientBtn">Add Ingredient</button>
+          </div>
 
-        </fieldset>
-       
-        <fieldset>
-            <label for="timeHours">
-                Hours:
-                <input type="number" id="timeHours" name="timeHours" min="0" placeholder="0">
-            </label>
+          <ul id="ingredientsList"></ul>
 
-
-            <label for="timeMinutes">
-                Minutes:
-                <input type="number" id="timeMinutes" name="timeMinutes" min="0" max="59" placeholder="30">
-            </label>
+          <!-- Steps Input -->
+          <label for="stepInput">
+              Steps:
+              <input type="text" id="stepInput" name="steps" placeholder="Enter a step">
+              <button type="button" id="addStepBtn">Add</button>
+          </label>
+          <ol id="stepsList"></ol> 
         </fieldset>
 
+ 
+        <fieldset>          
+          <label for="timeHours">
+              Hours:
+              <input type="number" id="timeHours" name="timeHours" min="0" placeholder="0">
+          </label>
 
-
-
+          <label for="timeMinutes">
+              Minutes:
+              <input type="number" id="timeMinutes" name="timeMinutes" min="0" max="59" placeholder="30">
+          </label>
+        </fieldset>
+          
         <!-- Create Card Button -->
         <button type="submit">Create Recipe</button>
     </form>
-   
+
     <br>
     <!-- Adds search bar -->
     <search>
-        <input type = "search" placeholder="Search">
+        <input type="search" placeholder="Search">
     </search>
-   
+
     <!-- Cards Are Populated Here -->
     <main id="cardsContainer"></main>
+
+    <!-- THANH PROOOOOOOOO -->
+
+    <!-- Meal Planner Controls -->
+    <section id="meal-planner">
+        <h2>Meal Planner</h2>
+
+        <!-- Create Meal button -->
+        <button id="create-meal-btn">Create Meal</button>
+
+        <!-- Show meal name input and Save button after selection begins -->
+        <div id="meal-controls" style="display: none; margin-top: 10px;">
+            <input type="text" id="meal-name-input" placeholder="Enter meal name" required>
+            <button id="save-meal-btn">Save Meal</button>
+        </div>
+
+        <!-- Container that lists created meals -->
+        <div id="meal-list-container" style="margin-top: 20px;">
+            <h3>Created Meals:</h3>
+            <ul id="meal-list"></ul>
+        </div>
+    </section>
+
+    <!-- Container where recipe cards will be shown -->
+    <main id="cardsContainer"></main>
+
+    <!-- Container where selected meal cards will be shown -->
+    <section id="meal-display-container" style="margin-top: 20px;">
+        <h3>Meal Preview:</h3>
+        <div id="meal-cards-display"></div>
+    </section>
+
+    <!-- THANH PROOOOOOOOOOO -->
 </body>
+
 </html>
