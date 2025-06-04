@@ -73,25 +73,30 @@ function renderCalendar(date) {
           return timeA.localeCompare(timeB); // sort by HH:MM
         });
 
-      let recipes = [];
-      for (const key of matchingKeys) {
-        const stored = localStorage.getItem(key).split(';');
-        recipes.push(...stored);
-      }
+        let recipeObjects = [];
+        for (const key of matchingKeys) {
+          const time = key.split(' ')[1]; // "HH:MM"
+          const stored = localStorage.getItem(key).split(';');
+          for (const r of stored) {
+            recipeObjects.push({ name: r, time });
+          }
+        }
+
+        // Determine how many to show based on screen width
+        let limit = 2;
+        if (window.innerWidth >= 1600) {
+          limit = 5;
+        } else if (window.innerWidth >= 1200) {
+          limit = 4;
+        } else if (window.innerWidth >= 768) {
+          limit = 3;
+        }
+
+        const recipeHtml = recipeObjects.slice(0, limit)
+          .map(({ name, time }) => getRecipeBlockHtml(name, time))
+          .join('');
+
       
-      // Determine how many to show based on screen width
-      let limit = 2;
-      if (window.innerWidth >= 1600) {
-        limit = 5;
-      } else if (window.innerWidth >= 1200) {
-        limit = 4;
-      } else if (window.innerWidth >= 768) {
-        limit = 3;
-      }
-
-      // Limit number of displayed recipe blocks
-      const recipeHtml = recipes.slice(0, limit).map(r => getRecipeBlockHtml(r)).join('');
-
       calendarGrid.innerHTML += `
       <div class="day" data-date="${dateKey}">
         <div class="day-number">${i}</div>
@@ -314,10 +319,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 
-function getRecipeBlockHtml(recipeName) {
+function getRecipeBlockHtml(recipeName, time='') {
   return `
     <div class="note-block">
-      <span class="recipe-name">${recipeName}</span>
+      <span class="recipe-name">${time ? time + ' – ' : ''}${recipeName}</span>
       <button class="delete-recipe" title="Delete">&times;</button> <!-- X icon -->
     </div>`;
 
