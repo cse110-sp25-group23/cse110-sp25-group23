@@ -64,13 +64,19 @@ function renderCalendar(date) {
     // fill in actual day cells
     for (let i = 1; i <= daysInMonth; i++) {
       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+      // Collect keys for this date and sort them by time
+      const matchingKeys = Object.keys(localStorage)
+        .filter(k => /^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' '))
+        .sort((a, b) => {
+          const timeA = a.split(' ')[1];
+          const timeB = b.split(' ')[1];
+          return timeA.localeCompare(timeB); // sort by HH:MM
+        });
+
       let recipes = [];
-      // Check if any recipe in localStorage matches this date
-      for (let k in localStorage) {
-        if (/^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' ')) {
-          const stored = localStorage.getItem(k).split(';');
-          recipes.push(...stored);
-        }
+      for (const key of matchingKeys) {
+        const stored = localStorage.getItem(key).split(';');
+        recipes.push(...stored);
       }
       
       // Determine how many to show based on screen width
