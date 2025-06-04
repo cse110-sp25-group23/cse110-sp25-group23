@@ -4,40 +4,36 @@
   <meta charset="UTF-8" />
   <title>Your Shopping List</title>
 
+  <!-- 1. Import the “Just Another Hand” font -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap"
     rel="stylesheet"
   />
 
+  <!-- 2. Inline CSS with larger fonts & spacing (same as before) -->
   <style>
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Just Another Hand', cursive;
       background: #f7f7f7;
       margin: 0;
       padding: 2rem;
       display: flex;
       justify-content: center;
     }
-
     .container {
       max-width: 600px;
       width: 100%;
     }
-
     h1 {
-      font-size: 2.5rem; /* Larger heading */
+      font-size: 2.5rem;
       margin-bottom: 1rem;
       text-align: center;
-      /* You can optionally bump up the weight for the heading: */
-      font-weight: 600;
     }
-
     ul {
       list-style: none;
       padding: 0;
       margin-bottom: 1.5rem;
     }
-
     li {
       display: flex;
       justify-content: space-between;
@@ -47,49 +43,39 @@
       border-radius: 6px;
       padding: 1rem 1.5rem;
       margin-bottom: 0.75rem;
-      font-size: 1.25rem; /* Larger item text */
-      font-weight: 400;
+      font-size: 1.25rem;
     }
-
     span.item-name {
       flex: 1;
     }
-
     .item-buttons button {
-      font-size: 1rem; /* Button text */
+      font-size: 1rem;
       padding: 0.6rem 1rem;
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.2s ease;
       margin-left: 0.5rem;
-      font-weight: 600;
     }
-
     .buy-item {
       background-color: #007bff;
       color: #fff;
       border: none;
     }
-
     .buy-item:hover {
       background-color: #0056b3;
     }
-
     .remove {
       background-color: #dc3545;
       color: #fff;
       border: none;
     }
-
     .remove:hover {
       background-color: #c82333;
     }
-
     .actions {
       display: flex;
       justify-content: center;
     }
-
     #clear {
       background-color: #28a745;
       color: #fff;
@@ -99,9 +85,7 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.2s ease;
-      font-weight: 600;
     }
-
     #clear:hover {
       background-color: #218838;
     }
@@ -125,29 +109,25 @@
 
     /**
      * Renders all items in the cart.
-     * If qty/unit are missing, falls back to just the name.
-     * Also logs each item’s data so you can inspect if something is undefined.
+     * If qty ≤ 1 or unit is missing, fall back to just the name.
+     * Only quantities greater than 1 will show the number.
      */
     function render() {
       ul.innerHTML = ''; // Clear existing list
 
       Cart.list().forEach((item) => {
-        const { id, name, qty, unit } = item;
-
-        console.log('Rendering item from cart:', item);
-        // If name itself is missing, you’ll see “undefined” here—meaning cart.js
-        // didn’t actually store a name. That would be a separate bug to fix.
+        const { name, qty, unit } = item;
 
         const li = document.createElement('li');
-        li.dataset.id = id;
-        li.dataset.name = name; 
+        // Now we store the ingredient’s name in data-name only
+        li.dataset.name = name;
 
-        // If qty or unit is missing (undefined/null/empty), we still show the name
-        const safeQty  = (qty !== undefined && qty !== null) ? qty : '';
-        const safeUnit = unit || '';
+        // Only show quantity if > 1
+        const safeQty = (qty !== undefined && qty > 1) ? qty : '';
+        const safeUnit = safeQty ? (unit || '') : '';
         const displayText = safeQty
           ? `${safeQty} ${safeUnit} ${name}`
-          : name || '(no name)';
+          : (name || '(no name)');
 
         li.innerHTML = `
           <span class="item-name">${displayText}</span>
@@ -160,23 +140,22 @@
       });
     }
 
-    // Delegate click events inside the UL
+    // Delegate clicks inside the UL
     ul.addEventListener('click', (e) => {
       const li = e.target.closest('li');
-      if (!li) return; // clicked outside any <li>
+      if (!li) return;
 
       // 1) Remove single item
       if (e.target.matches('.remove')) {
-        const id = li.dataset.id;
-        Cart.remove(id);
+        const ingredientName = li.dataset.name;
+        Cart.removeByName(ingredientName);
         return;
       }
 
       // 2) Buy this single item on Instacart
       if (e.target.matches('.buy-item')) {
         const rawName = li.dataset.name;
-        console.log('Redirecting to Instacart for:', rawName);
-        const query = encodeURIComponent((rawName || '').trim());
+        const query = encodeURIComponent(rawName.trim());
         window.location.href = `https://www.instacart.com/store/s?k=${query}`;
       }
     });
