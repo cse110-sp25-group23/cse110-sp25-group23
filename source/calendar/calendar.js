@@ -63,47 +63,47 @@ function renderCalendar(date) {
 
     // fill in actual day cells
     for (let i = 1; i <= daysInMonth; i++) {
-    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+      const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+      // Collect keys for this date and sort them by time
+      const matchingKeys = Object.keys(localStorage)
+        .filter(k => /^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' '))
+        .sort((a, b) => {
+          const timeA = a.split(' ')[1];
+          const timeB = b.split(' ')[1];
+          return timeA.localeCompare(timeB); // sort by HH:MM
+        });
 
-    // Get matching keys for this date and sort them by time
-    const matchingKeys = Object.keys(localStorage)
-      .filter(k => /^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' '))
-      .sort((a, b) => {
-        const timeA = a.split(' ')[1];
-        const timeB = b.split(' ')[1];
-        return timeA.localeCompare(timeB);
-      });
+        let recipeObjects = [];
+        for (const key of matchingKeys) {
+          const time = key.split(' ')[1]; // "HH:MM"
+          const stored = localStorage.getItem(key).split(';');
+          for (const r of stored) {
+            recipeObjects.push({ name: r, time });
+          }
+        }
 
-    let recipeObjects = [];
-    for (const key of matchingKeys) {
-      const time = key.split(' ')[1]; // "HH:MM"
-      const stored = localStorage.getItem(key).split(';');
-      for (const r of stored) {
-        recipeObjects.push({ name: r, time });
-      }
-    }
+        // Determine how many to show based on screen width
+        let limit = 2;
+        if (window.innerWidth >= 1600) {
+          limit = 5;
+        } else if (window.innerWidth >= 1200) {
+          limit = 4;
+        } else if (window.innerWidth >= 768) {
+          limit = 3;
+        }
 
-    // Determine how many to show based on screen width
-    let limit = 2;
-    if (window.innerWidth >= 1600) {
-      limit = 5;
-    } else if (window.innerWidth >= 1200) {
-      limit = 4;
-    } else if (window.innerWidth >= 768) {
-      limit = 3;
-    }
+        const recipeHtml = recipeObjects
+          .map(({ name, time }) => getRecipeBlockHtml(name, time))
+          .join('');
 
-    const recipeHtml = recipeObjects.slice(0, limit)
-      .map(({ name, time }) => getRecipeBlockHtml(name, time))
-      .join('');
-
-    calendarGrid.innerHTML += `
+      
+      calendarGrid.innerHTML += `
       <div class="day" data-date="${dateKey}">
         <div class="day-number">${i}</div>
         <div class="notes-container">${recipeHtml}</div>
       </div>`;
-    }
 
+    }
 
   // WEEK VIEW 
   // displays 7 days across and 24 hrs vertically per day 
@@ -194,8 +194,6 @@ function renderCalendar(date) {
         const recipeList = recipes.split(';');
         slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
       }
-
-
 
       calendarGrid.appendChild(slot);
     }
@@ -318,15 +316,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Helper function to generate HTML for a recipe block
-function getRecipeBlockHtml(recipeName, time = '') {
+// 
+function getRecipeBlockHtml(recipeName, time='') {
   return `
     <div class="note-block">
       <span class="recipe-name">${time ? time + ' – ' : ''}${recipeName}</span>
-      <button class="delete-recipe" title="Delete">&times;</button>
+      <button class="delete-recipe" title="Delete">&times;</button> <!-- X icon -->
     </div>`;
-}
 
+    // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
+}
 
 // Delete recipe handler
 document.addEventListener('click', (e) => {
@@ -369,6 +368,13 @@ document.addEventListener('click', (e) => {
     renderCalendar(currentDate);
   }
 });
+
+
+// Re-render calendar when screen is resized to apply new recipe limits
+window.addEventListener('resize', () => {
+  renderCalendar(currentDate);
+});
+
 
 
 // view recipe on card click

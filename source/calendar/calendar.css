@@ -527,11 +527,12 @@ nav a:hover{
   padding: 1px 2px;
   max-width: 95%;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-x: auto;
   line-height: 1.2;
   max-height: 30px; 
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Recipe block in week and day view */
@@ -703,10 +704,11 @@ nav a:hover{
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 2px 2px 32px 2px; 
+  padding: 2px; 
   box-sizing: border-box;
   border: none;
   overflow-y: auto; 
+  max-height: calc(100% - 35px);
 }
 
 .calendar-grid.month-view .day .day-number {
@@ -760,11 +762,6 @@ nav a:hover{
 
 
 /* DEBUGGING */
-
-/* Limit month view to show only first two recipe cards */
-.calendar-grid.month-view .notes-container .note-block:nth-of-type(n+3) {
-  display: none;
-}
 
 /* === footer === */
 .site-footer {
