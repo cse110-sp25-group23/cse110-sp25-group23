@@ -73,9 +73,21 @@ function renderCalendar(date) {
         }
       }
       
-      // renders first 2-3 recipes in the cell as blocks
-      const recipeHtml = recipes.slice(0, 3).map(r => getRecipeBlockHtml(r)).join('');
-      calendarGrid.innerHTML += `<div class="day" data-date="${dateKey}">
+      // Determine how many to show based on screen width
+      let limit = 2;
+      if (window.innerWidth >= 1600) {
+        limit = 5;
+      } else if (window.innerWidth >= 1200) {
+        limit = 4;
+      } else if (window.innerWidth >= 768) {
+        limit = 3;
+      }
+
+      // Limit number of displayed recipe blocks
+      const recipeHtml = recipes.slice(0, limit).map(r => getRecipeBlockHtml(r)).join('');
+
+      calendarGrid.innerHTML += `
+      <div class="day" data-date="${dateKey}">
         <div class="day-number">${i}</div>
         <div class="notes-container">${recipeHtml}</div>
       </div>`;
@@ -349,28 +361,11 @@ document.addEventListener('click', (e) => {
 });
 
 
+// Re-render calendar when screen is resized to apply new recipe limits
+window.addEventListener('resize', () => {
+  renderCalendar(currentDate);
+});
 
-// // Edit recipe
-// document.addEventListener('click', (e) => {
-//   if (e.target.classList.contains('edit-recipe')) {
-//     e.stopPropagation();
-//     const note = e.target.closest('.note-block');
-//     const oldRecipeName = note.querySelector('.recipe-name').textContent;
-//     const newRecipeName = prompt('Edit recipe name:', oldRecipeName);
-//     if (!newRecipeName) return;
-
-//     const parentDay = note.closest('.day');
-//     const dateKey = parentDay.dataset.date;
-//     const oldKey = `${dateKey} ${oldRecipeName}`;
-//     const newKey = `${dateKey} ${newRecipeName}`;
-
-//     const data = localStorage.getItem(oldKey);
-//     localStorage.removeItem(oldKey);
-//     localStorage.setItem(newKey, data);
-
-//     renderCalendar(currentDate);
-//   }
-// });
 
 
 // view recipe on card click
