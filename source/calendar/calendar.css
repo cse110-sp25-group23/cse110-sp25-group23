@@ -104,62 +104,7 @@
   padding-bottom: 40px; 
 }
 
-/*=== NAV BAR ===*/
-/*
-.main-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #ffe49e;
-  font-family: Arial;
-  padding: 10px 20px;
-}
-
-.main-nav a {
-  margin: 0 10px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: #fff3cc;
-  color: black;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.main-nav a:hover {
-  background: #fcefb2;
-}
-
-.main-nav input[type="text"] {
-  width: 100%;
-  max-width: 300px;
-  margin-left: auto;
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.nav-icon {
-  mix-blend-mode: multiply;
-  width: 20px;      
-  height: 20px;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-
-.main-nav .search-bar {
-  max-width: 300px;
-  margin-left: auto; 
-}
-
-.search-bar {
-  flex: 1; 
-  display: flex;
-  justify-content: flex-end; 
-}
-*/
 /* Desktop Navigation */
-
 
 body {
   font-family: var(--font);
@@ -508,8 +453,6 @@ nav a:hover{
   text-align: center;
   width: 100%;
   box-sizing: border-box;
-  /* overflow-y: auto;                  for scrollability
-  max-height: calc(100vh - 120px); */
 }
 
 /* Row displaying the days of the week (Sun, Mon, ...) */
@@ -540,7 +483,6 @@ nav a:hover{
 /* Day cells styling */
 .day {
   cursor: pointer;
-  /* transition: background 0.1s ease; */
 }
 
 /* Hover effect for day cells */
@@ -735,6 +677,13 @@ nav a:hover{
   }
 }
 
+/* === RESPONSIVE RECIPE BLOCK LIMITS === */
+
+@media (max-width: 768px) {
+  .calendar-grid.month-view .day .notes-container {
+    max-height: 90px;
+  }
+}
 
 
 /* == ADDING RECIPES ==*/
@@ -750,15 +699,14 @@ nav a:hover{
   top: 30px;
   left: 0;
   right: 0;
-  bottom: 0;
-  max-height: 75px;
+  bottom: 5px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 0 2px;
+  padding: 2px 2px 32px 2px; 
   box-sizing: border-box;
-  overflow: hidden;
   border: none;
+  overflow-y: auto; 
 }
 
 .calendar-grid.month-view .day .day-number {
