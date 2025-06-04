@@ -8,7 +8,8 @@ main {
 
 
 body {
-    background-image: url("wood-texture.jpg");
+    background-color: #faeac1;
+    accent-color: #e9dab4;
     background-size: cover;
     
 }
@@ -50,6 +51,10 @@ body {
     margin: 1rem;
     will-change: transform;
 }
+
+.flip-card:fullscreen {
+    background-color: pink;
+}
   
   /*For positioning front and back side of card */
   
@@ -65,7 +70,6 @@ body {
   
 .flip-card:hover {
     transform: scale(1.05);
-    border: 2px solid white;
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.5); /* optional glow effect */
     z-index: 1; /* optional: brings hovered card to front if overlapping */
 }
@@ -82,30 +86,42 @@ body {
   
 .flip-card-front, .flip-card-back {
     position: absolute;
+    border: 2px solid black;
     width: 100%;
     height: 100%;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
     border-radius: 16px;
-    background-image: url("old-paper-texture.avif");
+    background-color: #ffffff;
     background-size: 500px 300px;
 }
   
   
 .flip-card-front {
-    background-color: bisque;
+    background-color: #ffffff;
     padding: 20px;
     overflow: hidden;
 }
   
   
 .flip-card-back {
-    background-color:aqua;
+    background-color:#ffffff;
     transform: rotateY(180deg);
     
     text-align: center;
     overflow: scroll;
 }
+
+/* .flip-card:fullscreen .flip-card-inner {
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  } */
 
 /*Ingredient Scroll Function*/
 

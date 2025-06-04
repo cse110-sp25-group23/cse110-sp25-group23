@@ -16,6 +16,7 @@
         <div class="flip-card">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
+                    <button class="toggle">Toggle Fullscreen</button>
                     <div class = "image">
                         <img src = "oreo-pie.jpg" alt = "oreo pie" style ="width: 200px; height: 200px" class = "recipe-image">
                     </div>
@@ -68,6 +69,19 @@
                   }, 1000); // Match your CSS transition duration
                 });
               });
+            });
+
+            document.querySelectorAll(".toggle").forEach(button => {
+                button.addEventListener("click", (event) => {
+                    event.stopPropagation(); // Prevents the card click from flipping
+
+                    const card = button.closest(".flip-card");
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    } else {
+                        card.requestFullscreen();
+                    }
+                });
             });
         </script>
     
