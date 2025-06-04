@@ -6,7 +6,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint .",
     "stylelint": "stylelint ./__tests__/*.css ./source/*.css",
-    "htmlhint": "htmlhint ."
+    "htmlhint": "htmlhint .",
+    "test:calendar": "node --experimental-vm-modules node_modules/.bin/jest source/calendar/testing/calendarUtils.test.js --config jest.config.js"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
