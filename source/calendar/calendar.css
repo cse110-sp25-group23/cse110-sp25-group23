@@ -6,23 +6,93 @@
   --red: #ba3226;
   --text-dark: #000000;
   --card-bg: #ffffff ;
-  --font: inter;
+  --font: 'Inter';
   --fontlabel: pacifico-regular;
+}
+
+/* === Previous/Next Buttons === */
+.calendar-header button {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--accent);
+  color: var(--text-dark);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calendar-header button:hover {
+  background-color: var(--redlight);
+  color: #fff;
+  border-color: var(--red);
+}
+/* Dropdown and date/time inputs */
+#assign-form select,
+#assign-form input[type="date"],
+#assign-form input[type="time"] {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  padding: 10px 16px;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: var(--text-dark);
+  transition: border 0.2s ease;
+}
+
+#assign-form select:focus,
+#assign-form input[type="date"]:focus,
+#assign-form input[type="time"]:focus {
+  border-color: var(--red);
+  outline: none;
+}
+
+#assign-form button[type="submit"] {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  padding: 10px 20px;
+  background-color: var(--red);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+#assign-form button[type="submit"]:hover {
+  background-color: var(--redlight);
+  color: var(--card-bg)
 }
 
 /* === DEFAULT === */
 * {
-  font-family: Helvetica;
+  font-family: var(--font);
   /* background-color: #f7f5ef; */  /* I commented this out as it was overriding basic css - anu, let me know if any issue arises*/
-  color: black;
+  color: var(--text-dark);
   font-size: 12pt;
 }
 
 /* Add recipe styling */ 
 #assign-form {
-  font-family: Arial;
+  font-family: var(--font);
   padding: 6px 20px;
+    display: flex;
+    flex-wrap: wrap;           /* wrap inputs nicely on smaller screens */
+    gap: 10px;                 /* space between inputs */
+    justify-content: center;  /* center inputs inside the form */
+    align-items: center;
+  text-align: center;
 }
+
+
+.add-recipes {
+  display: flex;
+  justify-content: center; /* horizontally center */
+  margin: 20px 0;
+} 
 
 /* Container for the full calendar component */
 #calendar {
@@ -30,7 +100,8 @@
   max-width: 100%;
   padding: 1rem 8px;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: var(--font);
+  padding-bottom: 40px; 
 }
 
 /*=== NAV BAR ===*/
@@ -107,13 +178,6 @@ h1 {
   color: #000000;
   font-family: var(--font), Arial;
 }
-
-
-.cart img{
-  margin-left: 0px;
-  height: 150px;
-}
-
 
 /* === search bar === */
 #search-field-small {
@@ -199,13 +263,47 @@ header, nav {
   
 }
 
+/** === nav flexibility === **/
 .nav-tabs {
   display: flex;
-  justify-content: center;
-  width: 100%;
-  background-color: var(--accent);
+  flex-wrap: wrap;               /* Allow content to wrap on small screens */
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  max-width: 1200px;             /* Limit total width */
+  margin: 0 auto;                /* Center the nav bar horizontally */
   border: 10px solid var(--red);
-  gap: 30px;
+  border-radius: 2rem;
+  background-color: var(--card-bg);
+  gap: 1rem;
+  box-sizing: border-box;        /* Include padding/border in total size */
+  width: 95%;                    /* Responsive width that doesn't overflow */
+}
+
+.nav-tabs .logo img {
+  height: 80px;
+  max-width: 100%;
+}
+
+.nav-tabs h1 {
+  font-size: 2rem;
+  white-space: nowrap;
+}
+
+.nav-tabs [role="search"] {
+  flex-grow: 1;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.nav-tabs a,
+.nav-tabs .cart img {
+  max-width: 100%;
+}
+#search-field-small {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .desktop-nav .nav-tabs a {
@@ -222,6 +320,7 @@ header, nav {
 }
 
 .mobile-nav {
+  margin-top: 300px;
   display: none;
   position: fixed;
   bottom: 0;
@@ -241,27 +340,31 @@ header, nav {
   height: 26px;
   
 }
+.mobile-header {
+  display: none; /* hidden by default */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: var(--bg-color);
+}
+
+.mobile-header img {
+  height: 60px;
+}
+
+.mobile-header h1 {
+  font-family: "Pacifico", cursive;
+  font-size: 1.8rem;
+  color: var(--text-dark);
+  margin: 0;
+}
 
 nav a:hover{
     background-color: #d3c7aa;
     border-radius: 10px;
     transition: all 0.3s ease; 
 
-}
-
-/* Responsive Rules */
-@media (max-width: 1300px) {
-  .desktop-nav {
-    display: none;
-  }
-
-  .mobile-nav {
-    display: flex;
-  }  
-}
-
-.Themes {
-  width: 100%;
 }
 
 
@@ -298,6 +401,7 @@ nav a:hover{
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 /* Default: hide mobile nav on larger screens */
 .mobile-nav {
   display: none;
@@ -320,7 +424,7 @@ nav a:hover{
   }
 
   .mobile-nav a img {
-    height: 26px;
+    height: 30px;
     margin: 0 6px;
   }
 
@@ -329,11 +433,16 @@ nav a:hover{
     background-color: var(--accent);
     display: none;
   }
+  
+  .mobile-header {
+    display: flex;
+  }
 }
 
 #brand{
   font-family: "Pacifico", cursive;
 }
+
 
 /* === CALENDAR TOGGLE === */
 
@@ -343,6 +452,15 @@ nav a:hover{
   margin: 10px 0;
   padding: 10px 20px;
   gap: 10px;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
 }
 
 /* Toggle view button appearance */
@@ -353,7 +471,7 @@ nav a:hover{
   background: #f9f9f9;
   cursor: pointer;
   font-weight: bold;
-  font-family: 'Arial';
+  font-family: 'Inter';
 }
 
 .calendar-toggle button:hover, 
@@ -363,7 +481,7 @@ nav a:hover{
 
 .calendar-toggle button.active {
   font-style: oblique;
-  border: 2px solid #d4a03d;
+  border: 2px solid var(--red);
 }
 
 /* === CALENDAR HEADER === */
@@ -390,6 +508,8 @@ nav a:hover{
   text-align: center;
   width: 100%;
   box-sizing: border-box;
+  /* overflow-y: auto;                  for scrollability
+  max-height: calc(100vh - 120px); */
 }
 
 /* Row displaying the days of the week (Sun, Mon, ...) */
@@ -574,7 +694,7 @@ nav a:hover{
 .calendar-grid.week-view {
   display: grid;
   grid-auto-rows: var(--hour-height);
-  height: calc(24 * var(--hour-height));
+  min-height: calc(24 * var(--hour-height));
 }
 
 /* Hour label */
@@ -700,6 +820,7 @@ nav a:hover{
 
 /* === footer === */
 .site-footer {
+  margin-top: 10px;
   background-color: var(--accent);
   color: var(--text-dark);
   text-align: center;
