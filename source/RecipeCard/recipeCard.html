@@ -1,107 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Card</title>
-    <link rel="stylesheet" href="../home-page/styles.css"></link>
-    <link rel = "stylesheet" href="recipeCard.css">
-    <script src="recipeCard.js" type="module"></script>
-    <script src="../LocalStorage/storage.js" type="module"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Card</title>
+
+  <!-- Link to your existing homepage + card CSS -->
+  <link rel="stylesheet" href="../home-page/styles.css" />
+  <link rel="stylesheet" href="recipeCard.css" />
+
+  <!-- We’ll import recipeCard.js (below) and also our Cart helper -->
+  <script src="../LocalStorage/storage.js" type="module"></script>
+  <script src="recipeCard.js" type="module" defer></script>
+
+  <!-- EXTRA: Inline style so that the shopping‐cart icon is always top-right -->
+  <style>
+    body {
+      position: relative; /* allow absolute positioning inside body */
+    }
+    /* Top-right corner: shopping cart link */
+    .shopping-cart-link {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100; /* on top of everything */
+      width: 40px;
+      height: 40px;
+    }
+    .shopping-cart-link img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h1>Create a Recipe Card!</h1>
+  <!-- 1) SHOPPING‐CART ICON in the top-right -->
+  <a href="../shoppingCart/shopping.html" class="shopping-cart-link" title="Go to Shopping Cart">
+    <img
+      src="https://png.pngtree.com/png-clipart/20190920/original/pngtree-shopping-cart-convenient-icon-png-image_4637407.jpg"
+      alt="Shopping Cart"
+    />
+  </a>
 
-    <form id="new-recipe">
-        <!-- Recipe Name/Title -->
-        <label for="name"> 
-            Recipe Name:
-            <input type="text" name="name" id ="recipeName" placeholder="Recipe Name" required>
-        </label>
+  <h1>Create a Recipe Card!</h1>
 
-        <!-- Author Name -->
-        <label for="author">
-            Author:
-            <input type="text" name="author" id="authorName" placeholder="Author Name" required>
-        </label>
-        
-        <!-- Radio Buttons for image input type (radio buttons can only have one option selected) -->
-        <label>
-        <input type="radio" name="imageSource" value="file" id="imageSourceFile" checked>
-            Upload file
-        </label>
+  <form id="new-recipe">
+    <!-- … (all your existing form fields) … -->
+    <label for="name">
+      Recipe Name:
+      <input type="text" name="name" id="recipeName" placeholder="Recipe Name" required />
+    </label>
 
-        <label>
-            <input type="radio" name="imageSource" value="url" id="imageSourceURL">
-            Image URL
-        </label>
+    <label for="author">
+      Author:
+      <input type="text" name="author" id="authorName" placeholder="Author Name" required />
+    </label>
 
-        <!-- File Upload Input -->
-        <label id="fileInputLabel">
-            <input type="file" name="imageFile" id="imageFile" accept="image/*">
-        </label>
+    <label>
+      <input
+        type="radio"
+        name="imageSource"
+        value="file"
+        id="imageSourceFile"
+        checked
+      /> Upload file
+    </label>
+    <label>
+      <input type="radio" name="imageSource" value="url" id="imageSourceURL" /> Image URL
+    </label>
 
-        <!-- Image URL Input -->
-        <label id="urlInputLabel" style="display: none;">
-            Image URL:
-            <input type="url" name="imageURL" id="imageURL" placeholder="Image URL">
-        </label>
+    <label id="fileInputLabel">
+      <input type="file" name="imageFile" id="imageFile" accept="image/*" />
+    </label>
 
-        
-        <!-- Custom and Predefined Tags (Predefined tags = Difficulty and displays as an option list) -->
-        <label for="tags">
-            Tags: 
-            <select name="difficulty" id="tagsDropdown">
-                <option value="">Select a Tag</option>
-                <option value="Easy">Easy</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Pro">Pro</option>
-            </select>
-            <input name="tags" id="customTag" placeholder="Custom Tag">
-        </label>
-        
-        <!-- Ingredients Input -->
-        <div class="ingredient-row">
-            <input type="text" id="ingredientInput" placeholder="Ingredient name" >
-            <input type="text" id="ingredientUnitInput" placeholder="e.g. 2 tbsp, 100g, 1 cup">
-            <button type="button" id="addIngredientBtn">Add Ingredient</button>
-        </div>
-        
-        <ul id="ingredientsList"></ul>
+    <label id="urlInputLabel" style="display: none;">
+      Image URL:
+      <input type="url" name="imageURL" id="imageURL" placeholder="Image URL" />
+    </label>
 
-        
-        <!-- Steps Input -->
-        <label for="stepInput">
-            Steps:
-            <input type="text" id="stepInput" name="steps" placeholder="Enter a step">
-            <button type="button" id="addStepBtn">Add</button>
-        </label>
-        <ol id="stepsList"></ol>
+    <label for="tags">
+      Tags:
+      <select name="difficulty" id="tagsDropdown">
+        <option value="">Select a Tag</option>
+        <option value="Easy">Easy</option>
+        <option value="Advanced">Advanced</option>
+        <option value="Pro">Pro</option>
+      </select>
+      <input name="tags" id="customTag" placeholder="Custom Tag" />
+    </label>
 
-        <label for="timeHours">
-            Hours:
-            <input type="number" id="timeHours" name="timeHours" min="0" placeholder="0">
-        </label>
+    <!-- INGREDIENT ROW: name + qty/unit, plus Add Ingredient -->
+    <div class="ingredient-row">
+      <input
+        type="text"
+        id="ingredientInput"
+        placeholder="Ingredient name"
+        required
+      />
+      <input
+        type="text"
+        id="ingredientUnitInput"
+        placeholder="e.g. 2 tbsp, 100g, 1 cup"
+      />
+      <button type="button" id="addIngredientBtn">Add Ingredient</button>
+    </div>
+    <ul id="ingredientsList"></ul>
 
-        <label for="timeMinutes">
-            Minutes:
-            <input type="number" id="timeMinutes" name="timeMinutes" min="0" max="59" placeholder="30">
-        </label>
+    <label for="stepInput">
+      Steps:
+      <input
+        type="text"
+        id="stepInput"
+        name="steps"
+        placeholder="Enter a step"
+      />
+      <button type="button" id="addStepBtn">Add</button>
+    </label>
+    <ol id="stepsList"></ol>
 
+    <label for="timeHours">
+      Hours:
+      <input
+        type="number"
+        id="timeHours"
+        name="timeHours"
+        min="0"
+        placeholder="0"
+      />
+    </label>
 
+    <label for="timeMinutes">
+      Minutes:
+      <input
+        type="number"
+        id="timeMinutes"
+        name="timeMinutes"
+        min="0"
+        max="59"
+        placeholder="30"
+      />
+    </label>
 
-        
-        <!-- Create Card Button -->
-        <button type="submit">Create Recipe</button> 
-    </form>
-    
-    <br>
-    <!-- Adds search bar -->
-    <search>
-        <input type = "search" placeholder="Search">
-    </search>
-    
-    <!-- Cards Are Populated Here -->
-    <main id="cardsContainer"></main>
+    <button type="submit">Create Recipe</button>
+  </form>
+
+  <br />
+
+  <search>
+    <input type="search" placeholder="Search" />
+  </search>
+
+  <!-- This is where all the <recipe-card> elements will be appended -->
+  <main id="cardsContainer"></main>
 </body>
 </html>
