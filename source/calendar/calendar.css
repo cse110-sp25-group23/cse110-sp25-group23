@@ -394,8 +394,7 @@ nav a:hover{
   padding: 1px 2px;
   max-width: 95%;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-x: auto;;
   line-height: 1.2;
   max-height: 30px; 
   cursor: pointer;
@@ -611,9 +610,5 @@ nav a:hover{
   right: 3px;
 }
 
-/* Show on hover */
-.note-block:hover button {
-  display: block; 
-}
 
 
