@@ -63,24 +63,47 @@ function renderCalendar(date) {
 
     // fill in actual day cells
     for (let i = 1; i <= daysInMonth; i++) {
-      const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-      let recipes = [];
-      // Check if any recipe in localStorage matches this date
-      for (let k in localStorage) {
-        if (/^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' ')) {
-          const stored = localStorage.getItem(k).split(';');
-          recipes.push(...stored);
-        }
+    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+
+    // Get matching keys for this date and sort them by time
+    const matchingKeys = Object.keys(localStorage)
+      .filter(k => /^\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}$/.test(k) && k.startsWith(dateKey + ' '))
+      .sort((a, b) => {
+        const timeA = a.split(' ')[1];
+        const timeB = b.split(' ')[1];
+        return timeA.localeCompare(timeB);
+      });
+
+    let recipeObjects = [];
+    for (const key of matchingKeys) {
+      const time = key.split(' ')[1]; // "HH:MM"
+      const stored = localStorage.getItem(key).split(';');
+      for (const r of stored) {
+        recipeObjects.push({ name: r, time });
       }
-      
-      // renders first 2-3 recipes in the cell as blocks
-      const recipeHtml = recipes.slice(0, 3).map(r => getRecipeBlockHtml(r)).join('');
-      calendarGrid.innerHTML += `<div class="day" data-date="${dateKey}">
+    }
+
+    // Determine how many to show based on screen width
+    let limit = 2;
+    if (window.innerWidth >= 1600) {
+      limit = 5;
+    } else if (window.innerWidth >= 1200) {
+      limit = 4;
+    } else if (window.innerWidth >= 768) {
+      limit = 3;
+    }
+
+    const recipeHtml = recipeObjects.slice(0, limit)
+      .map(({ name, time }) => getRecipeBlockHtml(name, time))
+      .join('');
+
+    calendarGrid.innerHTML += `
+      <div class="day" data-date="${dateKey}">
         <div class="day-number">${i}</div>
         <div class="notes-container">${recipeHtml}</div>
       </div>`;
-
     }
+
 
   // WEEK VIEW 
   // displays 7 days across and 24 hrs vertically per day 
@@ -295,16 +318,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// 
-function getRecipeBlockHtml(recipeName) {
+// Helper function to generate HTML for a recipe block
+function getRecipeBlockHtml(recipeName, time = '') {
   return `
     <div class="note-block">
-      <span class="recipe-name">${recipeName}</span>
-      <button class="delete-recipe" title="Delete">&times;</button> <!-- X icon -->
+      <span class="recipe-name">${time ? time + ' – ' : ''}${recipeName}</span>
+      <button class="delete-recipe" title="Delete">&times;</button>
     </div>`;
-
-    // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
 }
+
 
 // Delete recipe handler
 document.addEventListener('click', (e) => {
@@ -347,30 +369,6 @@ document.addEventListener('click', (e) => {
     renderCalendar(currentDate);
   }
 });
-
-
-
-// // Edit recipe
-// document.addEventListener('click', (e) => {
-//   if (e.target.classList.contains('edit-recipe')) {
-//     e.stopPropagation();
-//     const note = e.target.closest('.note-block');
-//     const oldRecipeName = note.querySelector('.recipe-name').textContent;
-//     const newRecipeName = prompt('Edit recipe name:', oldRecipeName);
-//     if (!newRecipeName) return;
-
-//     const parentDay = note.closest('.day');
-//     const dateKey = parentDay.dataset.date;
-//     const oldKey = `${dateKey} ${oldRecipeName}`;
-//     const newKey = `${dateKey} ${newRecipeName}`;
-
-//     const data = localStorage.getItem(oldKey);
-//     localStorage.removeItem(oldKey);
-//     localStorage.setItem(newKey, data);
-
-//     renderCalendar(currentDate);
-//   }
-// });
 
 
 // view recipe on card click
