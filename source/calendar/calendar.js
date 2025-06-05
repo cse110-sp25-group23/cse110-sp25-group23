@@ -22,6 +22,18 @@ function highlightActiveToggle() {
   });
 }
 
+// render a recipe block with name, author, and time
+function renderRecipeBlock({ name, author = '', durationMinutes = 60 }, topPercent = 0) {
+  const html = getRecipeBlockHtml(name, author);
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  const note = temp.firstElementChild;
+  note.style.position = 'absolute';
+  note.style.top = `${topPercent}%`;
+  note.style.height = `${(durationMinutes / 60) * 60}px`;
+  return note;
+}
+
 // renders calendar based on the current view
 // fills in cells using data from localStorage 
 function renderCalendar(date) {
@@ -92,17 +104,6 @@ function renderCalendar(date) {
           }
 
         }
-
-        // Determine how many to show based on screen width
-        let limit = 2;
-        if (window.innerWidth >= 1600) {
-          limit = 5;
-        } else if (window.innerWidth >= 1200) {
-          limit = 4;
-        } else if (window.innerWidth >= 768) {
-          limit = 3;
-        }
-
         const recipeHtml = recipeObjects
           .map(({ name, time }) => getRecipeBlockHtml(name, time))
           .join('');
@@ -160,30 +161,19 @@ function renderCalendar(date) {
             const minuteInKey = parseInt(k.split(':')[1]);
             if (hourInKey === h) {
               const stored = getStoredRecipeData(k);
-              stored.forEach(({ name, author }) => {
-                // const note = document.createElement('div');
-                // note.className = 'note';
-                // note.innerHTML = getRecipeBlockHtml(name, author);
+              stored.forEach(({ name, author, durationMinutes = 60 }) => {
+                // const html = getRecipeBlockHtml(name, author);
+                // const temp = document.createElement('div');
+                // temp.innerHTML = html;
+                const top = (minuteInKey / 60) * 100; // calculate top position as percentage
+                const note = renderRecipeBlock({name, author, durationMinutes }, top);
                 // note.style.position = 'absolute';
                 // note.style.top = `${(minuteInKey / 60) * 100}%`;
-                // slot.appendChild(note);
-
-                const html = getRecipeBlockHtml(name, author);
-                const temp = document.createElement('div');
-                temp.innerHTML = html;
-                const note = temp.firstElementChild;
-
-                note.style.position = 'absolute';
-                note.style.top = `${(minuteInKey / 60) * 100}%`;
                 slot.appendChild(note);
-
-
               });
             }
           }
         }
-
-
 
         calendarGrid.appendChild(slot);
       }
@@ -211,11 +201,17 @@ function renderCalendar(date) {
       slot.className = 'time-slot';
       slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
 
-      const recipes = localStorage.getItem(slot.dataset.datetime);
-      if (recipes) {
-        const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
-        slot.innerHTML = storedRecipes.map(({ name, author }) => getRecipeBlockHtml(name, author)).join('');
-      }
+      // const recipes = localStorage.getItem(slot.dataset.datetime);
+      // if (recipes) {
+      //   const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
+      //   slot.innerHTML = storedRecipes.map(({ name, author }) => getRecipeBlockHtml(name, author)).join('');
+      // }
+
+      const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
+      storedRecipes.forEach(({ name, author, durationMinutes = 60 }) => {
+        const note = renderRecipeBlock({ name, author, durationMinutes }, 0);
+        slot.appendChild(note);
+      });
 
       calendarGrid.appendChild(slot);
     }
@@ -224,6 +220,40 @@ function renderCalendar(date) {
 
 // inital render on page load
 renderCalendar(currentDate);
+
+// PATCHED form submission
+const assignForm = document.getElementById('assign-form');
+assignForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const recipeName = document.getElementById('recipe-select').value;
+  const date = document.getElementById('recipe-date').value;
+  const time = document.getElementById('recipe-time').value;
+  if (!recipeName || !date || !time) return;
+  const [y, m, d] = date.split("-");
+  const key = `${y}-${m}-${d} ${time}`;
+  const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
+  const selected = allRecipes.find(r => r.name === recipeName);
+  if (!selected) return;
+  const entry = {
+    name: selected.name,
+    author: selected.author,
+    durationMinutes: selected.durationMinutes || 60
+  };
+  let current = [];
+  try {
+    current = JSON.parse(localStorage.getItem(key)) || [];
+  } catch {
+    current = [];
+  }
+  const duplicate = current.find(r => r.name === entry.name && r.author === entry.author);
+  if (!duplicate) {
+    current.push(entry);
+    localStorage.setItem(key, JSON.stringify(current));
+  }
+  renderCalendar(currentDate);
+  assignForm.reset();
+});
+
 
 
 // Store recipe to localStorage under a specific key
@@ -305,50 +335,6 @@ function populateRecipeDropdown() {
 }
 
 populateRecipeDropdown();
-
-// form submit handler: saves the selected recipe to a specific date and time in localStorage
-const assignForm = document.getElementById('assign-form');
-
-assignForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const recipeName = document.getElementById('recipe-select').value;
-  const date = document.getElementById('recipe-date').value;
-  const time = document.getElementById('recipe-time').value;
-
-  if (!recipeName || !date || !time) return;
-
-  // Construct localStorage key: "YYYY-M-D HH:MM"
-  const [y, m, d] = date.split("-");
-  const key = `${y}-${m}-${d} ${time}`;
-  
-  // Save multiple recipes separated by ;
-  const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
-  const selected = allRecipes.find(r => r.name === recipeName);
-  if (!selected) return;
-
-  const entry = { name: selected.name, author: selected.author };
-
-  let current = [];
-  try {
-    current = JSON.parse(localStorage.getItem(key)) || [];
-  } catch {
-    current = [];
-  }
-
-  const duplicate = current.find(r => r.name === entry.name && r.author === entry.author);
-  if (!duplicate) {
-    current.push(entry);
-    localStorage.setItem(key, JSON.stringify(current));
-  }
-
-  // Refresh the calendar view to reflect changes
-  renderCalendar(currentDate);
-
-  // Optionally reset form
-  assignForm.reset();
-});
-
 
 // when clicked on day in month view, go to day view of that day
 calendarGrid.addEventListener('click', (e) => {
