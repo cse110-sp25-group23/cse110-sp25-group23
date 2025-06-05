@@ -124,5 +124,23 @@ export function getRecipeCardTemplateCSS() {
             
             overflow: scroll;
         }
+
+        
+        .ingredients-scroll {
+            max-height: 7rem; /* adjust as needed */
+            max-width: 14rem;
+            overflow-y: scroll;
+            padding-right: 0.5em; /* optional: avoids cutting off scrollbar */
+            border: 3px ridge var(--red);
+        }
+
+        .ingredients-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ingredients-scroll::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 4px;
+        }
     `;
 }
