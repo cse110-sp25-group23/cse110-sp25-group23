@@ -1,17 +1,16 @@
 # Calendar Feature
+Contributors: Anna (calendar), Fnu Anu (Navbar, footer, local storage, debugs)
 
-This is the documentation for the Calendar feature. - Anna 
+Note: The main file here is calender.html, calendar.css and calendar.js.
+Additional Folders: Images folder contains icons for mobile navigation bar to 
+facilitate smaller screen sizes and website logo. 
 
-**Context:** We want users to be able to meal plan using a calendar view. This requires viewing meals planned for a day, week, or month.
-
-**Notes:**
-- [ ] Need to fix the hover fctn for week and day.
-- [ ] create current day/week/month toggle?
-- [ ] clear the time glitch. stuck.
+**Context:** We want users to be able to meal plan using a calendar view. 
+This requires viewing meals planned for a day, week, or month.
 
 ---
-**HEX Codes Used:**
-- soft yellow: #fcefb2
-- darker yellow: #ffe49e
-- off-white: #f7f5ef
-- header background from main: #fff3cc
+**Main functionalities or points to consider:**
+Describe functionalities - To anna
+---
+
+**Uniform Theme and navbar-footer used across the page as the whole website**

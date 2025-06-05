@@ -7,6 +7,7 @@ window.addEventListener('DOMContentLoaded', function() {
   // e.g. "2025-06-04"
   const todayStr = new Date().toLocaleDateString("en-CA"); 
   
+  //DELETE LATER
   // localStorage.setItem("2025-06-04 21:00", JSON.stringify({name:"Fnu"}));
   // localStorage.setItem("2025-06-04 12:00", JSON.stringify("yay"));
   // localStorage.setItem("2025-06-04 13:00", JSON.stringify("yup"));
@@ -28,18 +29,17 @@ window.addEventListener('DOMContentLoaded', function() {
       const meal = JSON.parse(localStorage.getItem(key));
 
       if (hour >= 5 && hour < 11) {
-        breakfastMeals.push(meal);
+        breakfastMeals.push({meal,hour});
       } else if (hour >= 11 && hour < 16) {
-        lunchMeals.push(meal);
+        lunchMeals.push({meal,hour});
       } else if (hour >= 16 && hour <= 23) {
-        dinnerMeals.push(meal);
+        dinnerMeals.push({meal,hour});
       }
     }
   }
 
 
   // Render to homepage
-  // add author later
   document.getElementById("breakfast").innerHTML = renderMealCards(breakfastMeals, "Breakfast");
   document.getElementById("lunch").innerHTML = renderMealCards(lunchMeals, "Lunch");
   document.getElementById("dinner").innerHTML = renderMealCards(dinnerMeals, "Dinner");
@@ -56,15 +56,18 @@ window.addEventListener('DOMContentLoaded', function() {
    */
   function renderMealCards(meals, label) {
     if (!meals || meals.length === 0){
-
       lower = label.toLowerCase();
       return `<h2>${label}</h2>`+`<p>No ${lower} scheduled.<br>Plan something delicious now!</p>`;
     } 
-    return `<h2>${label}</h2>` + meals.map(meal => `
-      <div class="meal-card">
-        <p>${typeof meal === 'string' ? meal : meal.name}</p>
-      </div>
-    `).join('');
+    return `<h2>${label}</h2>` + meals.map(item => {
+      const name = typeof item.meal === 'string' ? item.meal : item.meal.name;
+      const timeLabel = `${item.hour.toString().padStart(2, '0')}:00`;
+      return `
+        <div class="meal-card">
+          <p><b>${timeLabel}</b> — <i>${name}</i></p>
+        </div>
+      `;
+    }).join('\n');
   }
   
   // Extracting recipeCart saved Items
