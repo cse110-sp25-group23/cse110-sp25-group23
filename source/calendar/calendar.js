@@ -265,8 +265,14 @@ function renderCalendar(date) {
           const recipes = getStoredRecipeData(key);
           recipes.forEach(({ name, author, durationMinutes = 60 }) => {
             const heightPx = (durationMinutes / 60) * hourHeight;
-            const note = renderRecipeBlock({ name, author }, topPx, heightPx);
-            overlay.appendChild(note);
+            const slotIndex = hour;
+            const slot = document.querySelectorAll('.time-slot')[slotIndex];
+            if (slot) {
+              const offsetTop = (minute / 60) * hourHeight;
+              const note = renderRecipeBlock({ name, author }, offsetTop, heightPx);
+              slot.appendChild(note);
+            }
+
           });
         }
       });
