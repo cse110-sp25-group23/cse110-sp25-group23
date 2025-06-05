@@ -162,13 +162,8 @@ function renderCalendar(date) {
             if (hourInKey === h) {
               const stored = getStoredRecipeData(k);
               stored.forEach(({ name, author, durationMinutes = 60 }) => {
-                // const html = getRecipeBlockHtml(name, author);
-                // const temp = document.createElement('div');
-                // temp.innerHTML = html;
                 const top = (minuteInKey / 60) * 100; // calculate top position as percentage
                 const note = renderRecipeBlock({name, author, durationMinutes }, top);
-                // note.style.position = 'absolute';
-                // note.style.top = `${(minuteInKey / 60) * 100}%`;
                 slot.appendChild(note);
               });
             }
@@ -200,12 +195,6 @@ function renderCalendar(date) {
       const slot = document.createElement('div');
       slot.className = 'time-slot';
       slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
-
-      // const recipes = localStorage.getItem(slot.dataset.datetime);
-      // if (recipes) {
-      //   const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
-      //   slot.innerHTML = storedRecipes.map(({ name, author }) => getRecipeBlockHtml(name, author)).join('');
-      // }
 
       const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
       storedRecipes.forEach(({ name, author, durationMinutes = 60 }) => {
