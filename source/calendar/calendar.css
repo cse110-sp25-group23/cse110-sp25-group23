@@ -8,6 +8,7 @@
   --card-bg: #ffffff ;
   --font: 'Inter';
   --fontlabel: pacifico-regular;
+   --hour-height: 60px;
 }
 
 /* === Previous/Next Buttons === */
@@ -101,9 +102,14 @@
   padding: 1rem 8px;
   box-sizing: border-box;
   font-family: var(--font);
-  padding-bottom: 40px; 
-  max-height: 700px;
-  overflow-y: auto;
+  /* padding-bottom: 40px;  */
+  /* max-height: 700px;
+  overflow-y: auto; */
+
+  /* overrides */
+  height:auto;
+  overflow: visible;
+  position: relative;
 }
 
 /* Desktop Navigation */
@@ -516,7 +522,6 @@ nav a:hover{
   padding: 1px 2px;
   max-width: 95%;
   white-space: nowrap;
-  overflow-x: auto;
   line-height: 1.2;
   max-height: 30px; 
   cursor: pointer;
@@ -533,8 +538,12 @@ nav a:hover{
 
 /* Recipe block in week and day view */
 .note {
+  position:absolute;
   font-size: 1rem;
   max-height: 48px; 
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .recipe-name {
@@ -574,14 +583,20 @@ nav a:hover{
   left: 50px;
   width: calc(100% - 50px);
   height: 1440px;
+  z-index: 10;
+  overflow: visible;
+  background: rgba(255, 0, 0, 0.05);
   pointer-events: none; /* let clicks pass through unless you want to handle them */
-  z-index: 2;
 }
 
 .calendar-grid.day-view {
-  position: relative;
-  height: 1440px; /* 24 hours * 60 minutes */
-  overflow-y: scroll;
+  position: relative; /* x */
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  grid-template-rows: repeat(24, var(--hour-height)); ;
+  height: 1440px;
+  /* overflow-y: scroll; */  /* x */
+  overflow: visible;
 }
 
 /* Day view cells (hour slots) */
@@ -638,11 +653,6 @@ nav a:hover{
 
 /* === TIME STRUCTURE for day/week views === */
 
-/* Styles for the hour seperator */
-:root {
-  --hour-height: 60px;
-}
-
 /* Base for day and week views */
 /* Shared vertical layout: 24 hour slots (24 rows) */
 .calendar-grid.day-view,
@@ -664,7 +674,7 @@ nav a:hover{
 .time-slot {
   position: relative;
   border-top: 1px solid #eee;
-  height: var(--hour-height)
+  /* height: var(--hour-height) */
 }
 
 /* 30-min dash */
