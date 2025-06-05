@@ -6,7 +6,7 @@
  * Author: Anna Doan
  */
 
-import { extractDateKey, getRecipeBlockHtml } from '../source/calendar/testing/calendarUtils.js';
+import { extractDateKey, getRecipeBlockHtml } from '../../__tests__/calendar/calendarUtils.js';
 
 test('extractDateKey returns correct format', () => {
   const date = new Date(2025, 5, 4); // June 4, 2025
