@@ -7,7 +7,7 @@
     "lint": "eslint .",
     "stylelint": "stylelint ./__tests__/*.css ./source/*.css",
     "htmlhint": "htmlhint .",
-    "test:calendar": "node --experimental-vm-modules node_modules/.bin/jest __tests__/calendarUtils.test.js --config jest.config.js"
+    "test:calendar": "node --experimental-vm-modules node_modules/.bin/jest __tests__/calendar/calendarUtils.test.js --config jest.config.js"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
