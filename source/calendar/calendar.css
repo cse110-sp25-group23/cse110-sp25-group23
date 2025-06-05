@@ -518,7 +518,6 @@ nav a:hover{
   line-height: 1.2;
   max-height: 30px; 
   cursor: pointer;
-  overflow: hidden;
 }
 
 /* Recipe block in week and day view */
