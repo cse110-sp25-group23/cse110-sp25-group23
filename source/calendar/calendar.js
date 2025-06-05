@@ -161,12 +161,23 @@ function renderCalendar(date) {
             if (hourInKey === h) {
               const stored = getStoredRecipeData(k);
               stored.forEach(({ name, author }) => {
-                const note = document.createElement('div');
-                note.className = 'note';
-                note.innerHTML = getRecipeBlockHtml(name, author);
+                // const note = document.createElement('div');
+                // note.className = 'note';
+                // note.innerHTML = getRecipeBlockHtml(name, author);
+                // note.style.position = 'absolute';
+                // note.style.top = `${(minuteInKey / 60) * 100}%`;
+                // slot.appendChild(note);
+
+                const html = getRecipeBlockHtml(name, author);
+                const temp = document.createElement('div');
+                temp.innerHTML = html;
+                const note = temp.firstElementChild;
+
                 note.style.position = 'absolute';
                 note.style.top = `${(minuteInKey / 60) * 100}%`;
                 slot.appendChild(note);
+
+
               });
             }
           }
@@ -227,20 +238,25 @@ function storeRecipeToCalendar(key, recipeName, recipesList) {
 
 
 function getStoredRecipeData(key) {
+  const raw = localStorage.getItem(key);
+
   try {
-    const parsed = JSON.parse(localStorage.getItem(key));
+    const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
       return parsed;
-    } else if (typeof parsed === 'object') {
+    } else if (typeof parsed === 'object' && parsed !== null) {
       return [parsed];
-    } else if (typeof parsed === 'string') {
-      return [{ name: parsed, author: '' }];
     }
   } catch (e) {
-    console.warn(`Could not parse localStorage item at ${key}:`, e);
+    // fallback: treat raw string as recipe name
+    if (typeof raw === 'string') {
+      return [{ name: raw, author: '' }];
+    }
   }
+
   return [];
 }
+
 
 
 // navigation button handlers
