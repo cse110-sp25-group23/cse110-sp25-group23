@@ -1,7 +1,12 @@
 
-// jest tests for those functions
+/**
+ * @fileoverview Unit tests for calendar utility functions.
+ * These tests validate date formatting and HTML generation logic.
+ * 
+ * Author: Anna Doan
+ */
 
-import { extractDateKey, getRecipeBlockHtml } from './calendarUtils.js';
+import { extractDateKey, getRecipeBlockHtml } from '../source/calendar/testing/calendarUtils.js';
 
 test('extractDateKey returns correct format', () => {
   const date = new Date(2025, 5, 4); // June 4, 2025
