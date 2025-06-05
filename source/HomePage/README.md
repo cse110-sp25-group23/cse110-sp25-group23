@@ -1,3 +1,4 @@
+# HomePage Feature
 Contributors: Fnu Anu
 
 Note: The main file here is home.html, home.css and home.js. 
