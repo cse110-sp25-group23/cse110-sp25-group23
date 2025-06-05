@@ -39,27 +39,6 @@ function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60) {
   return note;
 }
 
-
-// function renderRecipeBlock({ name, author = '', durationMinutes = 60 }, topPx = 0) {
-//   const html = getRecipeBlockHtml(name, author);
-//   const temp = document.createElement('div');
-//   temp.innerHTML = html;
-//   const note = temp.firstElementChild;
-
-//   note.classList.add('note'); // ensure consistent styling
-//   note.style.position = 'absolute';
-//   note.style.top = `${topPx}px`;  // positioned relative to .day-column
-//   note.style.height = `${durationMinutes}px`;
-//   note.style.left = '0';
-//   note.style.right = '0';
-
-//   return note;
-// }
-
-
-
-
-
 // renders calendar based on the current view
 // fills in cells using data from localStorage 
 function renderCalendar(date) {
@@ -281,43 +260,6 @@ function renderCalendar(date) {
     });
 
   }
-
-
-
-
-
-  // ORIGINAL DAY VIEW CODE BELOW
-  // } else if (currentView === 'day') {
-  //   calendarGrid.innerHTML = '';
-  //   calendarGrid.style.gridTemplateColumns = '50px 1fr'; // 1 label + 1 slot
-
-  //   monthYear.textContent = `${monthNames[month]} ${date.getDate()}, ${year}`;
-  //   const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  //   calendarDayLabel.textContent = weekdayNames[date.getDay()];
-
-  //   const dayKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-
-  //   for (let h = 0; h < 24; h++) {
-  //     const label = document.createElement('div');
-  //     label.className = 'time-label';
-  //     label.textContent = `${h}:00`;
-  //     calendarGrid.appendChild(label);
-
-  //     const slot = document.createElement('div');
-  //     slot.className = 'time-slot';
-  //     slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
-
-  //     const recipes = localStorage.getItem(slot.dataset.datetime);
-  //     if (recipes) {
-  //       const recipeList = recipes.split(';');
-  //       slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
-  //     }
-
-
-
-  //     calendarGrid.appendChild(slot);
-  //   }
-  // }
   
 }
 
