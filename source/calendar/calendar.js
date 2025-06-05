@@ -76,10 +76,21 @@ function renderCalendar(date) {
         let recipeObjects = [];
         for (const key of matchingKeys) {
           const time = key.split(' ')[1]; // "HH:MM"
-          const stored = localStorage.getItem(key).split(';');
-          for (const r of stored) {
-            recipeObjects.push({ name: r, time });
+          try {
+            const stored = JSON.parse(localStorage.getItem(key));
+            if (Array.isArray(stored)) {
+              stored.forEach(obj => {
+                recipeObjects.push({ name: obj.name, author: obj.author, time });
+              });
+            } else if (typeof stored === 'object') {
+              recipeObjects.push({ name: stored.name, author: stored.author, time });
+            } else if (typeof stored === 'string') {
+              recipeObjects.push({ name: stored, time });
+            }
+          } catch (e) {
+            console.warn(`Error parsing key ${key}:`, e);
           }
+
         }
 
         // Determine how many to show based on screen width
@@ -203,6 +214,35 @@ function renderCalendar(date) {
 // inital render on page load
 renderCalendar(currentDate);
 
+
+// Store recipe to localStorage under a specific key
+// key is a string like "YYYY-MM-DD HH:MM"
+// recipeName is the name of the recipe to store
+// recipesList is an array of recipe objects with name and author properties
+function storeRecipeToCalendar(key, recipeName, recipesList) {
+  const selected = recipesList.find(r => r.name === recipeName);
+  const toStore = selected ? { name: selected.name, author: selected.author } : recipeName;
+  localStorage.setItem(key, JSON.stringify(toStore));
+}
+
+
+function getStoredRecipeData(key) {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(key));
+    if (Array.isArray(parsed)) {
+      return parsed;
+    } else if (typeof parsed === 'object') {
+      return [parsed];
+    } else if (typeof parsed === 'string') {
+      return [{ name: parsed, author: '' }];
+    }
+  } catch (e) {
+    console.warn(`Could not parse localStorage item at ${key}:`, e);
+  }
+  return [];
+}
+
+
 // navigation button handlers
 // adjusts currentDate based on view and re-render
 prevBtn.addEventListener('click', () => {
@@ -267,13 +307,23 @@ assignForm.addEventListener('submit', (event) => {
   const key = `${y}-${m}-${d} ${time}`;
   
   // Save multiple recipes separated by ;
-  const existing = localStorage.getItem(key);
-  if (existing) {
-    if (!existing.split(';').includes(recipeName)) {
-      localStorage.setItem(key, existing + ';' + recipeName);
-    }
-  } else {
-    localStorage.setItem(key, recipeName);
+  const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
+  const selected = allRecipes.find(r => r.name === recipeName);
+  if (!selected) return;
+
+  const entry = { name: selected.name, author: selected.author };
+
+  let current = [];
+  try {
+    current = JSON.parse(localStorage.getItem(key)) || [];
+  } catch {
+    current = [];
+  }
+
+  const duplicate = current.find(r => r.name === entry.name && r.author === entry.author);
+  if (!duplicate) {
+    current.push(entry);
+    localStorage.setItem(key, JSON.stringify(current));
   }
 
   // Refresh the calendar view to reflect changes
@@ -316,23 +366,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// 
-function getRecipeBlockHtml(recipeName, time='') {
+// Helper function to generate HTML for a recipe block
+function getRecipeBlockHtml(name, author = '', time = '') {
   return `
-    <div class="note-block">
-      <span class="recipe-name">${time ? time + ' – ' : ''}${recipeName}</span>
-      <button class="delete-recipe" title="Delete">&times;</button> <!-- X icon -->
+    <div class="note-block" data-name="${name}" data-author="${author}">
+      <span class="recipe-name">
+        ${time ? `${time} – ` : ''}${name}${author ? ` by ${author}` : ''}
+      </span>
+      <button class="delete-recipe" title="Delete">&times;</button>
     </div>`;
-
-    // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
 }
+
+
+
 
 // Delete recipe handler
 document.addEventListener('click', (e) => {
   if (e.target.classList.contains('delete-recipe')) {
     e.stopPropagation();
     const note = e.target.closest('.note-block, .note');
-    const recipeName = note.querySelector('.recipe-name').textContent;
+    const recipeText = note.querySelector('.recipe-name').textContent;
+    const recipeStr = recipeText.replace(/\d{2}:\d{2} – /, '').trim();  // strip time prefix if exists
     const parentDayOrSlot = note.closest('.day') || note.closest('.time-slot');
 
     let key;
@@ -350,23 +404,22 @@ document.addEventListener('click', (e) => {
     }
 
     // Remove only one occurrence of the recipe from storage
-    const existing = localStorage.getItem(key);
-    if (existing) {
-      const updatedArray = existing.split(';');
-      const indexToRemove = updatedArray.indexOf(recipeName);
-      if (indexToRemove !== -1) {
-        updatedArray.splice(indexToRemove, 1); // remove only one instance
-      }
-
-      if (updatedArray.length) {
-        localStorage.setItem(key, updatedArray.join(';'));
-      } else {
+    try {
+      const existing = JSON.parse(localStorage.getItem(key)) || [];
+      const updated = existing.filter(r => !(r.name === recipeName || `${r.name} by ${r.author}` === recipeStr));
+      if (updated.length) {
+        localStorage.setItem(key, JSON.stringify(updated));
+       } else {
         localStorage.removeItem(key);
       }
+    } catch (e) {
+      console.warn(`Error updating deletion for ${key}:`, e);
     }
 
-    renderCalendar(currentDate);
+  renderCalendar(currentDate);
+
   }
+  
 });
 
 
