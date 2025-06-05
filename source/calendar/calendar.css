@@ -729,15 +729,13 @@ nav a:hover{
 .note-block .delete-recipe {
   top: 3px;
   right: 3px;
+  background-color: #e9dab4;
 }
 
 /* Show on hover */
 .note-block:hover button {
   display: block; 
 }
-
-
-/* DEBUGGING */
 
 /* === footer === */
 .site-footer {
