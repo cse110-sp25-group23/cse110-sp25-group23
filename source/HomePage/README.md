@@ -24,4 +24,4 @@ meals, favorites as well as the cart items that they have saved from recipe's in
 
 Note: Navigation Bar and footer will be uniform after being developed and integrated by me on all pages across this project website!
 
-**Uniform Theme and navbar-footer used across the page as the whole website**
+**Uniform Theme and navbar-footer used across the page as part of the whole website**

@@ -13,4 +13,4 @@ This requires viewing meals planned for a day, week, or month.
 Describe functionalities - To anna
 ---
 
-**Uniform Theme and navbar-footer used across the page as the whole website**
+**Uniform Theme and navbar-footer used across the page as part of the whole website**

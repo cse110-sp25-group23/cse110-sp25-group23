@@ -18,3 +18,5 @@ and be careful to not override any of the functionality by any of the other css 
 ---
 
 Note: Navigation Bar will be uniform after being developed and integrated by me on all pages across this project website!
+
+**Uniform Theme and navbar-footer used across the page as part of the whole website**

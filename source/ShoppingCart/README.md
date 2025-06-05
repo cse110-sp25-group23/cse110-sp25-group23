@@ -12,6 +12,5 @@ facilitate smaller screen sizes and website logo.
   Task - add feature details to this section - TO Manan
 ---
 
-**Uniform Theme and navbar-footer used across the page as the whole website**
-
+**Uniform Theme and navbar-footer used across the page as part of the whole website**
 
