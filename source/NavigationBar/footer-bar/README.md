@@ -1,7 +1,7 @@
 # Footer Feature
 Contributors: Fnu Anu
 
-Note: The main file here is footer.html and footer.css.
+**Note:** The main file here is footer.html and footer.css.
 
 **Context:** The purpose of this page is to facilitate the replication of footer across various
 web pages so the updates to the structure are formulated here for further manipulations, as changes are made.

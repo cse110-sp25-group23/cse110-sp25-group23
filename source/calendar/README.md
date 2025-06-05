@@ -1,7 +1,7 @@
 # Calendar Feature
 Contributors: Anna (calendar), Fnu Anu (Navbar, footer, local storage, debugs)
 
-Note: The main file here is calender.html, calendar.css and calendar.js.
+**Note:** The main file here is calender.html, calendar.css and calendar.js.
 Additional Folders: Images folder contains icons for mobile navigation bar to 
 facilitate smaller screen sizes and website logo. 
 

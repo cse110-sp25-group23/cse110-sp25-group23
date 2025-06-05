@@ -1,7 +1,7 @@
 # Nav-bar Feature
 Contributors: Fnu Anu
 
-Note: The main file here is nav-bar.html, nav-bar.css and nav-bar.js (yet to be implemented). 
+**Note:** The main file here is nav-bar.html, nav-bar.css and nav-bar.js (yet to be implemented). 
 Additional Folders: Images folder contains icons for mobile navigation bar to 
 facilitate smaller screen sizes and website logo. 
 
