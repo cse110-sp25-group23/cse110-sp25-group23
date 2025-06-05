@@ -328,19 +328,6 @@ nav a:hover{
   overflow: hidden; /* optional: hides overflow */
 }
 
-
-/* .nav-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 24px;
-  padding: 12px 20px;
-  max-width: 960px;
-  background-color: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-} */
-
 .nav-inner a {
   white-space: nowrap;
   overflow: hidden;
@@ -532,7 +519,6 @@ nav a:hover{
   max-height: 30px; 
   cursor: pointer;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Recipe block in week and day view */
@@ -718,10 +704,6 @@ nav a:hover{
 
 
 /* === DELETE RECIPES (edit is gone) === */
-/* .note-block .edit-recipe, .note .edit-recipe {
-  top: 3px;
-  left: 3px;
-} */
 
 .note-block .delete-recipe, 
 .note .delete-recipe {
@@ -744,11 +726,6 @@ nav a:hover{
   display: none; 
   cursor: pointer;
 }
-
-/* .note-block .edit-recipe {
-  top: 3px;
-  left: 3px;
-} */
 
 .note-block .delete-recipe {
   top: 3px;
