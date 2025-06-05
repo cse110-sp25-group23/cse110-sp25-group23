@@ -1,29 +1,35 @@
 <!--
-  TO DO LIST: 
-  update css on all files
-  dont refresh if click on its own icon page
-  Local storage for calendarly daily meals (coordinate for the day) like various local storages but also can be an array of 365 days?
-  check footer and navbar bar links
+  RN:
   DOCUMENTATION ON JS
-  insert mobilenavigation bar as well as part of nav-bar
+  Do read-me for navigation and update calendar read me as well
+  local storage coordination fixes for homepage
+
+  TO DO LIST: 
+  reask manan for work
   ARIA tags
   Failure points
-  organize css file (remove tags I ended up deleting)
   end to end testing
   unit testing
-  fix the navigation bar and screen sizes
-  On calendar page, center the days in the week lab and secondly apply font decided and fix the week to day selection?, 
-  search bar for calendar page functionality; 
-  Search bar functionality on nav bar
-  local storage coordination fixes for homepage
-  fix footer to be at the end
-  have logo website for apps
+
+  Discuss:
+  Search bar functionality on nav bar & nav-bar.js implementation - work with niroop
   change niroops css file to my-recipe.css (uniformed)
-  pick a recipe bar implementation on calendar
-  Do read-me for navigation and update calendar read me as well
-  nav-bar.js implementation - work with niroop
+  
+  Decide:
+  fix footer to be at the end - check at the end of functionality
 
   DONE:
+    dont refresh if click on its own icon page - done
+    check footer and navbar bar links - done
+    pick a recipe implementation on calendar - done
+    search bar for calendar page functionality; - pick a recipe works - checked so done
+    Local storage for calendarly daily meals (coordinate for the day) like various local storages but also can be an array of 365 days? - done
+    On calendar page, center the days in the week lab and secondly apply font decided and fix the week to day selection?, - done
+    update css on all files - done
+    organize css file (remove tags I ended up deleting) - done
+    insert mobilenavigation bar as well as part of nav-bar - done
+    have logo website for apps - done
+    fix the navigation bar and screen sizes - done
     delete kevin's old navigation bar folder - done 
     Clean image folder - done
   footer (bold/weight) - done
@@ -76,6 +82,10 @@
     </header>
 
         <!-- Mobile Navigation -->
+        <div class="mobile-header">
+          <img src="images/logo.png" alt="Logo">
+          <h1>Cooklection</h1>
+        </div>
         <nav class="mobile-nav">
           <a href="../HomePage/home.html">
             <img src="images/home.png" alt="Home page of website for summary">
@@ -97,35 +107,38 @@
           </a>
         </nav>
 
-    <!-- First Section -->
+    <!-- First Section - Schedule Meals planned -->
     <h1>Today's Meals</h1>
     <div id="breakfast" class="meal-card"></div>
     <div id="lunch" class="meal-card"></div>
     <div id="dinner" class="meal-card"></div>
 
-    <!-- Second Section -->
+    <!-- Second Section - Summary of items in the shopping cart -->
     <div class="cart-summary">
       <h2>Cart Summary</h2>
       <ul id="cart-items"></ul>
       <p class="total" id="cart-total"></p>
     </div>
 
-    <!-- Third Section -->
+    <!-- Third Section - Favorited Recipes -->
     <div class="section-card" style="max-width: none;">
       <h2> ♡ Favorited Recipes ♡ </h2>
       <div id="favorites-list" class="favorites-container"></div>
+      <div id="see-more-wrapper">
+        <button id="see-more-btn" class="see-more-button">See More</button>
+      </div>
     </div>
 
       <footer class="site-footer">
         <div class="footer-links">
           <a href="home.html">Home</a>
-          <a href="../RecipeCard/shelf.html">Shelf</a>
+          <a href="../RecipeCard/recipeCard.html">Shelf</a>          
+          <a href="../RecipeCard/recipeImporter/recipeImport.html">Create</a>
           <a href="../calendar/calendar.html">Calendar</a>
-          <a href="../RecipeCard/create.html">Create</a>
-          <a href="../ShopingCart/shopping.html">Shopping Cart</a>
+          <a href="../ShoppingCart/shopping.html">Shopping Cart</a>
         </div>
         <p class="footer-message">Check out some heart-warming recipes today!</p>    
     </footer>
-    <script src="home.js" defer></script>
+    <script src="home.js"></script>
   </body>
 </html>

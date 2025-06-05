@@ -28,13 +28,6 @@
     font-family: var(--font), Arial;
   }
   
-
-  .cart img{
-    margin-left: 0px;
-    height: 150px;
-  }
-  
-  
   /* === search bar === */
   #search-field-small {
     /* max-width: 700px; */
@@ -78,7 +71,7 @@
     background-color: #d18572
   }
   /* === search bar ends=== */
-
+  
   /* Shared */
   header, nav {
     display: flex;
@@ -119,14 +112,47 @@
     
   }
   
+  /** === nav flexibility === **/
   .nav-tabs {
     display: flex;
-    justify-content: center;
-    width: 100%;
-    background-color: var(--card-bg);
+    flex-wrap: wrap;               /* Allow content to wrap on small screens */
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    max-width: 1200px;             /* Limit total width */
+    margin: 0 auto;                /* Center the nav bar horizontally */
     border: 10px solid var(--red);
-    gap: 30px;
     border-radius: 2rem;
+    background-color: var(--card-bg);
+    gap: 1rem;
+    box-sizing: border-box;        /* Include padding/border in total size */
+    width: 95%;                    /* Responsive width that doesn't overflow */
+  }
+  
+  .nav-tabs .logo img {
+    height: 80px;
+    max-width: 100%;
+  }
+  
+  .nav-tabs h1 {
+    font-size: 2rem;
+    white-space: nowrap;
+  }
+  
+  .nav-tabs [role="search"] {
+    flex-grow: 1;
+    min-width: 200px;
+    max-width: 400px;
+  }
+  
+  .nav-tabs a,
+  .nav-tabs .cart img {
+    max-width: 100%;
+  }
+  #search-field-small {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .desktop-nav .nav-tabs a {
@@ -143,6 +169,7 @@
   }
   
   .mobile-nav {
+    margin-top: 300px;
     display: none;
     position: fixed;
     bottom: 0;
@@ -162,6 +189,25 @@
     height: 26px;
     
   }
+  .mobile-header {
+    display: none; /* hidden by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background-color: var(--bg-color);
+  }
+  
+  .mobile-header img {
+    height: 60px;
+  }
+  
+  .mobile-header h1 {
+    font-family: "Pacifico", cursive;
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    margin: 0;
+  }
   
   nav a:hover{
       background-color: #d3c7aa;
@@ -170,22 +216,7 @@
   
   }
   
-  /* Responsive Rules */
-  @media (max-width: 1300px) {
-    .desktop-nav {
-      display: none;
-    }
   
-    .mobile-nav {
-      display: flex;
-    }  
-  }
-  
-  .Themes {
-    width: 100%;
-  }
-  
- 
   
   .nav-inner {
     display: flex;
@@ -213,12 +244,13 @@
     border-radius: 16px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   } */
-
+  
   .nav-inner a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  
   /* Default: hide mobile nav on larger screens */
   .mobile-nav {
     display: none;
@@ -241,7 +273,7 @@
     }
   
     .mobile-nav a img {
-      height: 26px;
+      height: 30px;
       margin: 0 6px;
     }
   
@@ -250,8 +282,14 @@
       background-color: var(--accent);
       display: none;
     }
+    
+    .mobile-header {
+      display: flex;
+    }
   }
   
   #brand{
     font-family: "Pacifico", cursive;
   }
+  
+  

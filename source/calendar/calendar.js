@@ -11,6 +11,20 @@ const nextBtn = document.getElementById('next-month');
 let currentDate = new Date();
 let currentView = 'month';
 
+
+// Prevents reloading page if already on the said page
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', function(event) {
+    const current = window.location.pathname;
+    const target = new URL(this.href).pathname;
+
+    if (current === target) {
+      event.preventDefault();
+      console.log('You are already on this tab.');
+    }
+  });
+});
+
 // highlight the active toggle button
 function highlightActiveToggle() {
   document.querySelectorAll('.calendar-toggle button').forEach(button => {

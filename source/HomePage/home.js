@@ -1,111 +1,170 @@
-/* Local storage for calendarly daily meals (coordinate for the day) 
-like various local storages but also can be an array of recipes array of 365 days? */
-const meals = JSON.parse(localStorage.getItem("todaysMeals")) || {
-    breakfast: "Avocado Toast with Eggs",
-    lunch: "",
-    dinner: "Spaghetti Bolognese"
-};
+console.log("JS file loaded");
 
-//
-const cart = JSON.parse(localStorage.getItem("userCart")) || [
-    { name: "Eggs", price: 3.50 },
-    { name: "Avocados", price: 2.00 },
-    { name: "Pasta", price: 1.25 },
-    { name: "Ground Beef", price: 5.00 }
-];
+// const meals = JSON.parse(localStorage.getItem("todaysMeals"));
+window.addEventListener('DOMContentLoaded', function() {
+  console.log("Script running after DOM ready");
 
-//
-const favorites = JSON.parse(localStorage.getItem("favoritedRecipes")) || [
-    {
-      name: "Pesto Pasta",
-      image: "https://cdn77-s3.lazycatkitchen.com/wp-content/uploads/2022/06/broccoli-pesto-pasta-800x1200.jpg",
-      tags: ["vegetarian", "quick"]
-    },
-    {
-      name: "Grilled Salmon",
-      image: "https://www.thecookierookie.com/wp-content/uploads/2023/05/featured-grilled-salmon-recipe.jpg",
-      tags: ["healthy"]
-    },
-    {
-      name: "Fruit Smoothie",
-      image: "https://lilluna.com/wp-content/uploads/2022/10/fruit-smoothie-resize-14.jpg",
-      tags: ["breakfast", "refreshing"]
-    },
-    {
-      name: "Veggie Tacos",
-      image: "https://www.wellplated.com/wp-content/uploads/2021/04/Tasty-Vegetarian-Tacos.jpg",
-      tags: ["spicy", "vegan"]
-    },
-    {
-      name: "Chocolate Cake",
-      image: "https://stylesweet.com/wp-content/uploads/2022/06/ChocolateCakeForTwo_Featured.jpg",
-      tags: ["dessert"]
+  // e.g. "2025-06-04"
+  const todayStr = new Date().toLocaleDateString("en-CA"); 
+  
+  // localStorage.setItem("2025-06-04 21:00", JSON.stringify({name:"Fnu"}));
+  // localStorage.setItem("2025-06-04 12:00", JSON.stringify("yay"));
+  // localStorage.setItem("2025-06-04 13:00", JSON.stringify("yup"));
+  // localStorage.setItem('recipeCart', JSON.stringify([{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2}]));
+
+  console.log("✅ Running meal loader. Today = ", todayStr);
+  const breakfastMeals = [];
+  const lunchMeals = [];
+  const dinnerMeals = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+
+    // Match keys that start with today’s date
+    if (key.startsWith(todayStr)) {
+      const timePart = key.split(" ")[1];
+      console.log("time", timePart);
+      const hour = parseInt(timePart.split(":")[0]);
+      console.log("hour", hour);
+      const meal = JSON.parse(localStorage.getItem(key));
+
+      if (hour >= 5 && hour < 11) {
+        breakfastMeals.push(meal);
+      } else if (hour >= 11 && hour < 16) {
+        lunchMeals.push(meal);
+      } else if (hour >= 16 && hour <= 23) {
+        dinnerMeals.push(meal);
+      }
     }
-];
+  }
 
-/**
- * 
- * @param {*} id 
- * @param {*} mealName 
- * @param {*} item 
- */
-function updateMealCard(id, mealName, item) {
-    const section = document.getElementById(id);
-    section.innerHTML = `
-        <h2>${mealName}</h2>
-        <p>${item
-            ? `You have scheduled: <br>${item}`
-            : `No ${mealName.toLowerCase()} scheduled.<br>Plan something delicious!`}</p>
-        `;
-}
 
-/**
- * 
- * @returns 
- */
-function renderFavorites() {
+  // Render to homepage
+  // add author later
+  document.getElementById("breakfast").innerHTML = renderMealCards(breakfastMeals, "Breakfast");
+  document.getElementById("lunch").innerHTML = renderMealCards(lunchMeals, "Lunch");
+  document.getElementById("dinner").innerHTML = renderMealCards(dinnerMeals, "Dinner");
+  
+  /**
+   * 
+   * @param {*} meals  - it is type of meals - breakfast, lunch or dinner 
+   * array that is previously ordered in these 3 arrays based on time scheduled
+   * @param {*} label  - label goes along with type of array of meals being
+   * passed for it to be inputted as header label alongside the meals name
+   * that are being pulled details of from the storage.
+   * @returns html code that showcases label and meals in their respective
+   * containers of breakfast, lunch and dinner.
+   */
+  function renderMealCards(meals, label) {
+    if (!meals || meals.length === 0){
+
+      lower = label.toLowerCase();
+      return `<h2>${label}</h2>`+`<p>No ${lower} scheduled.<br>Plan something delicious now!</p>`;
+    } 
+    return `<h2>${label}</h2>` + meals.map(meal => `
+      <div class="meal-card">
+        <p>${typeof meal === 'string' ? meal : meal.name}</p>
+      </div>
+    `).join('');
+  }
+  
+  // Extracting recipeCart saved Items
+  const cart = JSON.parse(localStorage.getItem("recipeCart"));
+
+  // favoritedRecipes (need to be connected with niroops favorite features in recipeCard)
+  const favorites = JSON.parse(localStorage.getItem("favoritedRecipes"));
+
+  // Prevents reloading page if already on the said page
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function(event) {
+      const current = window.location.pathname;
+      const target = new URL(this.href).pathname;
+
+      if (current === target) {
+        event.preventDefault();
+        console.log('You are already on this tab.');
+      }
+    });
+  });
+
+
+  let favoritesPage = 1;
+  const FAVORITES_PER_PAGE = 10;
+
+  /**
+   * 
+   * @returns favorited recipes for user to view in batches of 10 and with see 
+   * more button until no more favorites are left to display to the user.
+   */
+  function renderFavorites() {
     const container = document.getElementById("favorites-list");
-    if (favorites.length === 0) {
-        container.innerHTML = "<p>No favorites yet.</p>";
-        return;
+    container.innerHTML = ""; // Clearing previous content
+
+    if (!favorites || favorites.length === 0) {
+      container.innerHTML = `<p class="no-favorites">No favorites yet.<br><br><em>Browse to Store, Organize, and Share the Joy!</em></p>`;
+      document.getElementById("see-more-wrapper").style.display = "none";
+      return;
     }
 
-    container.innerHTML = favorites.map(recipe => `
+    const startIndex = 0;
+    const endIndex = FAVORITES_PER_PAGE * favoritesPage;
+    const visibleFavorites = favorites.slice(startIndex, endIndex);
+
+    visibleFavorites.forEach(recipe => {
+      container.innerHTML += `
         <div class="favorite-card">
-        <img src="${recipe.image}" alt="${recipe.name}">
-        <h3>${recipe.name}</h3>
-        <div class="tags">${recipe.tags.join(', ')}</div>
+          <img src="${recipe.image}" alt="${recipe.name}">
+          <h3>${recipe.name}</h3>
+          <div class="tags">${recipe.tags.join(', ')}</div>
         </div>
-        `).join('');
+      `;
+  });
+
+  // Show/hide button based on remaining items
+  const seeMore = document.getElementById("see-more-wrapper");
+  if (favorites.length > endIndex) {
+    seeMore.style.display = "flex";
+  } else {
+    seeMore.style.display = "none";
+  }
 }
 
-/**
-* 
-* @returns 
-*/
-function renderCartSummary() {
+document.getElementById("see-more-btn").addEventListener("click", () => {
+  favoritesPage++; // increase page
+  renderFavorites(); // now render new batch
+});
+
+  /**
+  * 
+  * @returns a cart summary of the number of items they have in the cart
+  */
+  function renderCartSummary() {
     const list = document.getElementById("cart-items");
     const totalDisplay = document.getElementById("cart-total");
-
-    if (cart.length === 0) {
-        list.innerHTML = "<li>Your cart is empty.</li>";
-        totalDisplay.textContent = "";
-        return;
-    }
-
-    let total = 0;
-    list.innerHTML = "";
-    cart.forEach(item => {
-        total += item.price;
-        list.innerHTML += `<li><span>${item.name}</span><span>$${item.price.toFixed(2)}</span></li>`;
-    });
-
-    totalDisplay.textContent = `Total: $${total.toFixed(2)}`;
-}
-
   
-updateMealCard("breakfast", "Breakfast", meals.breakfast);
-updateMealCard("lunch", "Lunch", meals.lunch);
-updateMealCard("dinner", "Dinner", meals.dinner);
-renderCartSummary();
-renderFavorites();
+    if (!cart || cart.length === 0) {
+      list.innerHTML = "<li>Your cart is empty.</li>";
+      totalDisplay.textContent = `Total Items: 0`;
+      return;
+    }
+  
+    let total = cart.length;
+    list.innerHTML = "";
+  
+    // Shows only first 10 items
+    const previewItems = cart.slice(0, 10);
+    previewItems.forEach(item => {
+      list.innerHTML += `<li><span>${item.name}</span></li>`;
+    });
+  
+    //If more than 10, show "click cart" message
+    if (cart.length > 10) {
+      list.innerHTML += `<li><em>More items in cart. Click <a href="../ShoppingCart/shopping.html">cart</a> to view all.</em></li>`;
+    }
+  
+    totalDisplay.textContent = `Total Saved Items: ${total}`;
+  }
+
+  renderCartSummary();
+  renderFavorites();
+
+});

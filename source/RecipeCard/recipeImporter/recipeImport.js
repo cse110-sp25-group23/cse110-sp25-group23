@@ -10,6 +10,20 @@ const recipeImage = document.getElementById('recipeImage');
 const recipeIngredients = document.getElementById('recipeIngredients');
 const recipeInstructions = document.getElementById('recipeInstructions');
 
+
+// Prevents reloading page if already on the said page
+document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function(event) {
+      const current = window.location.pathname;
+      const target = new URL(this.href).pathname;
+  
+      if (current === target) {
+        event.preventDefault();
+        console.log('You are already on this tab.');
+      }
+    });
+  });
+  
 importButton.addEventListener('click', async () => {
     try {
         errorMessage.style.display = 'none';

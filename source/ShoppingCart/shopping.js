@@ -60,6 +60,20 @@ document.getElementById('clear').addEventListener('click', () => {
   Cart.clear();
 });
 
+
+// Prevents reloading page if already on the said page
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', function(event) {
+    const current = window.location.pathname;
+    const target = new URL(this.href).pathname;
+
+    if (current === target) {
+      event.preventDefault();
+      console.log('You are already on this tab.');
+    }
+  });
+});
+
 // Re-render whenever cart changes
 document.addEventListener('cart:update', render);
 render(); // initial paint
