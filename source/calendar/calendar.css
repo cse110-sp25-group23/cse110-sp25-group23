@@ -664,12 +664,20 @@ nav a:hover{
 }
 
 /* Hour label */
-.time-label {
+
+.calendar-grid.day-view .time-label{
   text-align: right;
   padding: 6px;
   font-size: 0.85rem;
   border-right: 1px solid #ccc;
   height: 60px; /* 1 hour height */
+}
+
+.time-label {
+  text-align: right;
+  padding: 6px;
+  font-size: 0.85rem;
+  border-right: 1px solid #ccc;
 }
 
 /* Hour box */
