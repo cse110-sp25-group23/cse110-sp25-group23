@@ -585,7 +585,7 @@ nav a:hover{
   height: 1440px;
   pointer-events: none; /* allows interaction to pass through */
   z-index: 2;
-  background-color: none;
+  background-color: transparent !important;
   box-sizing: border-box;
 }
 
