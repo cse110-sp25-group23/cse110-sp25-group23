@@ -159,13 +159,13 @@ function renderCalendar(date) {
             const hourInKey = parseInt(time);
             const minuteInKey = parseInt(k.split(':')[1]);
             if (hourInKey === h) {
-              const recipes = localStorage.getItem(k).split(';');
-              recipes.forEach(r => {
+              const stored = getStoredRecipeData(k);
+              stored.forEach(({ name, author }) => {
                 const note = document.createElement('div');
                 note.className = 'note';
-                note.innerHTML = `<span class="recipe-name">${r}</span><button class="delete-recipe" title="Delete">&times;</button>`;
+                note.innerHTML = getRecipeBlockHtml(name, author);
                 note.style.position = 'absolute';
-                note.style.top = `${(minuteInKey / 60) * 100}%`; // position based on minute
+                note.style.top = `${(minuteInKey / 60) * 100}%`;
                 slot.appendChild(note);
               });
             }
