@@ -520,6 +520,12 @@ nav a:hover{
   cursor: pointer;
 }
 
+.note-block {
+  box-sizing: border-box;
+  min-height: 20px;
+  overflow: hidden;
+}
+
 /* Recipe block in week and day view */
 .note {
   font-size: 1rem;
@@ -636,6 +642,7 @@ nav a:hover{
 /* Hour box */
 .time-slot {
   position: relative;
+  height: 60px;
   border-top: 1px solid #eee;
 }
 
