@@ -8,7 +8,7 @@
   --card-bg: #ffffff ;
   --font: 'Inter';
   --fontlabel: pacifico-regular;
-   --hour-height: 71.48px;
+   --hour-height: 60px;
 }
 
 /* === Previous/Next Buttons === */
@@ -586,6 +586,7 @@ nav a:hover{
   pointer-events: none; /* allows interaction to pass through */
   z-index: 2;
   background-color: none;
+  box-sizing: border-box;
 }
 
 
@@ -674,8 +675,12 @@ nav a:hover{
 .time-slot {
   position: relative;
   border-top: 1px solid #eee;
-  /* height: var(--hour-height) */
 }
+
+.day-view .time-slot {
+  height: 60px;
+}
+
 
 /* 30-min dash */
 .time-slot::after {

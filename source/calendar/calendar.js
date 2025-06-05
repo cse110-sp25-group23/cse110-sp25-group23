@@ -231,15 +231,19 @@ function renderCalendar(date) {
     }
 
     // Compute total overlay height based on actual slot height
-    const hourHeight = document.querySelector('.time-slot')?.offsetHeight || 60;
-    const totalHeight = 24 * hourHeight;
-
-  
+    const lastSlot = document.querySelectorAll('.time-slot')[23];
+    const gridTop = calendarGrid.getBoundingClientRect().top;
+    const slotBottom = lastSlot.getBoundingClientRect().bottom;
+    const height = slotBottom - gridTop;
 
     // Add floating overlay container
     requestAnimationFrame(() => {
-      const hourHeight = document.querySelector('.time-slot')?.offsetHeight || 60;
-      const totalHeight = 24 * hourHeight;
+      const lastSlot = document.querySelectorAll('.time-slot')[23];
+      const gridTop = calendarGrid.getBoundingClientRect().top;
+      const slotBottom = lastSlot.getBoundingClientRect().bottom;
+      const height = slotBottom - gridTop;
+
+      const hourHeight = lastSlot.offsetHeight;
 
       const overlay = document.createElement('div');
       overlay.className = 'day-overlay';
@@ -247,7 +251,7 @@ function renderCalendar(date) {
       overlay.style.left = '50px';
       overlay.style.top = '0';
       overlay.style.width = 'calc(100% - 50px)';
-      overlay.style.height = `${totalHeight}px`;
+      overlay.style.height = `${height}px`; 
       overlay.style.zIndex = '2';
       overlay.style.pointerEvents = 'none';
 
@@ -262,7 +266,6 @@ function renderCalendar(date) {
           recipes.forEach(({ name, author, durationMinutes = 60 }) => {
             const heightPx = (durationMinutes / 60) * hourHeight;
             const note = renderRecipeBlock({ name, author }, topPx, heightPx);
-
             overlay.appendChild(note);
           });
         }
@@ -270,7 +273,9 @@ function renderCalendar(date) {
 
       calendarGrid.appendChild(overlay);
     });
+
   }
+
 
 
 
