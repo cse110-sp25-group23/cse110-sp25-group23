@@ -23,21 +23,38 @@ function highlightActiveToggle() {
 }
 
 // render a recipe block with name, author, and time
-function renderRecipeBlock({ name, author = '', durationMinutes = 60 }, topPx = 0) {
+function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60) {
   const html = getRecipeBlockHtml(name, author);
   const temp = document.createElement('div');
   temp.innerHTML = html;
   const note = temp.firstElementChild;
 
-  note.classList.add('note'); // ensure consistent styling
+  note.classList.add('note');
   note.style.position = 'absolute';
-  note.style.top = `${topPx}px`;  // positioned relative to .day-column
-  note.style.height = `${durationMinutes}px`;
-  note.style.left = '0';
-  note.style.right = '0';
+  note.style.top = `${topPx}px`;
+  note.style.height = `${heightPx}px`;
+  note.style.left = '2px';
+  note.style.right = '2px';
 
   return note;
 }
+
+
+// function renderRecipeBlock({ name, author = '', durationMinutes = 60 }, topPx = 0) {
+//   const html = getRecipeBlockHtml(name, author);
+//   const temp = document.createElement('div');
+//   temp.innerHTML = html;
+//   const note = temp.firstElementChild;
+
+//   note.classList.add('note'); // ensure consistent styling
+//   note.style.position = 'absolute';
+//   note.style.top = `${topPx}px`;  // positioned relative to .day-column
+//   note.style.height = `${durationMinutes}px`;
+//   note.style.left = '0';
+//   note.style.right = '0';
+
+//   return note;
+// }
 
 
 
@@ -187,11 +204,13 @@ function renderCalendar(date) {
 
 
   // DAY VIEW
-  // displays 24 vertical time slots for a single day
-
+  // displays 24 vertical time slots for a single da
+  
   } else if (currentView === 'day') {
     calendarGrid.innerHTML = '';
-    calendarGrid.style.gridTemplateColumns = '50px 1fr'; // 1 label + 1 slot
+    calendarGrid.style.gridTemplateColumns = '50px 1fr';
+    // calendarGrid.style.gridTemplateRows = 'repeat(24, 60px)';
+    calendarGrid.style.position = 'relative';
 
     monthYear.textContent = `${monthNames[month]} ${date.getDate()}, ${year}`;
     const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -207,19 +226,87 @@ function renderCalendar(date) {
 
       const slot = document.createElement('div');
       slot.className = 'time-slot';
-      slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
-
-      const recipes = localStorage.getItem(slot.dataset.datetime);
-      if (recipes) {
-        const recipeList = recipes.split(';');
-        slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
-      }
-
-
-
+      slot.style.position = 'relative'; // so children can be positioned absolute
       calendarGrid.appendChild(slot);
     }
+
+    // Compute total overlay height based on actual slot height
+    const hourHeight = document.querySelector('.time-slot')?.offsetHeight || 60;
+    const totalHeight = 24 * hourHeight;
+
+  
+
+    // Add floating overlay container
+    requestAnimationFrame(() => {
+      const hourHeight = document.querySelector('.time-slot')?.offsetHeight || 60;
+      const totalHeight = 24 * hourHeight;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'day-overlay';
+      overlay.style.position = 'absolute';
+      overlay.style.left = '50px';
+      overlay.style.top = '0';
+      overlay.style.width = 'calc(100% - 50px)';
+      overlay.style.height = `${totalHeight}px`;
+      overlay.style.zIndex = '2';
+      overlay.style.pointerEvents = 'none';
+
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(dayKey)) {
+          const [_, time] = key.split(' ');
+          const [hour, minute] = time.split(':').map(Number);
+          const startMin = hour * 60 + minute;
+          const topPx = (startMin / 60) * hourHeight;
+
+          const recipes = getStoredRecipeData(key);
+          recipes.forEach(({ name, author, durationMinutes = 60 }) => {
+            const heightPx = (durationMinutes / 60) * hourHeight;
+            const note = renderRecipeBlock({ name, author }, topPx, heightPx);
+
+            overlay.appendChild(note);
+          });
+        }
+      });
+
+      calendarGrid.appendChild(overlay);
+    });
   }
+
+
+
+
+  // ORIGINAL DAY VIEW CODE BELOW
+  // } else if (currentView === 'day') {
+  //   calendarGrid.innerHTML = '';
+  //   calendarGrid.style.gridTemplateColumns = '50px 1fr'; // 1 label + 1 slot
+
+  //   monthYear.textContent = `${monthNames[month]} ${date.getDate()}, ${year}`;
+  //   const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  //   calendarDayLabel.textContent = weekdayNames[date.getDay()];
+
+  //   const dayKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+  //   for (let h = 0; h < 24; h++) {
+  //     const label = document.createElement('div');
+  //     label.className = 'time-label';
+  //     label.textContent = `${h}:00`;
+  //     calendarGrid.appendChild(label);
+
+  //     const slot = document.createElement('div');
+  //     slot.className = 'time-slot';
+  //     slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
+
+  //     const recipes = localStorage.getItem(slot.dataset.datetime);
+  //     if (recipes) {
+  //       const recipeList = recipes.split(';');
+  //       slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
+  //     }
+
+
+
+  //     calendarGrid.appendChild(slot);
+  //   }
+  // }
   
 }
 

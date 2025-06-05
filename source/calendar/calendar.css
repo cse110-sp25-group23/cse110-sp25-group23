@@ -8,7 +8,7 @@
   --card-bg: #ffffff ;
   --font: 'Inter';
   --fontlabel: pacifico-regular;
-   --hour-height: 60px;
+   --hour-height: 71.48px;
 }
 
 /* === Previous/Next Buttons === */
@@ -102,13 +102,13 @@
   padding: 1rem 8px;
   box-sizing: border-box;
   font-family: var(--font);
-  /* padding-bottom: 40px;  */
-  /* max-height: 700px;
-  overflow-y: auto; */
+  padding-bottom: 40px; 
+  max-height: 80vh;
+  overflow-y: auto;
 
   /* overrides */
   height:auto;
-  overflow: visible;
+  /* overflow: visible; */
   position: relative;
 }
 
@@ -543,7 +543,7 @@ nav a:hover{
   max-height: 48px; 
   width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-x: scroll;
 }
 
 .recipe-name {
@@ -577,26 +577,26 @@ nav a:hover{
 
 /* DAY view layout: 1 column + time labels */
 
-.day-column {
+.day-overlay {
   position: absolute;
   top: 0;
   left: 50px;
   width: calc(100% - 50px);
   height: 1440px;
-  z-index: 10;
-  overflow: visible;
-  background: rgba(255, 0, 0, 0.05);
-  pointer-events: none; /* let clicks pass through unless you want to handle them */
+  pointer-events: none; /* allows interaction to pass through */
+  z-index: 2;
+  background-color: none;
 }
 
+
+
 .calendar-grid.day-view {
-  position: relative; /* x */
+  position: relative;
   display: grid;
   grid-template-columns: 50px 1fr;
   grid-template-rows: repeat(24, var(--hour-height)); ;
-  height: 1440px;
-  /* overflow-y: scroll; */  /* x */
   overflow: visible;
+  height: 1440px;
 }
 
 /* Day view cells (hour slots) */
