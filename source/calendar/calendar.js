@@ -213,8 +213,8 @@ function renderCalendar(date) {
 
       const recipes = localStorage.getItem(slot.dataset.datetime);
       if (recipes) {
-        const recipeList = recipes.split(';');
-        slot.innerHTML = recipeList.map(r => getRecipeBlockHtml(r)).join('');
+        const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
+        slot.innerHTML = storedRecipes.map(({ name, author }) => getRecipeBlockHtml(name, author)).join('');
       }
 
       calendarGrid.appendChild(slot);
