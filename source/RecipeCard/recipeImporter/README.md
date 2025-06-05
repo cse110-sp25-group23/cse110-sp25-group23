@@ -1,7 +1,7 @@
 # RecipeImport Feature
 Contributors: Mehdi (research and main implementation) and Fnu Anu (layout reorganization, navbar-footer, css implementation and local storage coordination)
 
-Note: The main file here is .
+Note: The main file here is recipeImport.css, recipeImport.html, recipeImport.js and finally, recipeImporter.js.
 
 **Context:** The purpose of this page is to facilitate the creation and saving of a recipe card on a single platform for the user by importing a desired recipe from outside recipe websites.
 
