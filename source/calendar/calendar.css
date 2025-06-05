@@ -102,6 +102,8 @@
   box-sizing: border-box;
   font-family: var(--font);
   padding-bottom: 40px; 
+  max-height: 700px;
+  overflow-y: auto;
 }
 
 /* Desktop Navigation */
@@ -521,9 +523,12 @@ nav a:hover{
 }
 
 .note-block {
+  z-index: 3;
   box-sizing: border-box;
   min-height: 20px;
   overflow: hidden;
+  position: absolute;
+  max-width: calc(100% - 4px);
 }
 
 /* Recipe block in week and day view */
@@ -562,8 +567,21 @@ nav a:hover{
 /* === DAY VIEW Customizations === */
 
 /* DAY view layout: 1 column + time labels */
+
+.day-column {
+  position: absolute;
+  top: 0;
+  left: 50px;
+  width: calc(100% - 50px);
+  height: 1440px;
+  pointer-events: none; /* let clicks pass through unless you want to handle them */
+  z-index: 2;
+}
+
 .calendar-grid.day-view {
-  grid-template-columns: 50px 1fr;
+  position: relative;
+  height: 1440px; /* 24 hours * 60 minutes */
+  overflow-y: scroll;
 }
 
 /* Day view cells (hour slots) */
@@ -593,7 +611,10 @@ nav a:hover{
 
 /* WEEK view layout: 1 label column + 7 days */
 .calendar-grid.week-view {
+  display: grid;
   grid-template-columns: 50px repeat(7, 1fr);
+  grid-template-rows: repeat(24, var(--hour-height));
+
 }
 
 /* In week view, display recipe blocks in the same hour slot side by side */
@@ -634,16 +655,16 @@ nav a:hover{
 /* Hour label */
 .time-label {
   text-align: right;
-  padding: 2px 6px;
-  font-size: 0.9rem;
+  padding: 6px;
+  font-size: 0.85rem;
   border-right: 1px solid #ccc;
 }
 
 /* Hour box */
 .time-slot {
   position: relative;
-  height: 60px;
   border-top: 1px solid #eee;
+  height: var(--hour-height)
 }
 
 /* 30-min dash */

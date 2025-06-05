@@ -23,16 +23,21 @@ function highlightActiveToggle() {
 }
 
 // render a recipe block with name, author, and time
-function renderRecipeBlock({ name, author = '', durationMinutes = 60 }, topPercent = 0) {
+function renderRecipeBlock({ name, author = '', durationMinutes = 60 }, topPx = 0) {
   const html = getRecipeBlockHtml(name, author);
   const temp = document.createElement('div');
   temp.innerHTML = html;
   const note = temp.firstElementChild;
   note.style.position = 'absolute';
-  note.style.top = `${topPercent}%`;
-  note.style.height = `${(durationMinutes / 60) * 60}px`;
+  note.style.top = `${topPx}px`;  // e.g. 720 for 12:00
+  note.style.height = `${durationMinutes}px`;  // e.g. 90
+  note.style.left = '2px';
+  note.style.right = '2px';
   return note;
 }
+
+
+
 
 // renders calendar based on the current view
 // fills in cells using data from localStorage 
@@ -130,80 +135,116 @@ function renderCalendar(date) {
 
     monthYear.textContent = `Week of ${monthNames[start.getMonth()]} ${start.getDate()} – ${monthNames[end.getMonth()]} ${end.getDate()}, ${end.getFullYear()}`;
 
-    // render hr labels and slots for each day
-    for (let h = 0; h < 24; h++) {
-      // left-side hr label
-      const label = document.createElement('div');
-      label.className = 'time-label';
-      label.textContent = `${h}:00`;
-      calendarGrid.appendChild(label);
-       
-      // 7 columns, one for each day of the week
-      for (let d = 0; d < 7; d++) {
-        const day = new Date(start);
-        day.setDate(start.getDate() + d);
+    // Loop through 24 hours and 7 days
+    for (let hour = 0; hour < 24; hour++) {
+      for (let dayOffset = -1; dayOffset < 7; dayOffset++) {
+        const cell = document.createElement('div');
 
-        const key = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')} ${String(h).padStart(2, '0')}:00`;
+        if (dayOffset === -1) {
+          // leftmost column: time label
+          cell.className = 'time-label';
+          cell.textContent = `${hour}:00`;
+        } else {
+          const day = new Date(start);
+          day.setDate(start.getDate() + dayOffset);
+          const key = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')} ${String(hour).padStart(2, '0')}:00`;
 
-        const slot = document.createElement('div');
-        slot.className = 'time-slot';
-        slot.dataset.datetime = key;
+          cell.className = 'time-slot';
+          cell.dataset.datetime = key;
+          cell.style.position = 'relative';
 
-        // clear slot content
-        slot.innerHTML = '';
-        slot.style.position = 'relative'; // to position recipe blocks absolutely
-
-        // find all recipes for this hour
-        for (let k in localStorage) {
-          if (k.startsWith(`${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`)) {
-            const [_, __, ___, time] = k.split(/[- :]/);
-            const hourInKey = parseInt(time);
-            const minuteInKey = parseInt(k.split(':')[1]);
-            if (hourInKey === h) {
-              const stored = getStoredRecipeData(k);
-              stored.forEach(({ name, author, durationMinutes = 60 }) => {
-                const top = (minuteInKey / 60) * 100; // calculate top position as percentage
-                const note = renderRecipeBlock({name, author, durationMinutes }, top);
-                slot.appendChild(note);
-              });
-            }
-          }
+          const stored = getStoredRecipeData(key);
+          stored.forEach(({ name, author, durationMinutes = 60 }) => {
+            const note = renderRecipeBlock({ name, author, durationMinutes }, 0);
+            cell.appendChild(note);
+          });
         }
 
-        calendarGrid.appendChild(slot);
+        calendarGrid.appendChild(cell);
       }
     }
-  
+
+
   // DAY VIEW
   // displays 24 vertical time slots for a single day
   } else if (currentView === 'day') {
     calendarGrid.innerHTML = '';
-    calendarGrid.style.gridTemplateColumns = '50px 1fr'; // 1 label + 1 slot
+    calendarGrid.classList.add('day-view');
 
-    monthYear.textContent = `${monthNames[month]} ${date.getDate()}, ${year}`;
+    calendarGrid.style.gridTemplateColumns = '50px 1fr'; // 1 label + 1 slot
+    calendarGrid.style.display = 'grid';
+    calendarGrid.style.gridTemplateRows = 'repeat(24, var(--hour-height))';
+
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+
+    const dateKeyPrefix = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    monthYear.textContent = `${date.toLocaleString('default', { month: 'long' })} ${day}, ${year}`;
     const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     calendarDayLabel.textContent = weekdayNames[date.getDay()];
+    calendarDayLabel.classList.add('day-view');
 
-    const dayKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-
+    // Create 24 hour rows
     for (let h = 0; h < 24; h++) {
       const label = document.createElement('div');
       label.className = 'time-label';
       label.textContent = `${h}:00`;
       calendarGrid.appendChild(label);
 
-      const slot = document.createElement('div');
-      slot.className = 'time-slot';
-      slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
-
-      const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
-      storedRecipes.forEach(({ name, author, durationMinutes = 60 }) => {
-        const note = renderRecipeBlock({ name, author, durationMinutes }, 0);
-        slot.appendChild(note);
-      });
-
-      calendarGrid.appendChild(slot);
+      const cell = document.createElement('div');
+      cell.className = 'time-slot';
+      calendarGrid.appendChild(cell);
     }
+
+    // Render recipe blocks in a floating day column
+    const overlay = document.createElement('div');
+    overlay.className = 'day-column';
+
+    Object.keys(localStorage).forEach(k => {
+      if (k.startsWith(dateKeyPrefix)) {
+        const parts = k.split(' ');
+        const [yyyy, mm, dd] = parts[0].split('-');
+        const [hh, min] = parts[1].split(':');
+        const totalMinutes = parseInt(hh) * 60 + parseInt(min);
+
+        const stored = getStoredRecipeData(k);
+        stored.forEach(({ name, author, durationMinutes = 60 }) => {
+          console.log(`Rendering "${name}" at ${totalMinutes}px for ${durationMinutes}min`);
+          const note = renderRecipeBlock({ name, author, durationMinutes }, totalMinutes);
+          overlay.appendChild(note);
+        });
+      }
+    });
+
+    calendarGrid.appendChild(overlay);
+
+    // monthYear.textContent = `${monthNames[month]} ${date.getDate()}, ${year}`;
+    // const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    // calendarDayLabel.textContent = weekdayNames[date.getDay()];
+
+    // const dayKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+    // for (let h = 0; h < 24; h++) {
+    //   const label = document.createElement('div');
+    //   label.className = 'time-label';
+    //   label.textContent = `${h}:00`;
+    //   calendarGrid.appendChild(label);
+
+    //   const slot = document.createElement('div');
+    //   slot.className = 'time-slot';
+    //   slot.dataset.datetime = `${dayKey} ${String(h).padStart(2, '0')}:00`;
+
+    //   const storedRecipes = getStoredRecipeData(slot.dataset.datetime);
+    //   storedRecipes.forEach(({ name, author, durationMinutes = 60 }) => {
+    //     const note = renderRecipeBlock({ name, author, durationMinutes }, 0);
+    //     slot.appendChild(note);
+    //   });
+
+    //   calendarGrid.appendChild(slot);
+    // }
+
   }
 }
 
