@@ -47,6 +47,9 @@ function renderCalendar(date) {
   calendarGrid.innerHTML = '';
   calendarGrid.classList.remove('day-view', 'week-view', 'month-view');
   calendarGrid.classList.add(`${currentView}-view`);
+  calendarGrid.style.gridTemplateRows = ''; // clear any row structure (day/week)
+  calendarGrid.style.gridTemplateColumns = ''; // also safe to clear before redefining
+
   
   calendarDayLabel.textContent = '';
   calendarDayLabel.classList.remove('day-view', 'week-view', 'month-view');
@@ -71,6 +74,7 @@ function renderCalendar(date) {
   // shows a grid of days, one cell per date, includes overflow from previous month
   if (currentView === 'month') {
     calendarGrid.style.gridTemplateColumns = 'repeat(7, 1fr)'; // styling for month
+    calendarGrid.style.gridTemplateRows = ''; 
     monthYear.textContent = `${monthNames[month]} ${year}`; // header
     
     // fill leading blanks
