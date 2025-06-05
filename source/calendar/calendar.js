@@ -75,7 +75,8 @@ function renderCalendar(date) {
     
     // fill leading blanks
     for (let i = 0; i < firstDay; i++) {
-      calendarGrid.innerHTML += `<div></div>`;
+      const blank = document.createElement('div');
+      calendarGrid.appendChild(blank);
     }
 
     // fill in actual day cells
@@ -114,12 +115,21 @@ function renderCalendar(date) {
           .join('');
 
       
-      calendarGrid.innerHTML += `
-      <div class="day" data-date="${dateKey}">
-        <div class="day-number">${i}</div>
-        <div class="notes-container">${recipeHtml}</div>
-      </div>`;
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'day';
+      dayDiv.dataset.date = dateKey;
 
+      const dayNumberDiv = document.createElement('div');
+      dayNumberDiv.className = 'day-number';
+      dayNumberDiv.textContent = i;
+
+      const notesContainer = document.createElement('div');
+      notesContainer.className = 'notes-container';
+      notesContainer.innerHTML = recipeHtml;
+
+      dayDiv.appendChild(dayNumberDiv);
+      dayDiv.appendChild(notesContainer);
+      calendarGrid.appendChild(dayDiv);
     }
 
   // WEEK VIEW 
