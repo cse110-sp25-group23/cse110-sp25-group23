@@ -8,12 +8,48 @@
   <script src="../RecipeCard/recipeCard.js" type="module"></script>
   <script src="my-recipes.js" type="module"></script>
 </head>
+
+
 <body>
-  <header class="header">
-    <div class="menu-icon">&#9776;</div>
-    <input type="text" placeholder="Find a recipe" class="search-bar" id="searchInput" />
-    <div class="profile-box">TA</div>
+  <!-- Desktop Navigation -->
+  <header class="desktop-nav">
+    <nav class="nav-tabs">
+      <a class="logo" href="home.html">
+        <img src="../home-page/images/logo.png" alt="Logo">
+      </a>
+      <h1 id="brand">Cooklection </h1>
+      <div role="search">
+        <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?"> </input>
+        <button type="submit"> </button>
+      </div>
+     
+      <!-- text tabs -->
+      <a href="../calendar/calendar.html">Calendar</a>
+      <a href="../RecipeCard/my-recipes.html">Shelf</a>
+      <a href="../RecipeCard/recipeCard.html">Create</a>
+      <a class="cart" href="shop.html">
+        <img src="../home-page/images/shop.png" alt="shopping cart">
+      </a>
+    </nav>
   </header>
+
+   <!-- Mobile Navigation -->
+   <nav class="mobile-nav">
+    <a href="home.html">
+      <img src="../home-page/images/home.png" alt="Home">
+    </a>
+    <a href="../calendar/calendar.html">
+      <img src="../home-page/images/calendar.png" alt="Calendar">
+    </a>
+    <a href="my-recipes.html">
+      <img src="../home-page/images/shelf.png" alt="Shelf">
+    </a>
+    <a href="cart.html">
+      <img src="../home-page/images/shop.png" alt="Cart">
+    </a>
+  </nav>
+
+
   <h1> My Recipes</h1>
   <div class="dropdown">
     <button class="dropbtn">+ Create</button>
@@ -23,27 +59,21 @@
     </div>
   </div>
 
-  <!--TODO: add - Filter By: Favorite, Difficlty, tag1, tag2, etc... or maybe the search bar is enough-->
 
   <!--Will be filled in with individual shelves-->
   <div id="shelf-container"></div>
+  
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="../RecipeCard/shelf.html">Shelf</a>
+      <a href="../calendar/calendar.html">Calendar</a>
+      <a href="cart.html">Shopping Cart</a>
+    </div>
+    <p class="footer-message">Check out some heart-warming recipes today!</p>   
+</footer>
 
-  <nav class="nav-bar">
-    <a class="nav-item" href="../home-page/index.html">
-      <img src="../home-page/images/home.png" alt="Home" class="nav-icon">
-    <!-- added-->
-    </a>
-    <a class="nav-item" href="../home-page/shop.html">
-      <img src="../home-page/images/shop.png" alt="Shop" class="nav-icon">
-    </a>
-    <a class="nav-item" href="../calendar/calendar.html">
-<!--    <a class="nav-item" href="calendar.html"> -->
-      <img src="../home-page/images/calendar.png" alt="Calendar" class="nav-icon">
-    </a>
-    <a class="nav-item selected" href="../my-recipes/my-recipes.html">
-      <img src="../home-page/images/shelf.png" alt="Stats" class="nav-icon">
-    </a>
-  </nav>
+
 
   <div id="popupContainer" style="display:none"></div>
   <!-- <script src="script.js"></script>  -->
