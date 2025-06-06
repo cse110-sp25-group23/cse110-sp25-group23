@@ -175,6 +175,14 @@ export function update_card(shadowRoot, hostElement, recipeData){
         `;
 
         shadowRoot.innerHTML = `
+        <style>
+            :host {
+                display: block;
+                background: white;
+                padding: 20px;
+                border-radius: 12px;
+            }
+        </style>
         <label>Name: <input type="text" value="${originalData.name}" class="edit-name"></label><br>
         <label>Author: <input type= "text" value="${originalData.author}" class="edit-author"></label><br>
         <label>Image: <input type="text" value="${originalData.image}" class="edit-image"></label><br>

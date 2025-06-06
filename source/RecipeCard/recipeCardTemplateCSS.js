@@ -3,7 +3,7 @@ export function getRecipeCardTemplateCSS() {
         .tags-class {
             display:flex;
             position: absolute;
-            bottom: 0px;
+            bottom: 1px;
             gap: 8px;
             align-items: center;
         }
@@ -93,6 +93,7 @@ export function getRecipeCardTemplateCSS() {
             transition: transform 1s, border 0.3s ease 1s, box-shadow 0.3s ease 1s;
             transform-style: preserve-3d;
             border-radius: 16px;
+            transform-origin: center center;
         }
         
         /* Recipe card will flip when hovered over with mouse */
