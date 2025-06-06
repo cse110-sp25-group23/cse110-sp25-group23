@@ -33,12 +33,13 @@ export class RecipeCard extends HTMLElement {
         <div class="flip-card">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
+                    <button class="toggle">Fullscreen</button>
                     <button class="favorite-btn ${recipeData.favorite ? 'favorited' : ''}" aria-label="Favorite">♥</button>
                     <img src="${recipeData.image}" alt="${recipeData.name}" style="width:200px;height:200px;" class="recipe-image">
                     <h3>${recipeData.name}</h3>
                     <p>Author: ${recipeData.author}</p>
+                    <p>Ingredients:</p>
                     <div class="ingredients-class">
-                        <p>Ingredients:</p>
                         <ul>
                             ${recipeData.ingredients.map(ing => `<li>${ing.name}${ing.unit ? ' - ' + ing.unit : ''}</li>`).join('')}
                         </ul>
@@ -49,8 +50,8 @@ export class RecipeCard extends HTMLElement {
                     </div>
                 </div>
                 <div class="flip-card-back">
-                    <div class="steps-class">
-                        <p>Steps: </p>
+                    <p>Steps: </p>
+                    <div class="steps-list">
                         <ol>
                             ${recipeData.steps.map(step => `<li>${step}</li>`).join('')}
                         </ol>                    
@@ -110,6 +111,19 @@ export class RecipeCard extends HTMLElement {
                 saveRecipesToStorage(localRecipes);
             }
         });
+
+        //event handling for clicking fullscreen button
+        const fullscreenBtn = container.querySelector(".toggle");
+        fullscreenBtn.addEventListener("click", (event) => {
+            event.stopPropagation(); // Prevents the card click from flipping
+
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                flipCard.requestFullscreen();
+            }
+        });
+
     
         // Initialize delete and update logic
         delete_card(this.shadowRoot,this);

@@ -13,6 +13,7 @@ body {
     padding: 0;
     background: url("images/wood4.png");
     overflow-x: hidden;
+    position: relative;
   }
 
   .header {
@@ -206,8 +207,11 @@ body {
   
   .dropdown {
     position: absolute;
-    right: 0;
     display: inline-block;
+    right: 20px;  
+    top: 120px;   
+    display: inline-block;
+    z-index: 20;
   }
   
   .dropdown-content {

@@ -1,16 +1,9 @@
 export function getRecipeCardTemplateCSS() {
     return `
-        body {
-            background-image: url("wood-texture.jpg");
-            background-size: cover;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5em;
-        }
-
         .tags-class {
-            display: flex;
-            flex-wrap: wrap;
+            display:flex;
+            position: absolute;
+            bottom: 0px;
             gap: 8px;
             align-items: center;
         }
@@ -26,25 +19,24 @@ export function getRecipeCardTemplateCSS() {
 
 
         .recipe-image{
-            float: right;
-            margin-left: auto;
-            margin-right: 70px;
-            margin-top: 30px;
+            position: absolute;
+            right: 30px;
+            top: 55px;
             width: fit-content;
             border-radius: 8px;
         }
 
         .steps-list li {
             text-align: left;
-            margin-top: 20px;
+            margin-top: 0.5rem;
         }
         
         /* Favorite Button */
         .favorite-btn {
             position: absolute;
             top: 5px;
-            right: 50px;
-            background-color:rgb(211, 211, 211);
+            right: 10px;
+            background-color:rgb(173, 173, 173);
             border: none;
             border-radius: 50%;
             width: 40px;
@@ -69,13 +61,27 @@ export function getRecipeCardTemplateCSS() {
         /*Card flip animation */
 
         .flip-card {
+            font-family: inter;
             background-color: transparent;
             width: 500px;
-            height: 300px;
+            height: 260px;
             border-radius: 16px;
-            overflow: hidden;
+            overflow: visible;
             perspective: 1000px;
             margin: 1rem;
+            will-change: transform;
+            margin-bottom: 50px;
+        }
+
+        .flip-card:fullscreen {
+            background-color: pink;
+            padding: 20px; 
+        }
+
+        .toggle {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
           
         /*For positioning front and back side of card */
@@ -84,16 +90,18 @@ export function getRecipeCardTemplateCSS() {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: 1s;
+            transition: transform 1s, border 0.3s ease 1s, box-shadow 0.3s ease 1s;
             transform-style: preserve-3d;
             border-radius: 16px;
         }
         
         /* Recipe card will flip when hovered over with mouse */
         
-        /*.flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }*/
+        .flip-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.5); /* optional glow effect */
+            z-index: 1; /* optional: brings hovered card to front if overlapping */
+        }
 
         .flip-card.flipped .flip-card-inner {
             transform: rotateY(180deg);
@@ -102,45 +110,53 @@ export function getRecipeCardTemplateCSS() {
           
         .flip-card-front, .flip-card-back {
             position: absolute;
+            border: 2px solid black;
             width: 100%;
             height: 100%;
             -webkit-backface-visibility: hidden; /* Safari */
             backface-visibility: hidden;
             border-radius: 16px;
-            background-image: url("old-paper-texture.avif");
-            background-size: 500px 300px;
-        }
-          
-          
-        .flip-card-front {
-            background-color: bisque;
+            background-color: #ffffff;
             padding: 20px;
         }
         
-        
         .flip-card-back {
-            background-color:aqua;
             transform: rotateY(180deg);
-            
+            text-align: center;
             overflow: scroll;
         }
 
         
-        .ingredients-scroll {
-            max-height: 7rem; /* adjust as needed */
-            max-width: 14rem;
+        .ingredients-class {
+            max-height: 6rem; /* adjust as needed */
+            max-width: 12rem;
             overflow-y: scroll;
             padding-right: 0.5em; /* optional: avoids cutting off scrollbar */
-            border: 3px ridge var(--red);
+            border: 3px ridge #ba3226;
         }
 
-        .ingredients-scroll::-webkit-scrollbar {
+        .ingredients-class::-webkit-scrollbar {
             width: 6px;
         }
 
-        .ingredients-scroll::-webkit-scrollbar-thumb {
+        .ingredients-class::-webkit-scrollbar-thumb {
             background-color: #ccc;
             border-radius: 4px;
+        }
+
+        .delete-btn {
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-left: 20px;
+
+        }
+
+        .edit-btn {
+            border: none;
+            margin-left: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
         }
     `;
 }
