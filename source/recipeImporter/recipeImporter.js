@@ -2,9 +2,9 @@
 const SPOONACULAR_API_KEY = '84180a4b77f2405597b0c117c850eb62';
 
 /**
- * Validates a URL
- * @param {string} url - The URL to validate
- * @returns {boolean} Whether the URL is valid
+ * Validates a URL string.
+ * @param {string} url - The URL string to validate.
+ * @returns {boolean} True if the URL is valid, false otherwise.
  */
 function isValidUrl(url) {
     try {
@@ -16,9 +16,25 @@ function isValidUrl(url) {
 }
 
 /**
- * Imports a recipe from a URL using Spoonacular's API
- * @param {string} url - The URL of the recipe to import
- * @returns {Promise<Object>} The imported recipe data
+ * Formats a time estimate in minutes into a human-readable string.
+ * @param {number} minutes - The total number of minutes.
+ * @returns {string} A formatted string representing the time estimate (e.g., "45 minutes", "1 hour", "1 hour 30 minutes"). Returns "Unknown" if minutes is null, undefined, or 0.
+ */
+function formatTimeEstimate(minutes) {
+    if (!minutes) return 'Unknown';
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours === 0) return `${mins} minutes`;
+    if (mins === 0) return `${hours} hours`;
+    return `${hours} hours ${mins} minutes`;
+}
+
+/**
+ * Imports a recipe from a given URL using the Spoonacular API.
+ * Validates the URL, handles potential API errors (quota, not found, network), and transforms the API response into the application's recipe schema.
+ * @param {string} url - The URL of the recipe to import.
+ * @returns {Promise<Object>} A promise that resolves with the imported recipe data in the application's schema format.
+ * @throws {Error} Throws an error if the URL is invalid, API errors occur, extraction fails, or a network issue prevents the fetch.
  */
 export async function importRecipeFromUrl(url) {
     // Validate URL
@@ -49,19 +65,18 @@ export async function importRecipeFromUrl(url) {
         
         // Transform the Spoonacular response into our recipe card format
         return {
-            id: Date.now().toString(), // Add unique ID
-            title: data.title,
+            name: data.title,
+            author: data.sourceName || 'Imported Recipe',
             image: data.image,
             ingredients: data.extendedIngredients.map(ing => ({
                 name: ing.name,
-                amount: ing.amount,
-                unit: ing.unit
+                unit: ing.unit ? `${ing.amount} ${ing.unit}` : ing.amount.toString()
             })),
-            instructions: data.analyzedInstructions[0]?.steps.map(step => step.step) || [],
-            servings: data.servings,
-            readyInMinutes: data.readyInMinutes,
-            sourceUrl: url,
-            importedAt: new Date().toISOString()
+            steps: data.analyzedInstructions[0]?.steps.map(step => step.step) || [],
+            timeEstimate: formatTimeEstimate(data.readyInMinutes),
+            favorite: false,
+            createdAt: new Date().toISOString(),
+            tags: []
         };
     } catch (error) {
         if (error.message.includes('Failed to fetch')) {
@@ -72,16 +87,22 @@ export async function importRecipeFromUrl(url) {
 }
 
 /**
- * Saves an imported recipe to localStorage
- * @param {Object} recipe - The recipe to save
+ * Saves a recipe object to the browser's local storage under the 'recipes' key.
+ * Checks for duplicate recipes based on name and author before saving.
+ * @param {Object} recipe - The recipe object to save. Must conform to the application's recipe schema.
+ * @returns {Object} The recipe object that was successfully saved.
+ * @throws {Error} Throws an error if the recipe is a duplicate or if localStorage operations fail.
  */
 export function saveImportedRecipe(recipe) {
     try {
         // Get existing recipes from localStorage
         const existingRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
         
-        // Check for duplicate recipes
-        const isDuplicate = existingRecipes.some(r => r.sourceUrl === recipe.sourceUrl);
+        // Check for duplicate recipes by name and author
+        const isDuplicate = existingRecipes.some(r => 
+            r.name === recipe.name && r.author === recipe.author
+        );
+        
         if (isDuplicate) {
             throw new Error('This recipe has already been imported');
         }
