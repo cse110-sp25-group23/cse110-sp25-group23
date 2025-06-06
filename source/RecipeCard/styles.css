@@ -501,7 +501,7 @@ h1{
 .shelf {
   display: block;
   z-index: 9;
-  content:url("images/shelf2.png");
+  content:url("images/shelf1.png");
   position: relative;
   width: 1241px;
   height: 400px;
@@ -516,7 +516,7 @@ h1{
 }
 
 .shelf-section img {
-  margin-top: 100px; 
+  margin-top: 300px; 
   padding: 20px 40px; 
   position: relative;
 }
