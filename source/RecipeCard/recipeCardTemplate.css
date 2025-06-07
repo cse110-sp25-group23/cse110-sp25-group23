@@ -24,8 +24,6 @@ body {
     background-size: cover;
 }
 
-
-
 .recipe-name {
     font: var(--fontlabel);
     font-size: 2em;
@@ -43,6 +41,14 @@ body {
 
     word-break: break-word;
     overflow-wrap: break-word;
+}
+
+.recipe-author {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
 }
 
 /* Styling for the custom tags on the card (placeholder) */
