@@ -25,6 +25,14 @@ body {
     background-size: cover;
 }
 
+
+
+.recipe-name {
+    font: var(--fontlabel);
+    font-size: 2em;
+    margin: 0em 0em;
+}
+
 /* Styling for the custom tags on the card (placeholder) */
 
 .tags-class {
