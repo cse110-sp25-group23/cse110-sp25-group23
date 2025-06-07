@@ -194,7 +194,7 @@ function initFormHandler() {
 		const ingredients = [...ingredientsArray];
 		const favorite = false;
 		const createdAt = new Date().toISOString();
-        const sourceUrl = "";
+        const sourceurl = "";
 		
 		//Time Estimate for recipe
 		const hours = parseInt(formData.get("timeHours") || "0");
@@ -243,7 +243,7 @@ function initFormHandler() {
 			timeEstimate,
 			favorite,
 			createdAt,
-            sourceUrl
+            sourceurl
 		};
 
 		//If User is Using URL, get image url 

@@ -1,14 +1,5 @@
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
 
-// list of categories (Favorite and Recently-Created are properties that need to be added to storage.js)
-const categories = [
-  { title: "All Recipes", filter: (r) => true },
-  { title: "Recently Created", filter: (r) => true, sortRecent: (r) => new Date(r.createdAt)},
-  { title: "Favorites", filter: (r) => r.favorite },  
-  { title: "Easy", filter: (r) => r.tags.includes("Easy") },
-  { title: "Advanced", filter: (r) => r.tags.includes("Advanced") },
-];
-
 window.addEventListener('DOMContentLoaded', init);      //runs the init function when dom content loads
 
 function init() {
@@ -72,6 +63,30 @@ function displayShelves() {
   const recipes = getRecipesFromStorage();
   const container = document.getElementById("shelf-container");
 
+    // retrieve all tags (includes predefined, custom, and meal tags)
+    let uniqueTags = [];
+    recipes.forEach(recipe => {
+        recipe.tags.forEach(tag => {
+            if (!uniqueTags.includes(tag)) {
+                uniqueTags.push(tag);
+            }
+        });
+    });
+
+    // make each tag a "category" that will be added to a "categories" object
+    const tagCategories = uniqueTags.map(tag => ({
+        title: tag,
+        filter: (r) => r.tags.includes(tag)
+    }));
+
+    // Step 3: Combine static + dynamic categories
+    const categories = [
+        { title: "All Recipes", filter: (r) => true },
+        { title: "Recently Created", filter: (r) => true, sortRecent: (r) => new Date(r.createdAt) },
+        { title: "Favorites", filter: (r) => r.favorite },
+        ...tagCategories
+    ];
+
   // loop through each category
   categories.forEach(category => {
     // filter for cards of this category
@@ -84,7 +99,7 @@ function displayShelves() {
     
 
     // limit how many recipes can be displayed on shelf to avoid overflow
-    const recipesToShow = 3;
+    const recipesToShow = 2;
     const someRecipes = shelfRecipes.slice(0, recipesToShow);
 
     // the container for this individual shelf (will contain label, img, and cards)
@@ -124,7 +139,9 @@ function displayShelves() {
   });
 }
 
-//search function (MODIFY)
+/**
+ * Searches for cards that have any properties related to the search input 
+ */
 function initSearch(){
 	//get input from search-bar
 	const searchInput = document.getElementById('searchInput')

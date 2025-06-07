@@ -500,12 +500,13 @@ h1{
 /* Shelf design settings */
 .shelf {
   display: block;
+  margin: 0 auto;
   z-index: 9;
   content:url("images/shelf1_edit_5.png");
   position: relative;
   width: 1641px;
   height: 200px;
-  left: -12.5%;
+  max-width: 100%;
 }
 
 .shelf-section {
