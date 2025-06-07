@@ -50,12 +50,28 @@ body {
     max-width: 200px;
     height: 100%;
     width: 100%;
-    margin-top: 0.05em;
-    margin-right: 0.05em;
+    margin-top: 0em;
+    margin-right: 0em;
     margin-bottom: 1em;
     margin-left: 1em;
     width: fit-content;
     border-radius: 8px;
+}
+
+.flip-card:fullscreen .recipe-name {
+    font-size: 5em;
+}
+
+.flip-card:fullscreen .recipe-author {
+    font-size: 2em;
+}
+
+.flip-card:fullscreen .steps-list {
+    font-size: 1.5em;
+}
+
+.flip-card:fullscreen .steps-title {
+    font-size: 2em;
 }
 
 .flip-card:fullscreen .recipe-image {
@@ -102,6 +118,8 @@ body {
     margin: 2rem;
 
 }
+
+
   
 /* For positioning front and back side of card */
   
