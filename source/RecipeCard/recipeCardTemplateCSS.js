@@ -94,6 +94,7 @@ export function getRecipeCardTemplateCSS() {
             transform-style: preserve-3d;
             border-radius: 16px;
             transform-origin: center center;
+            text-align: left;
         }
         
         /* Recipe card will flip when hovered over with mouse */
