@@ -10,11 +10,10 @@
 
 main {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
     gap: 2em;
-    padding: 2em 2em;;
+    padding: 0em 2em;;
     justify-items: center;
-
 }
 
 
@@ -31,6 +30,19 @@ body {
     font: var(--fontlabel);
     font-size: 2em;
     margin: 0em 0em;
+    
+    max-width: 4.75em;
+    width: 100%;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Number of lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3.2em; /* adjust for line height */
+
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Styling for the custom tags on the card (placeholder) */
@@ -107,7 +119,7 @@ body {
     height: 20em;
     border-radius: 16px;
     perspective: 1000px;
-    margin: 2rem;
+    margin: 1em;
     overflow: visible;
 }
 
