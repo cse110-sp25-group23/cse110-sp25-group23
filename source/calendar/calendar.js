@@ -173,6 +173,7 @@ function renderCalendar(date) {
 
           const datePrefix = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
           const hourPrefix = `${String(hour).padStart(2, '0')}:`;
+          const hourHeight = 60; // px per hour
           Object.keys(localStorage).forEach(key => {
             if (key.startsWith(datePrefix) && key.includes(hourPrefix)) {
               const [_, time] = key.split(' ');
@@ -186,6 +187,8 @@ function renderCalendar(date) {
               });
             }
           });
+
+
 
         }
 
@@ -289,13 +292,26 @@ assignForm.addEventListener('submit', (event) => {
   const [y, m, d] = date.split("-");
   const key = `${y}-${m}-${d} ${time}`;
   const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
-  const selected = allRecipes.find(r => r.name === recipeName);
+  const authorText = document.getElementById('recipe-select').selectedOptions[0].dataset.author;
+  const selected = allRecipes.find(r => r.name === recipeName && r.author === authorText);
+
   if (!selected) return;
+  function parseTimeEstimate(str) {
+    const match = str.match(/(?:(\d+)\s*hr)?\s*(?:(\d+)\s*min)?/i);
+    if (!match) return 60;
+    const hrs = parseInt(match[1]) || 0;
+    const mins = parseInt(match[2]) || 0;
+    return hrs * 60 + mins;
+  }
+
   const entry = {
     name: selected.name,
     author: selected.author,
-    durationMinutes: selected.durationMinutes || 60
+    durationMinutes: selected.timeEstimate
+      ? parseTimeEstimate(selected.timeEstimate)
+      : (selected.durationMinutes || 60)
   };
+
   let current = [];
   try {
     current = JSON.parse(localStorage.getItem(key)) || [];
@@ -387,6 +403,7 @@ function populateRecipeDropdown() {
     const option = document.createElement('option');
     option.value = recipe.name;
     option.textContent = recipe.name;
+    option.dataset.author = recipe.author;
     dropdown.appendChild(option);
   }
 }
