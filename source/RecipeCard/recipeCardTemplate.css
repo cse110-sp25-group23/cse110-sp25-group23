@@ -37,7 +37,7 @@ body {
 
 .tags-class {
     position: absolute;
-    bottom: 0.5rem;
+    bottom: 0rem;
     left: 1rem;
     backface-visibility: hidden;
 }
