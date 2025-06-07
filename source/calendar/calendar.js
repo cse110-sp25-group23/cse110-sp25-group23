@@ -171,11 +171,22 @@ function renderCalendar(date) {
           cell.dataset.datetime = key;
           cell.style.position = 'relative';
 
-          const stored = getStoredRecipeData(key);
-          stored.forEach(({ name, author, durationMinutes = 60 }) => {
-            const note = renderRecipeBlock({ name, author, durationMinutes }, 0);
-            cell.appendChild(note);
+          const datePrefix = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+          const hourPrefix = `${String(hour).padStart(2, '0')}:`;
+          Object.keys(localStorage).forEach(key => {
+            if (key.startsWith(datePrefix) && key.includes(hourPrefix)) {
+              const [_, time] = key.split(' ');
+              const [h, m] = time.split(':').map(Number);
+              const offsetTop = (m / 60) * 60; // px from top of cell
+              const stored = getStoredRecipeData(key);
+              stored.forEach(({ name, author, durationMinutes = 60 }) => {
+                const heightPx = (durationMinutes / 60) * 60;
+                const note = renderRecipeBlock({ name, author }, offsetTop, heightPx);
+                cell.appendChild(note);
+              });
+            }
           });
+
         }
 
         calendarGrid.appendChild(cell);
