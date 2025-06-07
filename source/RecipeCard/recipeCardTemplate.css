@@ -8,13 +8,13 @@
     --fontlabel: pacifico-regular;
 }
 
-
-
 main {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 2em;
+    padding: 2em 2em;;
     justify-items: center;
+
 }
 
 
@@ -25,23 +25,28 @@ body {
     background-size: cover;
 }
 
+/* Styling for the custom tags on the card (placeholder) */
 
 .tags-class {
     position: absolute;
-    bottom: 40px;
-    right: 70px;
+    bottom: 0.5rem;
+    left: 1rem;
+    backface-visibility: hidden;
 }
 
 
+/* Positioning and styling for the recipe image */
 .recipe-image{
     float: right;
-    margin-right: 1em;
+    margin-top: 0.05em;
+    margin-right: 0.05em;
     margin-bottom: 1em;
     margin-left: 1em;
     width: fit-content;
     border-radius: 8px;
 }
 
+/* Styling for the recipe steps on the backside of the recipe card*/
 
 .steps-list li {
     text-align: left;
@@ -54,21 +59,23 @@ body {
 .flip-card {
     background-color: transparent;
     width: 100%;
-    max-width: 500px;
-    height: 250px;
+    max-width: 32em;
+    height: 20em;
     border-radius: 16px;
-    padding: 1rem;
     perspective: 1000px;
-    margin: 1rem;
-    will-change: transform;
+    margin: 2rem;
     overflow: visible;
 }
 
+/* Specific styling for when the card is in fullscreen mode*/
+
 .flip-card:fullscreen {
-    background-color: pink;
+    background-color: var(--red);
+    margin: 2rem;
+
 }
   
-/*For positioning front and back side of card */
+/* For positioning front and back side of card */
   
 .flip-card-inner {
     position: relative;
@@ -87,9 +94,7 @@ body {
 }
 
 
-  /*.flip-card:hover .flip-card-inner {
-    transform: rotateY(180deg);
-  }*/
+/* Card flip animation information */
 
 .flip-card.flipped .flip-card-inner {
     transform: rotateY(180deg);
@@ -104,14 +109,15 @@ body {
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
     border-radius: 16px;
-    background-color: var(--card-bg);
-    background-size: 300px 500px;
     
+    background-color: var(--card-bg);
+    box-sizing: border-box;
 }
   
   
 .flip-card-front {
-    padding: 20px;
+    padding: 2em;
+    overflow: hidden;
 }
   
   
@@ -119,6 +125,7 @@ body {
     transform: rotateY(180deg);
     text-align: center;
     overflow: scroll;
+    padding: 1em;
 }
 
 /* .flip-card:fullscreen .flip-card-inner {
@@ -140,6 +147,13 @@ body {
     overflow-y: scroll;
     padding-right: 0.5em; /* optional: avoids cutting off scrollbar */
     border: 3px ridge var(--red);
+}
+
+.flip-card:fullscreen .ingredients-scroll {
+    max-height: 20em;
+    font-size: 1.1em;
+    padding: 1em;
+    overflow-y: auto;
 }
 
 .ingredients-scroll::-webkit-scrollbar {
