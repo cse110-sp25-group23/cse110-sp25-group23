@@ -118,8 +118,9 @@ function renderCalendar(date) {
 
         }
         const recipeHtml = recipeObjects
-          .map(({ name, time }) => getRecipeBlockHtml(name, time))
+          .map(({ name, author }) => getRecipeBlockHtml(name, author))
           .join('');
+
 
       
       const dayDiv = document.createElement('div');
