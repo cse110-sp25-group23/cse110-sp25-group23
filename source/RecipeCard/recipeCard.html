@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="recipeCard.css">
     <script src="recipeCard.js" type="module"></script>
     <script src="../LocalStorage/storage.js" type="module"></script>
-    <script src="mealPlanner.js" type="module"></script>
+    <script src="mealPlan3.js" type="module"></script>
 </head>
 
 <body>
@@ -117,24 +117,44 @@
         <!-- Create Meal button -->
         <button id="create-meal-btn">Create Meal</button>
 
-        <!-- Show meal name input and Save button after selection begins -->
+
+        <!-- Meal Creation Panel -->
         <div id="meal-controls" style="display: none; margin-top: 10px;">
             <input type="text" id="meal-name-input" placeholder="Enter meal name" required>
             <button id="save-meal-btn">Save Meal</button>
+            <p>Select recipes for this meal:</p>
+            <div id="meal-selection-cards" style="display: grid; gap: 10px; margin-top: 10px;"></div>
         </div>
+
 
         <!-- Container that lists created meals -->
         <div id="meal-list-container" style="margin-top: 20px;">
             <h3>Created Meals:</h3>
-            <ul id="meal-list"></ul>
+            <ul id="meal-list">
+                <!-- Example structure:
+        <li>
+            <button class="meal-view-btn">Thanksgiving Dinner</button>
+            <button class="meal-edit-btn">Edit</button>
+            <button class="meal-delete-btn">Delete</button>
+        </li>
+        -->
+            </ul>
         </div>
+
     </section>
+
+    <!-- Save edits to an existing meal -->
+    <div id="edit-controls" style="display: none; margin-top: 10px;">
+        <button id="save-edited-meal-btn">Save Changes</button>
+    </div>
+
 
     <!-- Container where selected meal cards will be shown -->
     <section id="meal-display-container" style="margin-top: 20px;">
         <h3>Meal Preview:</h3>
         <div id="meal-cards-display"></div>
     </section>
+
 
     <!-- THANH PROOOOOOOOOOO -->
 </body>
