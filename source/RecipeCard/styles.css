@@ -501,12 +501,11 @@ h1{
 .shelf {
   display: block;
   z-index: 9;
-  content:url("images/shelf1.png");
+  content:url("images/shelf1_edit_5.png");
   position: relative;
-  width: 1241px;
-  height: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 1641px;
+  height: 200px;
+  left: -12.5%;
 }
 
 .shelf-section {
@@ -516,7 +515,7 @@ h1{
 }
 
 .shelf-section img {
-  margin-top: 300px; 
+  margin-top: 200px; 
   padding: 20px 40px; 
   position: relative;
 }
@@ -526,7 +525,7 @@ h1{
   gap: 80px;
   justify-content: center;
   position: absolute;
-  top: 42%;              
+  top: 45%;              
   left: 50%;
   transform: translate(-50%, -50%);  
   min-height: 120px;     
