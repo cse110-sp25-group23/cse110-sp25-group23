@@ -33,7 +33,17 @@ function formatTimeEstimate(minutes) {
  * Imports a recipe from a given URL using the Spoonacular API.
  * Validates the URL, handles potential API errors (quota, not found, network), and transforms the API response into the application's recipe schema.
  * @param {string} url - The URL of the recipe to import.
- * @returns {Promise<Object>} A promise that resolves with the imported recipe data in the application's schema format.
+ * @returns {Promise<Object>} A promise that resolves with the imported recipe data in the application's schema format. The object includes:
+ *   - name: string
+ *   - author: string
+ *   - image: string
+ *   - ingredients: Array<{name: string, unit: string}>
+ *   - steps: string[]
+ *   - tags: string[]
+ *   - timeEstimate: string
+ *   - favorite: boolean
+ *   - createdAt: string (ISO date)
+ *   - sourceurl: string (original URL)
  * @throws {Error} Throws an error if the URL is invalid, API errors occur, extraction fails, or a network issue prevents the fetch.
  */
 export async function importRecipeFromUrl(url) {
@@ -73,10 +83,11 @@ export async function importRecipeFromUrl(url) {
                 unit: ing.unit ? `${ing.amount} ${ing.unit}` : ing.amount.toString()
             })),
             steps: data.analyzedInstructions[0]?.steps.map(step => step.step) || [],
+            tags: [],
             timeEstimate: formatTimeEstimate(data.readyInMinutes),
             favorite: false,
             createdAt: new Date().toISOString(),
-            tags: []
+            sourceurl: url
         };
     } catch (error) {
         if (error.message.includes('Failed to fetch')) {
@@ -89,7 +100,17 @@ export async function importRecipeFromUrl(url) {
 /**
  * Saves a recipe object to the browser's local storage under the 'recipes' key.
  * Checks for duplicate recipes based on name and author before saving.
- * @param {Object} recipe - The recipe object to save. Must conform to the application's recipe schema.
+ * @param {Object} recipe - The recipe object to save. Must conform to the application's recipe schema, including:
+ *   - name: string
+ *   - author: string
+ *   - image: string
+ *   - ingredients: Array<{name: string, unit: string}>
+ *   - steps: string[]
+ *   - tags: string[]
+ *   - timeEstimate: string
+ *   - favorite: boolean
+ *   - createdAt: string (ISO date)
+ *   - sourceurl: string (original URL)
  * @returns {Object} The recipe object that was successfully saved.
  * @throws {Error} Throws an error if the recipe is a duplicate or if localStorage operations fail.
  */

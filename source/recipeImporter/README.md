@@ -67,4 +67,23 @@ The importer handles the following error cases:
 
 ## **Main functionalities or points to consider:**
 - `importRecipeFromUrl(url)`: Fetches recipe data from a given URL using the Spoonacular API, validates the URL, handles API errors, and transforms the response into the application's recipe schema.
-- `saveImportedRecipe(recipe)`: Saves the transformed recipe object to the browser's local storage, preventing duplicates. 
+- `saveImportedRecipe(recipe)`: Saves the transformed recipe object to the browser's local storage, preventing duplicates.
+
+## Recipe Object Schema
+
+A recipe object imported and saved by this module will have the following properties:
+
+```
+{
+  name: string,
+  author: string,
+  image: string,
+  ingredients: Array<{ name: string, unit: string }>,
+  steps: string[],
+  tags: string[],
+  timeEstimate: string,
+  favorite: boolean,
+  createdAt: string, // ISO date
+  sourceurl: string  // original URL
+}
+``` 

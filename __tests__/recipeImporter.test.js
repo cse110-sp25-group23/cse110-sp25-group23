@@ -1,17 +1,21 @@
+import { expect, test, jest } from '@jest/globals';
 import { importRecipeFromUrl, saveImportedRecipe } from '../source/recipeImporter/recipeImporter.js';
 
 // Mock fetch and localStorage
 global.fetch = jest.fn();
-global.localStorage = {
+const mockLocalStorage = {
     getItem: jest.fn(),
     setItem: jest.fn()
 };
+Object.defineProperty(window, 'localStorage', {
+    value: mockLocalStorage
+});
 
 describe('Recipe Importer', () => {
     beforeEach(() => {
         // Clear all mocks before each test
         jest.clearAllMocks();
-        localStorage.getItem.mockReturnValue('[]');
+        mockLocalStorage.getItem.mockReturnValue('[]');
     });
 
     describe('importRecipeFromUrl', () => {
@@ -40,43 +44,36 @@ describe('Recipe Importer', () => {
         });
 
         it('should successfully import a valid recipe', async () => {
-            const mockRecipe = {
+            const mockRecipeData = {
                 title: 'Test Recipe',
-                sourceName: 'Test Source',
+                sourceName: 'Test Author',
                 image: 'test.jpg',
                 extendedIngredients: [
-                    { name: 'Ingredient 1', amount: 2, unit: 'cups' },
-                    { name: 'Ingredient 2', amount: 1, unit: 'tbsp' }
+                    { name: 'Ingredient 1', amount: 1, unit: 'cup' }
                 ],
                 analyzedInstructions: [{
-                    steps: [
-                        { step: 'Step 1' },
-                        { step: 'Step 2' }
-                    ]
+                    steps: [{ step: 'Step 1' }]
                 }],
-                readyInMinutes: 45
+                readyInMinutes: 30
             };
 
             fetch.mockResolvedValueOnce({
                 ok: true,
-                json: () => Promise.resolve(mockRecipe)
+                json: () => Promise.resolve(mockRecipeData)
             });
 
-            const result = await importRecipeFromUrl('https://example.com/recipe');
-
-            expect(result).toEqual({
+            const recipe = await importRecipeFromUrl('https://example.com/recipe');
+            expect(recipe).toEqual({
                 name: 'Test Recipe',
-                author: 'Test Source',
+                author: 'Test Author',
                 image: 'test.jpg',
-                ingredients: [
-                    { name: 'Ingredient 1', unit: '2 cups' },
-                    { name: 'Ingredient 2', unit: '1 tbsp' }
-                ],
-                steps: ['Step 1', 'Step 2'],
-                timeEstimate: '45 minutes',
+                ingredients: [{ name: 'Ingredient 1', unit: '1 cup' }],
+                steps: ['Step 1'],
+                tags: [],
+                timeEstimate: '30 minutes',
                 favorite: false,
                 createdAt: expect.any(String),
-                tags: []
+                sourceurl: 'https://example.com/recipe'
             });
         });
     });
@@ -85,12 +82,19 @@ describe('Recipe Importer', () => {
         it('should save a new recipe to localStorage', () => {
             const recipe = {
                 name: 'Test Recipe',
-                author: 'Test Author'
+                author: 'Test Author',
+                ingredients: [],
+                steps: [],
+                tags: [],
+                timeEstimate: '30 min',
+                favorite: false,
+                createdAt: new Date().toISOString(),
+                sourceurl: 'https://example.com/recipe'
             };
 
             const result = saveImportedRecipe(recipe);
 
-            expect(localStorage.setItem).toHaveBeenCalledWith(
+            expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
                 'recipes',
                 JSON.stringify([recipe])
             );
@@ -100,21 +104,38 @@ describe('Recipe Importer', () => {
         it('should prevent duplicate recipes', () => {
             const existingRecipe = {
                 name: 'Test Recipe',
-                author: 'Test Author'
+                author: 'Test Author',
+                ingredients: [],
+                steps: [],
+                tags: [],
+                timeEstimate: '30 min',
+                favorite: false,
+                createdAt: new Date().toISOString(),
+                sourceurl: 'https://example.com/recipe'
             };
 
-            localStorage.getItem.mockReturnValue(JSON.stringify([existingRecipe]));
+            mockLocalStorage.getItem.mockReturnValue(JSON.stringify([existingRecipe]));
 
             expect(() => saveImportedRecipe(existingRecipe))
                 .toThrow('This recipe has already been imported');
         });
 
         it('should handle localStorage errors', () => {
-            localStorage.setItem.mockImplementationOnce(() => {
+            mockLocalStorage.setItem.mockImplementationOnce(() => {
                 throw new Error('Storage error');
             });
 
-            expect(() => saveImportedRecipe({ name: 'Test', author: 'Test' }))
+            expect(() => saveImportedRecipe({ 
+                name: 'Test', 
+                author: 'Test',
+                ingredients: [],
+                steps: [],
+                tags: [],
+                timeEstimate: '30 min',
+                favorite: false,
+                createdAt: new Date().toISOString(),
+                sourceurl: 'https://example.com/recipe'
+            }))
                 .toThrow('Storage error');
         });
     });
