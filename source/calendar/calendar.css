@@ -513,9 +513,9 @@ nav a:hover{
 .note-block, .note {
   aspect-ratio: 1/1 fixed;
   flex: 0 0 auto;
-  background-color: #ffe49e !important; /* force color to show */
+  background-color: var(--bg-color) !important; /* force color to show */
   border-radius: 4px;
-  border: 1px solid #d4a03d !important; /* force border to show */
+  border: 1px solid var(--accent) !important; /* force border to show */
   font-size: 0.7rem;
   font-weight: bold;
   margin: 1px 0; 
@@ -530,10 +530,11 @@ nav a:hover{
 .note-block {
   z-index: 3;
   box-sizing: border-box;
-  min-height: 20px;
+  min-height: 48px;
   overflow: hidden;
   position: absolute;
   max-width: calc(100% - 4px);
+  height: auto;
 }
 
 /* Recipe block in week and day view */
@@ -544,6 +545,8 @@ nav a:hover{
   width: 100%;
   overflow: hidden;
   overflow-x: scroll;
+  min-height: 48px;
+  height: auto !important;
 }
 
 .recipe-name {
@@ -683,6 +686,8 @@ nav a:hover{
 /* Hour box */
 .time-slot {
   position: relative;
+  min-height: 48px;
+  height: auto;
   border-top: 1px solid #eee;
   overflow: visible; /* allows time blocks to flow into the next hour */;
 }
