@@ -46,6 +46,7 @@ export function getRecipeCardTemplateCSS() {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
 
         .favorite-btn:hover {
@@ -64,13 +65,12 @@ export function getRecipeCardTemplateCSS() {
             font-family: inter;
             background-color: transparent;
             width: 500px;
-            height: 260px;
+            height: 300px;
             border-radius: 16px;
             overflow: visible;
             perspective: 1000px;
-            margin: 1rem;
+            margin: 0.5rem;
             will-change: transform;
-            margin-bottom: 50px;
         }
 
         .flip-card:fullscreen {
@@ -82,6 +82,7 @@ export function getRecipeCardTemplateCSS() {
             position: absolute;
             bottom: 10px;
             right: 10px;
+            cursor: pointer;
         }
           
         /*For positioning front and back side of card */
@@ -120,6 +121,7 @@ export function getRecipeCardTemplateCSS() {
             border-radius: 16px;
             background-color: #ffffff;
             padding: 20px;
+            box-sizing: border-box; 
         }
         
         .flip-card-back {
@@ -127,7 +129,6 @@ export function getRecipeCardTemplateCSS() {
             text-align: center;
             overflow: scroll;
         }
-
         
         .ingredients-class {
             max-height: 6rem; /* adjust as needed */
@@ -151,7 +152,7 @@ export function getRecipeCardTemplateCSS() {
             padding: 6px 10px;
             border-radius: 6px;
             margin-left: 20px;
-
+            cursor: pointer;
         }
 
         .edit-btn {
@@ -159,6 +160,7 @@ export function getRecipeCardTemplateCSS() {
             margin-left: 4px;
             padding: 6px 12px;
             border-radius: 6px;
+            cursor: pointer;
         }
     `;
 }
