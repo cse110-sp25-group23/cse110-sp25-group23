@@ -684,6 +684,7 @@ nav a:hover{
 .time-slot {
   position: relative;
   border-top: 1px solid #eee;
+  overflow: visible; /* allows time blocks to flow into the next hour */;
 }
 
 .day-view .time-slot {
