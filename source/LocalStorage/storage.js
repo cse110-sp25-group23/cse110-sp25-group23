@@ -3,9 +3,9 @@ window.addEventListener('DOMContentLoaded', init);      //runs the init function
 function init() {
 	let recipes = getRecipesFromStorage();
 	addRecipesToDocument(recipes);
-    // adds event listeners to form elements
-	initFormHandler();    
-	
+	// adds event listeners to form elements
+	initFormHandler();
+
 	//adds search
 	initSearch();
 
@@ -41,8 +41,8 @@ function getRecipesFromStorage() {
  * @param {Array<Object>} recipes An array of recipes
  */
 function addRecipesToDocument(recipes) {
-    //or document.getElementById('cardsContainer')
-	const container = document.querySelector('main');    
+	//or document.getElementById('cardsContainer')
+	const container = document.querySelector('main');
 
 	for (let i = 0; i < recipes.length; i++) {
 		let recipeCard = document.createElement('recipe-card');
@@ -67,7 +67,7 @@ function saveRecipesToStorage(recipes) {
 function initFormHandler() {
 	const form = document.querySelector('form');
 	const container = document.querySelector('main');    //card container
-	
+
 	// Store ingredients in an array
 	const ingredientsArray = [];
 
@@ -80,7 +80,7 @@ function initFormHandler() {
 	addIngredientBtn.addEventListener('click', () => {
 		const name = ingredientInput.value.trim();
 		const unit = document.getElementById('ingredientUnitInput').value.trim();
-		
+
 		if (name) {
 			const ingredientObj = { name, unit };  // store as object
 			ingredientsArray.push(ingredientObj);
@@ -186,7 +186,7 @@ function initFormHandler() {
 		event.preventDefault();
 
 		const formData = new FormData(form);
-		
+
 		//Get inputs from Recipce Card form
 		const name = formData.get("name");
 		const author = formData.get("author");
@@ -194,8 +194,8 @@ function initFormHandler() {
 		const ingredients = [...ingredientsArray];
 		const favorite = false;
 		const createdAt = new Date().toISOString();
-        const sourceurl = "";
-		
+		const sourceurl = "";
+
 		//Time Estimate for recipe
 		const hours = parseInt(formData.get("timeHours") || "0");
 		const minutes = parseInt(formData.get("timeMinutes") || "0");
@@ -223,15 +223,15 @@ function initFormHandler() {
 		const tags = [];
 		if (predefinedTag) tags.push(predefinedTag);
 		if (customTag) {
-		tags.push(...customTag
-			.split(',')
-			.map(t => t.trim())
-			.filter(Boolean)
-			.map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()));
+			tags.push(...customTag
+				.split(',')
+				.map(t => t.trim())
+				.filter(Boolean)
+				.map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()));
 		}
 
 		//Check if the user will be using image URL
-		const urlInput = document.getElementById('imageSourceURL').checked ;
+		const urlInput = document.getElementById('imageSourceURL').checked;
 
 		//Recipe is an Object with these atributes
 		const recipe = {
@@ -243,21 +243,21 @@ function initFormHandler() {
 			timeEstimate,
 			favorite,
 			createdAt,
-            sourceurl
+			sourceurl
 		};
 
 		//If User is Using URL, get image url 
-		if(urlInput){
+		if (urlInput) {
 			const url = document.getElementById("imageURL").value.trim();
-			
+
 			//do not let them create without an image url
 			if (!url) {
 				alert("Please enter a valid image URL.");
 				return;
 			}
 			recipe.image = url;
-			finalizeRecipe(recipe); 
-		} else{
+			finalizeRecipe(recipe);
+		} else {
 			//get image and do not let user create card without image
 			const imgFile = document.getElementById("imageFile").files[0];
 			if (!imgFile) {
@@ -282,6 +282,8 @@ function initFormHandler() {
 			localRecipes.push(recipe);
 			saveRecipesToStorage(localRecipes);
 
+			window.dispatchEvent(new Event('recipeCreated'));
+
 			//Clear Inputs
 			form.reset();
 			//Reset image input and radio buttons
@@ -296,30 +298,30 @@ function initFormHandler() {
 			stepsArray.length = 0;
 			stepsList.innerHTML = '';
 		}
-	}); 
+	});
 }
 
 //search function
-function initSearch(){
+function initSearch() {
 	//get input from search-bar
 	const searchInput = document.querySelector('search input[type="search"]');
 
 	//If there is no input return
-	if(!searchInput){
+	if (!searchInput) {
 		return;
 	}
 
-	
+
 	searchInput.addEventListener('input', (query) => {
 		//remove spaces and convert all text to lowercase
 		const trimmedQuery = query.target.value.trim().toLowerCase();
 		const cards = document.querySelectorAll('recipe-card');
-		
+
 		//loop over each card
-		cards.forEach(card =>  {
+		cards.forEach(card => {
 			//get all data from each card
 			const { name, author, difficulty, tags, ingredients, steps } = card._data;
-			
+
 			/**
 			* Creates one string with all the text from all data
 			* .filter(x => x) Remvoves any null values, empty strings, and undefined values
@@ -327,7 +329,7 @@ function initSearch(){
 			* .join(' ') creates one large string with a space between every field 
 			* Ex. the strings "name" and "author" becomes one string "name, author"
 			*/
-			const haystack = [ name, author, difficulty, tags, ingredients, steps ].filter(x => x)
+			const haystack = [name, author, difficulty, tags, ingredients, steps].filter(x => x)
 				.join(' ')		//Combines all data into one string
 				.toLowerCase(); //Lowecase for all data
 
@@ -362,7 +364,7 @@ function toggleInputs() {
 //export functions for tests
 
 export {
-  addRecipesToDocument,
-  getRecipesFromStorage,
-  saveRecipesToStorage
+	addRecipesToDocument,
+	getRecipesFromStorage,
+	saveRecipesToStorage
 };

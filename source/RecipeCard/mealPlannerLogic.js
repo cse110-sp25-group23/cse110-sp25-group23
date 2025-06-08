@@ -238,6 +238,10 @@ window.addEventListener('recipesUpdated', () => {
     addRecipesToDocument(cleanedRecipes);
 });
 
+window.addEventListener('recipeCreated', () => {
+    renderMealList();
+});
+
 
 function renderMealList() {
     const mealList = document.getElementById('meal-list');
