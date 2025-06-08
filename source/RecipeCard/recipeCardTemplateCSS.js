@@ -1,13 +1,21 @@
 export function getRecipeCardTemplateCSS() {
     return `
-        .tags-class {
-            display:flex;
+        
+        .tags-wrapper {
             position: absolute;
-            bottom: 1px;
+            bottom: 5px;
+            left: 5px;
+            max-width: 20em;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .tags-class {
+            display: inline-flex;
             gap: 8px;
             align-items: center;
         }
-
+        
         .tag {
             background-color: #eee;
             color: #333;
@@ -16,7 +24,19 @@ export function getRecipeCardTemplateCSS() {
             font-size: 0.75rem;
             box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
-
+        
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        .scroll-animate {
+            animation: scroll-left 15s linear infinite;
+        }
 
         .recipe-image{
             position: absolute;
