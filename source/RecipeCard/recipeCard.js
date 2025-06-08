@@ -44,9 +44,10 @@ export class RecipeCard extends HTMLElement {
                             ${recipeData.ingredients.map(ing => `<li>${ing.name}${ing.unit ? ' - ' + ing.unit : ''}</li>`).join('')}
                         </ul>
                     </div>
-                    <div class="tags-class">
-                        <p>Tags: </p>
-                        ${recipeData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}                    
+                    <div class="tags-wrapper">
+                        <div class="tags-class">
+                            ${recipeData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
                     </div>
                 </div>
                 <div class="flip-card-back">
@@ -77,7 +78,19 @@ export class RecipeCard extends HTMLElement {
             </div>
         </recipe-card>
         */
+       
+        const wrapper = container.querySelector('.tags-wrapper');
+        const tags = container.querySelector('.tags-class');
 
+        // Use requestAnimationFrame to ensure layout is updated
+        requestAnimationFrame(() => {
+            if (tags.scrollWidth > wrapper.clientWidth) {
+                // Duplicate content to allow looping feel
+                tags.innerHTML += tags.innerHTML;
+                tags.classList.add('scroll-animate');
+            }
+        });
+        
         // add the JS script for toggling card flip here. Since .flip-card is in shadow DOM
         // we can't look for it or toggle it anywhere else but here
         const flipCard = container.querySelector('.flip-card');
