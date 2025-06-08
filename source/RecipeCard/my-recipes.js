@@ -1,15 +1,22 @@
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
 
-// list of categories (Favorite and Recently-Created are properties that need to be added to storage.js)
-const categories = [
-  { title: "All Recipes", filter: (r) => true },
-  { title: "Recently Created", filter: (r) => true, sortRecent: (r) => new Date(r.createdAt)},
-  { title: "Favorites", filter: (r) => r.favorite },  
-  { title: "Easy", filter: (r) => r.tags.includes("Easy") },
-  { title: "Advanced", filter: (r) => r.tags.includes("Advanced") },
-];
-
 window.addEventListener('DOMContentLoaded', init);      //runs the init function when dom content loads
+
+// if screen becomes too small, redisplay shelves so they only display 2 cards
+window.addEventListener('resize', () => {
+    // do not redisplay shelves if you're simply going fullscreen
+    if (document.fullscreenElement) {
+        return;
+    }
+    document.getElementById("shelf-container").innerHTML = "";
+    displayShelves();
+});
+
+// custom event: if a card's edit, delete, or favorite button is pressed, update all shelf displays
+window.addEventListener('recipesUpdated', () => {
+    document.getElementById("shelf-container").innerHTML = "";
+    displayShelves();
+});
 
 function init() {
     // displays shelves (each representing a category), adds event listeners to "See All" elements
@@ -21,47 +28,36 @@ function init() {
 }
 
 /**
- * Displays all cards in the specified category
- * NOTE: possibly remove if we allow horizontal scrolling through cards
- * @param title the category name
- * @param {Array<Object>} recipes An array of recipes
+ * Updates what cards from storage are displayed on the shelf 
+ * @param {HTMLElement} container the element that contains all the displayed recipe cards 
+ * @param {Array<Object>} recipes the array of recipes in localstorage 
+ * @param {number} startIndex display cards that start from this index in the recipes array
+ * @param {*} count the number of cards that we want to display on the shelf
+ * @param {HTMLElement} leftBtn the button element for the left arrow (for horizontal scrolling)
+ * @param {HTMLElement} rightBtn the button element for the right arrow (for horizontal scrolling)
  */
-function showAll(title, recipes) {
-  // Clear main container
-  const container = document.getElementById("shelf-container");
-  container.innerHTML = "";
-
-  /*
-  const titleElem = document.createElement("h2");
-  titleElem.textContent = `All ${title}`;
-  container.appendChild(titleElem);
-  */
-
-  // generate as many shelves as needed (5 per shelf, for now)
-  const shelfSize = 5;
-  for (let i = 0; i < recipes.length; i += shelfSize) {
-    // the container for this individual shelf
-    const shelfDiv = document.createElement("div");
-    shelfDiv.className = "shelf-section";
-
-    const shelfImage = document.createElement("img");
-    shelfImage.className = "shelf";
-    shelfDiv.appendChild(shelfImage);
-
-    const cardsContainer = document.createElement("div");
-    cardsContainer.className = "cards-on-shelf";
-
-    // display only the cards in the current 5-block chunk of recipes (based on i, loop counter)
-    const chunk = recipes.slice(i, i + shelfSize);
+function updateShelfCards(container, recipes, startIndex, count, leftBtn, rightBtn) {
+    container.innerHTML = "";   // clears cards only
+    const chunk = recipes.slice(startIndex, startIndex + count);
     chunk.forEach(recipe => {
-      	let recipeCard = document.createElement('recipe-card');
-		recipeCard.data = recipe;
-		cardsContainer.appendChild(recipeCard);
+        let recipeCard = document.createElement('recipe-card');
+        recipeCard.data = recipe;
+        container.appendChild(recipeCard);
     });
 
-    shelfDiv.appendChild(cardsContainer);
-    container.appendChild(shelfDiv);
-  }
+    // disables left click + changes button style to give indication that no further cards are to the left
+    if (startIndex == 0) {
+        leftBtn.classList.add("disabled");
+    } else {
+        leftBtn.classList.remove("disabled");
+    }
+
+    // Right button: disable if at last page
+    if (startIndex + count >= recipes.length) {
+        rightBtn.classList.add("disabled");
+    } else {
+        rightBtn.classList.remove("disabled");
+    }
 }
 
 /**
@@ -71,6 +67,30 @@ function showAll(title, recipes) {
 function displayShelves() {
   const recipes = getRecipesFromStorage();
   const container = document.getElementById("shelf-container");
+
+    // retrieve all tags (includes predefined, custom, and meal tags)
+    let uniqueTags = [];
+    recipes.forEach(recipe => {
+        recipe.tags.forEach(tag => {
+            if (!uniqueTags.includes(tag)) {
+                uniqueTags.push(tag);
+            }
+        });
+    });
+
+    // make each tag a "category" that will be added to a "categories" object
+    const tagCategories = uniqueTags.map(tag => ({
+        title: tag,
+        filter: (r) => r.tags.includes(tag)
+    }));
+
+    // Step 3: Combine static + dynamic categories
+    const categories = [
+        { title: "All Recipes", filter: (r) => true },
+        { title: "Recently Created", filter: (r) => true, sortRecent: (r) => new Date(r.createdAt) },
+        { title: "Favorites", filter: (r) => r.favorite },
+        ...tagCategories
+    ];
 
   // loop through each category
   categories.forEach(category => {
@@ -83,48 +103,76 @@ function displayShelves() {
     }
     
 
-    // limit how many recipes can be displayed on shelf to avoid overflow
-    const recipesToShow = 3;
+    // decides how many cards to show based on screen size
+    let recipesToShow = 3;
+    if (window.innerWidth < 1500) {
+        recipesToShow = 2; 
+    }
     const someRecipes = shelfRecipes.slice(0, recipesToShow);
 
     // the container for this individual shelf (will contain label, img, and cards)
     const shelfDiv = document.createElement("div");
     shelfDiv.className = "shelf-section";
+    // needed for us to know where in the localstorage "recipes" array we are at currently 
+    shelfDiv.dataset.currentIndex = "0";    
 
+    // the shelf label
     const title = document.createElement("h2");
     title.textContent = category.title;
     shelfDiv.appendChild(title);
 
+    // the image of the wooden shelf
     const shelfImage = document.createElement("img");
     shelfImage.className = "shelf";
     shelfDiv.appendChild(shelfImage);
 
+    // contains all the recipe cards displayed above shelf img
     const cardsContainer = document.createElement("div");
     cardsContainer.className = "shelf-cards";
 
-    // create each recipe-card
-    someRecipes.forEach(recipe => {
-      	let recipeCard = document.createElement('recipe-card');
-		recipeCard.data = recipe;
-		cardsContainer.appendChild(recipeCard);
+    // add the left and right buttons to each shelf. click to look at the rest of the cards in storage
+    const leftBtn = document.createElement("button");
+    leftBtn.textContent = "<";
+    leftBtn.className = "shelf-arrow left";     // adds 2 classes, shelf-arrow and left
+    leftBtn.addEventListener("click", () => {
+        let index = parseInt(shelfDiv.dataset.currentIndex);
+        //prevent going out of bounds (below 0 index)
+        index = Math.max(0, index - recipesToShow);  
+        shelfDiv.dataset.currentIndex = index.toString();
+        updateShelfCards(cardsContainer, shelfRecipes, index, recipesToShow, leftBtn, rightBtn);
     });
 
-    shelfDiv.appendChild(cardsContainer);
+    const rightBtn = document.createElement("button");
+    rightBtn.textContent = ">";
+    rightBtn.className = "shelf-arrow right";
+    rightBtn.addEventListener("click", () => {
+        let index = parseInt(shelfDiv.dataset.currentIndex);
+        if (index + recipesToShow < shelfRecipes.length) {
+            index += recipesToShow;  
+            shelfDiv.dataset.currentIndex = index.toString();
+            updateShelfCards(cardsContainer, shelfRecipes, index, recipesToShow, leftBtn, rightBtn);
+        }
+    });
 
-    // "See All" button event handling
-    if (shelfRecipes.length >= recipesToShow) {
-        const seeAllBtn = document.createElement("button");
-        seeAllBtn.textContent = "See All";
-        seeAllBtn.className = "see-all-btn"; 
-        seeAllBtn.addEventListener("click", () => showAll(category.title, shelfRecipes));
-        shelfDiv.appendChild(seeAllBtn);
-    }
+    // add buttons to shelf
+    shelfDiv.appendChild(leftBtn);
+    shelfDiv.appendChild(rightBtn);
+
+    // display a set of recipeCards starting from index {shelfDiv.dataset.currentIndex} in localstorage
+    // updateShelfCards will update the cardsContainer element to contain these cards
+    let index = parseInt(shelfDiv.dataset.currentIndex);
+    updateShelfCards(cardsContainer, shelfRecipes, index, recipesToShow, leftBtn, rightBtn);
+
+    // add the finalized cardsContainer to the shelfDiv container, then add shelfDiv to the bigger container
+    shelfDiv.appendChild(cardsContainer);
 
     container.appendChild(shelfDiv);
   });
 }
 
-//search function (MODIFY)
+/**
+ * Searches for cards that have any properties related to the search input 
+ */
 function initSearch(){
 	//get input from search-bar
 	const searchInput = document.getElementById('searchInput')

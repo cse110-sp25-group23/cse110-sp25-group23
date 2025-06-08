@@ -7,14 +7,17 @@ window.addEventListener('DOMContentLoaded', () => {
     const saveMealBtn = document.getElementById('save-meal-btn');
 
     createMealBtn.addEventListener('click', () => {
-        // Show meal form
+        // Show the meal creation input and controls
         mealControls.style.display = 'block';
         mealNameInput.value = '';
 
-        // Remove any existing checkboxes first
+        // Clear any existing meal preview
+        document.getElementById('meal-cards-display').innerHTML = '';
+
+        // Remove any previously inserted checkboxes from the cards
         document.querySelectorAll('.card-checkbox-wrapper').forEach(wrapper => wrapper.remove());
 
-        // Add checkboxes directly into live cards
+        // Insert a checkbox into each recipe-card to allow selection
         const cards = document.querySelectorAll('recipe-card');
 
         cards.forEach((card, index) => {
@@ -34,7 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
             checkbox.dataset.createdAt = card._data.createdAt;
 
             checkboxWrapper.appendChild(checkbox);
-            // Append checkbox wrapper to the recipe-card's shadow DOM container
             const container = card.shadowRoot.querySelector('.card-container');
             container.style.position = 'relative';
             container.insertBefore(checkboxWrapper, container.firstChild);
@@ -48,6 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Collect createdAt values of selected recipe cards
         const checkboxes = document.querySelectorAll('recipe-card');
         const selectedCreatedAts = [];
         checkboxes.forEach(card => {
@@ -57,14 +60,13 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-
         if (selectedCreatedAts.length === 0) {
             alert('Please select at least one recipe');
             return;
         }
 
+        // Add the meal tag to selected recipes
         const allRecipes = getRecipesFromStorage();
-
         allRecipes.forEach(recipe => {
             if (selectedCreatedAts.includes(recipe.createdAt)) {
                 const tags = recipe.tags || [];
@@ -75,34 +77,38 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-
+        // Save updated recipes and refresh meal list and card tags
         saveRecipesToStorage(allRecipes);
-        renderMealList(); // Update the list of created meals
+        renderMealList();
+        document.querySelector('main').innerHTML = '';
+        addRecipesToDocument(allRecipes);
+
+        // Hide meal creation UI
         document.getElementById('meal-controls').style.display = 'none';
 
-        // ✅ OPTIONAL: clear the selection grid if you're using it
-        const selectionGrid = document.getElementById('meal-selection-cards');
-        if (selectionGrid) selectionGrid.innerHTML = '';
-
-
+        // Remove all checkboxes
         document.querySelectorAll('recipe-card').forEach(card => {
             const box = card.shadowRoot.querySelector('.card-checkbox-wrapper');
             if (box) box.remove();
         });
 
+        // Clear the optional card selection area if it exists
+        const selectionGrid = document.getElementById('meal-selection-cards');
+        if (selectionGrid) selectionGrid.innerHTML = '';
     });
 
-    // ✅ Load saved recipes and render meals on page load
+    // Initial load: show stored recipes and available meals
     const recipes = getRecipesFromStorage();
-    document.querySelector('main').innerHTML = ''; // ✅ Clear old cards
-    addRecipesToDocument(recipes);  // Renders <recipe-card> elements
-    renderMealList();               // Renders meal buttons
+    document.querySelector('main').innerHTML = '';
+    addRecipesToDocument(recipes);
+    renderMealList();
 });
 
 function renderMealList() {
     const mealList = document.getElementById('meal-list');
     mealList.innerHTML = '';
 
+    // Extract all unique meal names from recipe tags
     const allRecipes = getRecipesFromStorage();
     const mealNames = new Set();
 
@@ -114,6 +120,7 @@ function renderMealList() {
         });
     });
 
+    // For each meal, render a list item with view, edit, and delete buttons
     mealNames.forEach(meal => {
         const li = document.createElement('li');
 
@@ -133,22 +140,27 @@ function renderMealList() {
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'meal-delete-btn';
         deleteBtn.addEventListener('click', () => {
-            const allRecipes = getRecipesFromStorage().map(recipe => ({
-                ...recipe,
-                tags: (recipe.tags || []).filter(tag => tag !== meal)
-            }));
-            saveRecipesToStorage(allRecipes);
+            // Remove the tag from all recipes
+            const updated = getRecipesFromStorage().map(recipe => {
+                const tags = (recipe.tags || []).filter(tag => tag !== meal);
+                return { ...recipe, tags };
+            });
+
+            // Save and re-render cards and meal list
+            saveRecipesToStorage(updated);
             renderMealList();
+            document.querySelector('main').innerHTML = '';
+            addRecipesToDocument(updated);
             document.getElementById('meal-cards-display').innerHTML = '';
         });
-        li.appendChild(deleteBtn);
 
+        li.appendChild(deleteBtn);
         mealList.appendChild(li);
     });
 }
 
-
 function showMealPreview(mealName) {
+    // Show only the cards associated with the selected meal
     const display = document.getElementById('meal-cards-display');
     display.innerHTML = '';
 
@@ -168,7 +180,7 @@ function startEditMeal(mealName, editBtn) {
     document.getElementById('meal-cards-display').innerHTML = '';
     document.querySelectorAll('.card-checkbox-wrapper').forEach(wrapper => wrapper.remove());
 
-    // Only create one save button
+    // Add a "Save changes" button if one doesn't already exist
     let saveChangesBtn = editBtn.nextElementSibling;
     if (!saveChangesBtn || !saveChangesBtn.classList.contains('save-edit-btn')) {
         saveChangesBtn = document.createElement('button');
@@ -179,6 +191,7 @@ function startEditMeal(mealName, editBtn) {
 
     const allRecipes = getRecipesFromStorage();
 
+    // Insert checkboxes into each card and check if it’s already in the meal
     cards.forEach(card => {
         const checkboxWrapper = document.createElement('div');
         checkboxWrapper.classList.add('card-checkbox-wrapper');
@@ -194,16 +207,14 @@ function startEditMeal(mealName, editBtn) {
         }
 
         checkboxWrapper.appendChild(checkbox);
-
         const container = card.shadowRoot.querySelector('.card-container');
         container.style.position = 'relative';
         container.insertBefore(checkboxWrapper, container.firstChild);
     });
 
-
     saveChangesBtn.onclick = () => {
+        // Collect selected recipe identifiers
         const selected = [];
-
         document.querySelectorAll('recipe-card').forEach(card => {
             const checkbox = card.shadowRoot.querySelector('.meal-select-checkbox');
             if (checkbox?.checked) {
@@ -211,6 +222,7 @@ function startEditMeal(mealName, editBtn) {
             }
         });
 
+        // Apply tag updates based on checkbox state
         const allRecipes = getRecipesFromStorage();
         const updated = allRecipes.map(recipe => {
             const tags = recipe.tags || [];
@@ -228,10 +240,13 @@ function startEditMeal(mealName, editBtn) {
             return recipe;
         });
 
+        // Save changes and re-render UI
         saveRecipesToStorage(updated);
         renderMealList();
+        document.querySelector('main').innerHTML = '';
+        addRecipesToDocument(updated);
 
-        // ✅ Fix: remove shadow DOM wrappers too
+        // Remove any checkboxes still in the shadow DOM
         document.querySelectorAll('recipe-card').forEach(card => {
             const wrapper = card.shadowRoot.querySelector('.card-checkbox-wrapper');
             if (wrapper) wrapper.remove();
@@ -239,7 +254,4 @@ function startEditMeal(mealName, editBtn) {
 
         saveChangesBtn.remove();
     };
-
-
-
 }

@@ -475,12 +475,13 @@ h1{
 /* Shelf design settings */
 .shelf {
   display: block;
+  margin: 0 auto;
   z-index: 9;
   content:url("images/shelf1_edit_5.png");
   position: relative;
   width: 1641px;
   height: 200px;
-  left: -12.5%;
+  max-width: 100%;
 }
 
 .shelf-section {
@@ -493,39 +494,64 @@ h1{
   margin-top: 200px; 
   padding: 20px 40px; 
   position: relative;
+  right: 45px;
 }
 
 .shelf-cards {
   display: flex;
-  gap: 80px;
+  gap: 10px;
   justify-content: center;
   position: absolute;
   top: 45%;              
-  left: 50%;
+  left: 49%;
   transform: translate(-50%, -50%);  
+  max-width:100%;
   min-height: 120px;     
-  width: 50%;
+  width: 90%;
   z-index: 10;
+  margin-top: 10px;
 }
 
-.see-all-btn {
-  display: block;
-  margin: 10px 30px 0 auto; 
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color:rgb(249, 215, 130);
-  border: 2px solid #fcd462;
-  border-radius: 8px;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
-  position: relative;
-  top: -150px;
+.shelf-arrow {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    background-color: var(--red);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--bg-color);  
+    cursor: pointer;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease;
 }
 
-.see-all-btn:hover {
-  background-color:rgb(255, 205, 68);
+.shelf-arrow:hover {
+    background-color: rgba(255, 5, 5, 0.7);
 }
 
+.shelf-arrow.left {
+    left: 10px;
+}
+
+.shelf-arrow.right {
+    right: 10px;
+}
+
+.shelf-arrow.disabled {
+    opacity: 0.7;
+    cursor: default;
+    background-color: #ba3226;
+    color: #eee;
+    pointer-events: none;
+}
   
 
 
