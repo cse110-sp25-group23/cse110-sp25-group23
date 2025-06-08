@@ -4,7 +4,8 @@ export class Cart {
   static _key = 'recipeCart';
 
   /**
-   * Read the cart array from localStorage (or fallback to empty array)
+   * Read the cart array from localStorage (or fallback to empty array).
+   * @returns {Array<{name: string, qty: number, unit: string}>} Parsed cart array
    */
   static _read() {
     let raw = '[]';
@@ -16,7 +17,9 @@ export class Cart {
   }
 
   /**
-   * Write the cart array back to localStorage and emit a cart:update event
+   * Write the cart array back to localStorage and emit a cart:update event.
+   * @param {Array<{name: string, qty: number, unit: string}>} cartArray - Array to persist
+   * @returns {void}
    */
   static _write(cartArray) {
     // Guard for environments without localStorage
@@ -30,8 +33,10 @@ export class Cart {
 
   /**
    * Add a "recipe" (list of ingredients) to the cart.
-   * Each ingredient must have { name, qty, unit }.
-   * We use 'name' as the unique key. Skips duplicates.
+   * Each ingredient object must have { name, qty, unit }.
+   * Uses 'name' as the unique key and skips duplicates.
+   * @param {{ ingredients: Array<{name: string, qty: number, unit: string}> }} recipe - Recipe data
+   * @returns {void}
    */
   static addRecipe(recipe) {
     const cart = this._read();
@@ -45,6 +50,8 @@ export class Cart {
 
   /**
    * Remove a single ingredient from the cart by its name.
+   * @param {string} ingredientName - The name of the ingredient to remove
+   * @returns {void}
    */
   static removeByName(ingredientName) {
     const filtered = this._read().filter(item => item.name !== ingredientName);
@@ -52,7 +59,8 @@ export class Cart {
   }
 
   /**
-   * Completely clear the cart.
+   * Completely clear the cart from localStorage and emit an update event.
+   * @returns {void}
    */
   static clear() {
     // Guard for environments without localStorage
@@ -64,7 +72,7 @@ export class Cart {
 
   /**
    * List all items in the cart.
-   * Returns an array of { name, qty, unit }.
+   * @returns {Array<{name: string, qty: number, unit: string}>} Current cart contents
    */
   static list() {
     return this._read();
