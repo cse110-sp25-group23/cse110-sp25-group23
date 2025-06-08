@@ -6,6 +6,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const mealControls = document.getElementById('meal-controls');
     const mealNameInput = document.getElementById('meal-name-input');
     const saveMealBtn = document.getElementById('save-meal-btn');
+    const stopViewingBtn = document.getElementById('stop-viewing-btn');
+
 
     createMealBtn.addEventListener('click', () => {
 
@@ -20,8 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
         mealNameInput.value = '';
         cancelMealBtn.style.display = 'inline-block';
 
-        // Clear any existing meal preview
-        document.getElementById('meal-cards-display').innerHTML = '';
 
         // Remove any previously inserted checkboxes from the cards
         document.querySelectorAll('.card-checkbox-wrapper').forEach(wrapper => wrapper.remove());
@@ -121,12 +121,15 @@ window.addEventListener('DOMContentLoaded', () => {
         if (selectionGrid) selectionGrid.innerHTML = '';
     });
 
-    const stopViewingBtn = document.getElementById('stop-viewing-btn');
     stopViewingBtn.addEventListener('click', () => {
-        document.getElementById('meal-cards-display').innerHTML = '';
+        const main = document.querySelector('main');
+        main.innerHTML = '';
+        addRecipesToDocument(getRecipesFromStorage());
+
         stopViewingBtn.style.display = 'none';
         window.currentPreviewedMeal = null;
     });
+
 
     // Initial load: show stored recipes and available meals
     const recipes = getRecipesFromStorage();
@@ -211,14 +214,14 @@ window.addEventListener('recipesUpdated', () => {
         return recipe;
     });
 
-    // Save updated recipes with orphaned tags removed
+    // Save cleaned recipes
     saveRecipesToStorage(cleanedRecipes);
 
-    // Refresh UI
-    document.getElementById('meal-cards-display').innerHTML = '';
-
+    const main = document.querySelector('main');
     const stopViewingBtn = document.getElementById('stop-viewing-btn');
+    main.innerHTML = '';
 
+    // If we're currently previewing a meal, re-show just those cards
     if (window.currentPreviewedMeal) {
         const stillExists = cleanedRecipes.some(r =>
             r.tags && r.tags.includes(window.currentPreviewedMeal)
@@ -226,16 +229,18 @@ window.addEventListener('recipesUpdated', () => {
         if (stillExists) {
             showMealPreview(window.currentPreviewedMeal);
         } else {
+            // Meal was deleted, stop viewing
             window.currentPreviewedMeal = null;
             stopViewingBtn.style.display = 'none';
+            addRecipesToDocument(cleanedRecipes); // Show all
         }
     } else {
         stopViewingBtn.style.display = 'none';
+        addRecipesToDocument(cleanedRecipes); // Show all
     }
 
+    // Always update the meal list
     renderMealList();
-    document.querySelector('main').innerHTML = '';
-    addRecipesToDocument(cleanedRecipes);
 });
 
 window.addEventListener('recipeCreated', () => {
@@ -279,6 +284,9 @@ function renderMealList() {
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'meal-delete-btn';
         deleteBtn.addEventListener('click', () => {
+            document.getElementById('stop-viewing-btn').style.display = 'none';
+            window.currentPreviewedMeal = null;
+
             // Remove the tag from all recipes
             const updated = getRecipesFromStorage().map(recipe => {
                 const tags = (recipe.tags || []).filter(tag => tag !== meal);
@@ -290,7 +298,6 @@ function renderMealList() {
             renderMealList();
             document.querySelector('main').innerHTML = '';
             addRecipesToDocument(updated);
-            document.getElementById('meal-cards-display').innerHTML = '';
         });
 
         li.appendChild(deleteBtn);
@@ -299,30 +306,32 @@ function renderMealList() {
 }
 
 function showMealPreview(mealName) {
-    // Show only the cards associated with the selected meal
-    const display = document.getElementById('meal-cards-display');
-    display.innerHTML = '';
+    const main = document.querySelector('main');
+    main.innerHTML = '';
 
     const allRecipes = getRecipesFromStorage();
     const mealRecipes = allRecipes.filter(r => r.tags && r.tags.includes(mealName));
 
     mealRecipes.forEach(recipe => {
-        const recipeCard = document.createElement('recipe-card');
-        recipeCard.data = recipe;
-        display.appendChild(recipeCard);
+        const card = document.createElement('recipe-card');
+        card.data = recipe;
+        main.appendChild(card);
     });
 
-
-    // ✅ Show the Stop Viewing button and set currentPreviewedMeal
     window.currentPreviewedMeal = mealName;
-    const stopBtn = document.getElementById('stop-viewing-btn');
-    stopBtn.style.display = 'inline-block';
+    document.getElementById('stop-viewing-btn').style.display = 'inline-block';
 }
 
+
+
 function startEditMeal(mealName, editBtn) {
+    document.getElementById('stop-viewing-btn').style.display = 'none';
+    window.currentPreviewedMeal = null;
+    document.querySelector('main').innerHTML = '';
+    addRecipesToDocument(getRecipesFromStorage());
     const cards = document.querySelectorAll('recipe-card');
+
     document.getElementById('meal-controls').style.display = 'none';
-    document.getElementById('meal-cards-display').innerHTML = '';
     document.querySelectorAll('.card-checkbox-wrapper').forEach(wrapper => wrapper.remove());
 
     // Add a "Save changes" button if one doesn't already exist

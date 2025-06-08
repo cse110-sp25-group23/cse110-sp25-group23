@@ -16,7 +16,7 @@ export class RecipeCard extends HTMLElement {
      * @param {Object} recipeData - Data for recipe
      */
     set data(recipeData) {
-        if(!recipeData) return;
+        if (!recipeData) return;
         this._data = recipeData;
 
         // Create and append <style> element to our current card component
@@ -78,7 +78,7 @@ export class RecipeCard extends HTMLElement {
             </div>
         </recipe-card>
         */
-       
+
         const wrapper = container.querySelector('.tags-wrapper');
         const tags = container.querySelector('.tags-class');
 
@@ -90,7 +90,7 @@ export class RecipeCard extends HTMLElement {
                 tags.classList.add('scroll-animate');
             }
         });
-        
+
         // add the JS script for toggling card flip here. Since .flip-card is in shadow DOM
         // we can't look for it or toggle it anywhere else but here
         const flipCard = container.querySelector('.flip-card');
@@ -102,8 +102,8 @@ export class RecipeCard extends HTMLElement {
         const favButton = container.querySelector('.favorite-btn');
         favButton.addEventListener('click', (e) => {
             //prevents flipping
-            e.stopPropagation(); 
-            
+            e.stopPropagation();
+
             // Toggle favorite
             favButton.classList.toggle('favorited');
             this._data.favorite = !this._data.favorite;
@@ -140,11 +140,11 @@ export class RecipeCard extends HTMLElement {
             }
         });
 
-    
+
         // Initialize delete and update logic
-        delete_card(this.shadowRoot,this);
+        delete_card(this.shadowRoot, this);
         update_card(this.shadowRoot, this, recipeData);
-    }   
+    }
 }
 
 // Define the custom recipe card element
@@ -160,18 +160,18 @@ customElements.define('recipe-card', RecipeCard);
  * @param {*} hostElement - recipe-card custom element
  * @param {*} recipeData  - Original data object 
  */
-export function update_card(shadowRoot, hostElement, recipeData){
+export function update_card(shadowRoot, hostElement, recipeData) {
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
     editButton.classList.add('edit-btn');
     shadowRoot.appendChild(editButton);
 
     editButton.addEventListener('click', () => {
-        const originalData   = { ...recipeData };
+        const originalData = { ...recipeData };
 
         //Can add more tags as we implement card (remember to edit HTML to sync)
         const predefinedTags = ["Easy", "Advanced", "Pro"];
-        const originalTags   = recipeData.tags;
+        const originalTags = recipeData.tags;
 
         //separate tags originally selected
         const predefinedSelectedTags = originalTags.filter(tag => predefinedTags.includes(tag));
@@ -212,26 +212,26 @@ export function update_card(shadowRoot, hostElement, recipeData){
         <label>Steps: <textarea class="edit-steps" placeholder="Step1 \nStep2">${originalData.steps ? originalData.steps.join('\n') : ''}</textarea></label><br>
         <button class="save-btn">Save</button>
         `;
-        
+
         const saveButton = shadowRoot.querySelector('.save-btn');
         saveButton.addEventListener('click', () => {
-        //tag handling: 
+            //tag handling: 
             //predefined tags
-            const checkedTags    = [];
-            const checkBoxedTags = shadowRoot.querySelectorAll('.edit-tag-checkbox'); 
-            
+            const checkedTags = [];
+            const checkBoxedTags = shadowRoot.querySelectorAll('.edit-tag-checkbox');
+
             checkBoxedTags.forEach(checkbox => {
-                if(checkbox.checked) {
+                if (checkbox.checked) {
                     checkedTags.push(checkbox.value);
                 }
             });
 
             //custom tags
-            const editedCustomTags =shadowRoot.querySelector('.edit-custom-tags').value;
+            const editedCustomTags = shadowRoot.querySelector('.edit-custom-tags').value;
             const savedCustomTags = editedCustomTags.split(',').map(tag => tag.trim()).filter(Boolean);
 
             const allEditedTags = checkedTags.concat(savedCustomTags);
-        
+
             //need to handle ingredients and steps since both are stringified arrays
             const editedIngredients = shadowRoot.querySelector('.edit-ingredients').value;
             const savedIngredients = editedIngredients.split('\n')
@@ -239,7 +239,7 @@ export function update_card(shadowRoot, hostElement, recipeData){
                     const [name, unit] = line.split('-').map(s => s.trim());
                     return name ? { name, unit: unit || '' } : null;
                 })
-                .filter(obj => obj); 
+                .filter(obj => obj);
 
             const editedSteps = shadowRoot.querySelector('.edit-steps').value;
             const savedSteps = editedSteps
@@ -257,12 +257,12 @@ export function update_card(shadowRoot, hostElement, recipeData){
                 steps: savedSteps
             };
 
-        //Updating logic --> compare new data with original to check for changes
+            //Updating logic --> compare new data with original to check for changes
 
             let hasChanges = false;
-            const finalData = { ...originalData};
+            const finalData = { ...originalData };
 
-            for(const key in updatedData) {
+            for (const key in updatedData) {
                 if (updatedData[key] !== originalData[key]) {
                     finalData[key] = updatedData[key];
                     hasChanges = true;
@@ -271,7 +271,7 @@ export function update_card(shadowRoot, hostElement, recipeData){
 
             shadowRoot.innerHTML = '';
             if (hasChanges) {
-                
+
                 hostElement.data = finalData;
             } else {
                 hostElement.data = originalData;
@@ -302,8 +302,8 @@ function delete_card(shadowRoot, hostElement) {
     shadowRoot.appendChild(deleteButton);
 
 
-    if(deleteButton) {
-        deleteButton.addEventListener('click', () => {            
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => {
             //update local storage
             let recipeString = localStorage.getItem('recipes');
             //turn the recipesString into an array
@@ -334,4 +334,3 @@ function delete_card(shadowRoot, hostElement) {
         });
     }
 }
-
