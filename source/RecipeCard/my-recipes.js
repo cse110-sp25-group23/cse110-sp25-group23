@@ -110,7 +110,10 @@ function displayShelves() {
 
     // decides how many cards to show based on screen size
     let recipesToShow = 3;
-    if (window.innerWidth < 1500) {
+    if (window.innerWidth < 1100) {
+        recipesToShow = 1;
+    }
+    else if (window.innerWidth < 1500) {
         recipesToShow = 2; 
     }
     const someRecipes = shelfRecipes.slice(0, recipesToShow);
