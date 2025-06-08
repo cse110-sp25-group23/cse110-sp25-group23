@@ -152,6 +152,8 @@
                 </label>
 
                 <button type="submit">Create Recipe</button>
+                <button type="button" id="import-btn">Import a Recipe Card Instead</button>
+
             </form>
         </section>
 
@@ -176,11 +178,14 @@
 
         <!-- Right: Recipe Cards -->
         <section id="right-panel">
+            <label class="search-label">Search For A Specific Recipe:</label>
             <search>
                 <input type="search" placeholder="Search" />
             </search>
+            <h3 class="cards-header">Recipe Cards:</h3>
             <main id="cardsContainer"></main>
         </section>
+
     </div>
     <footer class="site-footer">
         <div class="footer-links">

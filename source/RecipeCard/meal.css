@@ -1,26 +1,58 @@
-/* Layout */
+/* === Layout Container === */
 #layout-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 30px;
     padding: 20px;
     box-sizing: border-box;
 }
 
-/* Column Panels */
+/* === Column Panels === */
 #left-panel,
 #middle-panel {
     flex: 1;
     min-width: 280px;
     max-width: 320px;
+    background-color: #fff8e1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
 }
 
 #right-panel {
     flex: 2;
     min-width: 400px;
+    background-color: #fff8e1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* Form & Section Styling */
+
+/* === Header Fonts for Left, Middle, Right === */
+#left-panel h1,
+#middle-panel h2,
+#right-panel .search-label {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 15px;
+}
+
+/* === Subheadings (smaller) === */
+#middle-panel h3,
+#right-panel .cards-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+/* === Forms & Controls === */
 form label,
 .ingredient-row,
 #meal-controls,
@@ -35,75 +67,112 @@ button,
 textarea {
     display: block;
     margin-top: 5px;
-    padding: 6px;
+    padding: 8px;
     width: 100%;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     box-sizing: border-box;
 }
 
 button {
     margin-top: 8px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border: 1px solid #aaa;
 }
 
-#stop-viewing-btn {
-    margin-bottom: 15px;
+button:hover {
+    background-color: #e0e0e0;
 }
 
-/* Responsive stacking on narrow screens */
-@media (max-width: 900px) {
-    #layout-container {
-        flex-direction: column;
-    }
-
-    #left-panel,
-    #middle-panel,
-    #right-panel {
-        max-width: 100%;
-    }
-}
-
-/* Each list item for a meal */
-.meal-list-item {
-    list-style: none;
-    margin-bottom: 16px;
-}
-
-/* Button displaying the meal name */
-.meal-name-btn {
+/* === Consistent Button Width in Middle Panel === */
+/* Ensure all meal panel buttons including meal-name-btn are consistent */
+#middle-panel button,
+#meal-list button {
     display: block;
     width: 100%;
-    font-weight: bold;
-    margin-bottom: 6px;
+    padding: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin-bottom: 8px;
 }
 
-/* Wrapper for Edit and Delete buttons side-by-side */
+
+/* === Meal List Buttons Styling === */
+.meal-list-item {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 .meal-action-container {
     display: flex;
+    justify-content: center;
     gap: 10px;
-    /* Space between buttons */
+    margin-top: 6px;
+    width: 100%;
 }
 
-/* Each button takes up equal width inside the container */
 .meal-action-container button {
     flex: 1;
+    min-width: 0;
+    padding: 8px;
 }
 
+/* === Recipe Cards Grid === */
 main {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    /* spacing between cards */
     justify-content: flex-start;
-    /* or center, space-between, etc. */
     align-items: flex-start;
     padding: 10px;
 }
 
-.meal-action-container {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
+/* === Stop Viewing Button Spacing === */
+#stop-viewing-btn {
+    margin-bottom: 15px;
 }
 
-.meal-list-item {
-    margin-bottom: 12px;
+/* === Search + Header === */
+#right-panel .search-label {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#right-panel search {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#right-panel input[type="search"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+}
+
+/* === Recipe Cards Title === */
+#right-panel .cards-header {
+    margin-top: 10px;
+}
+
+/* === Import Button Placement === */
+#import-btn {
+    margin-top: 12px;
+    background-color: #e7f0ff;
+    border-color: #88aadd;
+
+}
+
+#meal-list {
+    padding-left: 0;
+    /* Removes default indentation */
+    margin: 0;
 }

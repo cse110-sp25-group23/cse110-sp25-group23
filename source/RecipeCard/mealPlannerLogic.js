@@ -31,6 +31,11 @@ window.addEventListener('DOMContentLoaded', () => {
         // Exit preview mode if user was viewing a specific meal
         window.currentPreviewedMeal = null;
 
+        // Hide all action containers (edit/delete/stop viewing)
+        document.querySelectorAll('.meal-action-container').forEach(container => {
+            container.style.display = 'none';
+        });
+
         // Show all recipes again
         document.querySelector('main').innerHTML = '';
         addRecipesToDocument(getRecipesFromStorage());
@@ -133,11 +138,6 @@ window.addEventListener('DOMContentLoaded', () => {
         // If the meal name is too long, alert the user to use less
         if (mealName.length > 30) {
             alert('Meal name is too long. Please use 30 characters or fewer.');
-            return;
-        }
-
-        if (existingMeals.has(mealName)) {
-            alert('A meal with this name already exists. Please choose another name.');
             return;
         }
 
@@ -382,6 +382,12 @@ function renderMealList() {
 
         // Button click: show meal preview & toggle current menu, hide all others
         viewBtn.addEventListener('click', () => {
+            // If we're in Create Meal mode, cancel it
+            const cancelMealBtn = document.getElementById('cancel-meal-btn');
+            if (cancelMealBtn && cancelMealBtn.style.display !== 'none') {
+                cancelMealBtn.click();
+            }
+
             showMealPreview(meal);
 
             // Hide all other action containers
