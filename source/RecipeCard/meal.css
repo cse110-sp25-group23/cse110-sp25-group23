@@ -1,0 +1,94 @@
+/* Layout */
+#layout-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Column Panels */
+#left-panel,
+#middle-panel {
+    flex: 1;
+    min-width: 280px;
+    max-width: 320px;
+}
+
+#right-panel {
+    flex: 2;
+    min-width: 400px;
+}
+
+/* Form & Section Styling */
+form label,
+.ingredient-row,
+#meal-controls,
+#meal-list-container {
+    display: block;
+    margin-bottom: 15px;
+}
+
+input,
+select,
+button,
+textarea {
+    display: block;
+    margin-top: 5px;
+    padding: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    margin-top: 8px;
+}
+
+#stop-viewing-btn {
+    margin-bottom: 15px;
+}
+
+/* Responsive stacking on narrow screens */
+@media (max-width: 900px) {
+    #layout-container {
+        flex-direction: column;
+    }
+
+    #left-panel,
+    #middle-panel,
+    #right-panel {
+        max-width: 100%;
+    }
+}
+
+/* Each list item for a meal */
+.meal-list-item {
+    list-style: none;
+    margin-bottom: 16px;
+}
+
+/* Button displaying the meal name */
+.meal-name-btn {
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+/* Wrapper for Edit and Delete buttons side-by-side */
+.meal-action-container {
+    display: flex;
+    gap: 10px;
+    /* Space between buttons */
+}
+
+/* Each button takes up equal width inside the container */
+.meal-action-container button {
+    flex: 1;
+}
+
+#meal-action-bar {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}

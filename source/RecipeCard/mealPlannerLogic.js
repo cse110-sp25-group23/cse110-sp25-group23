@@ -30,6 +30,14 @@ window.addEventListener('DOMContentLoaded', () => {
     */
     createMealBtn.addEventListener('click', () => {
 
+        // Exit preview mode if user was viewing a specific meal
+        window.currentPreviewedMeal = null;
+        stopViewingBtn.style.display = 'none';
+
+        // Show all recipes again
+        document.querySelector('main').innerHTML = '';
+        addRecipesToDocument(getRecipesFromStorage());
+
         // Get all recipe-card elements currently in the DOM
         const recipeCards = document.querySelectorAll('recipe-card');
 
@@ -49,7 +57,11 @@ window.addEventListener('DOMContentLoaded', () => {
         cancelMealBtn.style.display = 'inline-block';
 
         // Remove any previously inserted checkbox wrappers from earlier interactions
-        document.querySelectorAll('.card-checkbox-wrapper').forEach(wrapper => wrapper.remove());
+        document.querySelectorAll('recipe-card').forEach(card => {
+            const oldWrapper = card.shadowRoot.querySelector('.card-checkbox-wrapper');
+            if (oldWrapper) oldWrapper.remove();
+        });
+
 
         // Loop through each recipe card and inject a checkbox for meal selection
         const cards = document.querySelectorAll('recipe-card');
@@ -58,13 +70,6 @@ window.addEventListener('DOMContentLoaded', () => {
             // Create a wrapper div to hold the checkbox and apply visual styling
             const checkboxWrapper = document.createElement('div');
             checkboxWrapper.classList.add('card-checkbox-wrapper');
-            checkboxWrapper.style.position = 'absolute';            // position at top-left
-            checkboxWrapper.style.top = '5px';
-            checkboxWrapper.style.left = '5px';
-            checkboxWrapper.style.zIndex = '1000';                  // make sure it's above the card
-            checkboxWrapper.style.backgroundColor = 'white';        // contrast background
-            checkboxWrapper.style.padding = '2px';                  // small padding around checkbox
-            checkboxWrapper.style.borderRadius = '4px';             // slightly rounded corners
 
             // Create the actual checkbox input
             const checkbox = document.createElement('input');
@@ -206,6 +211,11 @@ window.addEventListener('DOMContentLoaded', () => {
         // Clear out all currently displayed recipe cards
         main.innerHTML = '';
 
+        // Hide any visible Edit/Delete panels
+        document.querySelectorAll('.meal-action-container').forEach(container => {
+            container.style.display = 'none';
+        });
+
         // Re-render all recipes from localStorage (shows every card again)
         addRecipesToDocument(getRecipesFromStorage());
 
@@ -238,6 +248,13 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('recipesUpdated', () => {
     // Get all current recipes from localStorage
     const allRecipes = getRecipesFromStorage();
+
+    // Cancel Create Meal mode if active
+    const cancelMealBtn = document.getElementById('cancel-meal-btn');
+    if (cancelMealBtn && cancelMealBtn.style.display !== 'none') {
+        cancelMealBtn.click();
+    }
+
 
     // Create a Set to track tags that are still used (excluding standard tags)
     const stillUsedTags = new Set();
@@ -313,81 +330,80 @@ window.addEventListener('recipeCreated', () => {
  * Each meal gets a list item with buttons to view, edit, or delete the associated recipe group.
  */
 function renderMealList() {
-    // Get the <ul> or <div> container that holds the meal buttons
     const mealList = document.getElementById('meal-list');
-
-    // Clear the existing meal list so it can be re-rendered fresh
     mealList.innerHTML = '';
 
-    // Get all saved recipes from localStorage
     const allRecipes = getRecipesFromStorage();
-
-    // Create a Set to hold unique meal names (non-standard tags)
     const mealNames = new Set();
 
-    // Loop through all recipes and collect custom tags as meal names
     allRecipes.forEach(recipe => {
         (recipe.tags || []).forEach(tag => {
-            // Skip built-in tags like difficulty levels
             if (!["Easy", "Advanced", "Pro"].includes(tag)) {
-                mealNames.add(tag); // Add meal name to the Set
+                mealNames.add(tag);
             }
         });
     });
 
-    // For each meal name found...
     mealNames.forEach(meal => {
-        // Create a new <li> element to hold the buttons
         const li = document.createElement('li');
+        li.className = 'meal-list-item';
 
-        // ===== VIEW BUTTON =====
+        // Meal name button
         const viewBtn = document.createElement('button');
-        viewBtn.textContent = meal; // Show the meal name as button text
-        viewBtn.className = 'meal-view-btn'; // Style class
-        // When clicked, preview only the recipes in this meal
-        viewBtn.addEventListener('click', () => showMealPreview(meal));
-        li.appendChild(viewBtn);
+        viewBtn.textContent = meal;
+        viewBtn.className = 'meal-name-btn';
 
-        // ===== EDIT BUTTON =====
+        // Action container (Edit/Delete)
+        const actionContainer = document.createElement('div');
+        actionContainer.className = 'meal-action-container';
+        actionContainer.style.display = 'none'; // Initially hidden
+
+        // Edit button
         const editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit'; // Label for the edit button
-        editBtn.className = 'meal-edit-btn'; // Style class
-        // When clicked, enter edit mode for this meal
+        editBtn.textContent = 'Edit';
+        editBtn.className = 'meal-edit-btn';
         editBtn.addEventListener('click', () => startEditMeal(meal, editBtn));
-        li.appendChild(editBtn);
+        actionContainer.appendChild(editBtn);
 
-        // ===== DELETE BUTTON =====
+        // Delete button
         const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete'; // Label for the delete button
-        deleteBtn.className = 'meal-delete-btn'; // Style class
-        // When clicked, remove this meal from all recipes
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.className = 'meal-delete-btn';
         deleteBtn.addEventListener('click', () => {
-            // Stop any current meal preview and hide the stop button
             document.getElementById('stop-viewing-btn').style.display = 'none';
             window.currentPreviewedMeal = null;
 
-            // Create an updated version of the recipe list without the deleted meal tag
             const updated = getRecipesFromStorage().map(recipe => {
-                const tags = (recipe.tags || []).filter(tag => tag !== meal); // Remove the tag
-                return { ...recipe, tags }; // Return updated recipe object
+                const tags = (recipe.tags || []).filter(tag => tag !== meal);
+                return { ...recipe, tags };
             });
 
-            // Save the modified recipes to storage
             saveRecipesToStorage(updated);
+            renderMealList();
+            document.querySelector('main').innerHTML = '';
+            addRecipesToDocument(updated);
+        });
+        actionContainer.appendChild(deleteBtn);
 
-            // Refresh the UI
-            renderMealList(); // Re-render the meal list
-            document.querySelector('main').innerHTML = ''; // Clear all cards
-            addRecipesToDocument(updated); // Show all updated recipe cards
+        // Button click: show meal preview & toggle current menu, hide all others
+        viewBtn.addEventListener('click', () => {
+            showMealPreview(meal);
+
+            // Hide all other action containers
+            document.querySelectorAll('.meal-action-container').forEach(container => {
+                container.style.display = 'none';
+            });
+
+            // Show only the clicked one
+            actionContainer.style.display = 'flex';
         });
 
-        // Add the delete button to the list item
-        li.appendChild(deleteBtn);
-
-        // Add the fully built <li> to the meal list in the UI
+        li.appendChild(viewBtn);
+        li.appendChild(actionContainer);
         mealList.appendChild(li);
     });
 }
+
 
 /**
  * Displays only the recipe cards that belong to a specific meal.
