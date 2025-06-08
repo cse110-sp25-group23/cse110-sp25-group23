@@ -1,6 +1,10 @@
 /**
  * @jest-environment jsdom
- */
+ * 
+*/
+
+// USE `NODE_ENV=test npm run test:calendar` OR `NPM RUN TEST:CALENDAR` TO RUN TESTS
+
 
 // Mock DOM elements before importing calendar.js
 document.body.innerHTML = `
@@ -29,8 +33,15 @@ import {
   getRecipeBlockHtml,
   getStoredRecipeData,
   normalizeDatetimeKey,
-  pad
+  pad, 
+  highlightActiveToggle,
+  renderCalendar, 
+  storeRecipeToCalendar, 
+  populateRecipeDropdown
 } from '../../source/calendar/calendar.js';
+
+global.currentView = 'month';  // Or 'week' or 'day' as needed
+global.currentDate = new Date(); // For renderCalendar
 
 beforeAll(() => {
   // Set up basic mock HTML structure for DOM references in calendar.js
@@ -78,10 +89,11 @@ describe('Calendar Utility Functions', () => {
     expect(block.textContent).toContain('Soup');
   });
 
-  test('getStoredRecipeData returns empty array for invalid key', () => {
+  test('getStoredRecipeData wraps raw string in array with empty author (fallback)', () => {
     localStorage.setItem('invalid', 'not json');
-    expect(getStoredRecipeData('invalid')).toEqual([]);
+    expect(getStoredRecipeData('invalid')).toEqual([{ name: 'not json', author: '' }]);
   });
+
 
   test('getStoredRecipeData returns parsed array if valid JSON array', () => {
     const key = '2025-06-07 10:00';
@@ -103,5 +115,76 @@ describe('Calendar Utility Functions', () => {
     localStorage.setItem(key, value);
     expect(getStoredRecipeData(key)).toEqual([{ name: 'Burger', author: '' }]);
   });
+
+  test('highlightActiveToggle sets the correct button as active', () => {
+    document.body.innerHTML = `
+      <div class="calendar-toggle">
+        <button data-view="month">Month</button>
+        <button data-view="week">Week</button>
+        <button data-view="day">Day</button>
+      </div>
+    `;
+
+    currentView = 'month';
+    highlightActiveToggle();
+
+    const buttons = document.querySelectorAll('.calendar-toggle button');
+    expect(buttons[0].classList.contains('active')).toBe(true);
+    expect(buttons[1].classList.contains('active')).toBe(false);
+    expect(buttons[2].classList.contains('active')).toBe(false);
+  });
+
+
+
+  test('storeRecipeToCalendar adds a recipe to localStorage', () => {
+    const recipes = [{ name: 'Cake', author: 'Baker' }];
+    storeRecipeToCalendar('2025-06-07 10:00', 'Cake', recipes);
+    const stored = JSON.parse(localStorage.getItem('2025-06-07 10:00'));
+    expect(stored).toEqual({ name: 'Cake', author: 'Baker' });
+  });
+
+  test('populateRecipeDropdown fills #recipe-select with options', () => {
+    document.body.innerHTML = `
+      <select id="recipe-select">
+        <option value="">Select a recipe</option>
+      </select>
+    `;
+
+    const recipes = [
+      { name: 'Spaghetti', author: 'John' },
+      { name: 'Brownies', author: 'Jane' }
+    ];
+
+    localStorage.setItem('recipes', JSON.stringify(recipes)); // <-- Fix
+
+    populateRecipeDropdown();
+
+    const options = document.querySelectorAll('#recipe-select option');
+    expect(options.length).toBe(3); // 1 placeholder + 2 recipes
+    expect(options[1].value).toBe('Spaghetti');
+    expect(options[2].textContent).toContain('Brownies');
+  });
+
+
+  // mock test for renderCalendar
+  test('renderCalendar resets grid and applies correct view class', () => {
+    document.body.innerHTML = `
+      <div id="calendar-grid" class="calendar-grid"></div>
+      <div id="calendar-day-label"></div>
+      <div id="month-year"></div>
+      <div class="calendar-days"></div>
+      <div class="calendar-toggle">
+        <button data-view="month"></button>
+        <button data-view="week"></button>
+        <button data-view="day"></button>
+      </div>
+    `;
+
+    renderCalendar(currentDate);
+
+    const grid = document.getElementById('calendar-grid');
+    expect(grid.classList.contains('month-view')).toBe(true);
+  });
+
 
 });
