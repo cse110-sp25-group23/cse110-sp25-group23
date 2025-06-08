@@ -90,6 +90,16 @@ export function getRecipeCardTemplateCSS() {
             max-width: 28.5em;
         }
 
+        .flip-card:fullscreen p {
+            font-size: 2em;
+            max-width: 28.5em;
+        }
+
+        .flip-card:fullscreen .ingredients-scroll {
+            max-height: 20rem;
+            max-width: 30rem;
+        }
+
         .flip-card:fullscreen .steps-list {
             font-size: 1.5em;
         }
