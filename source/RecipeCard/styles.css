@@ -591,11 +591,11 @@ nav a:hover{
 }
 
 .shelf-arrow.left {
-    left: 10px;
+    left: -25px;
 }
 
 .shelf-arrow.right {
-    right: 10px;
+    right: -25px;
 }
 
 .shelf-arrow.disabled {
