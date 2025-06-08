@@ -1,6 +1,11 @@
 // calendar.js
 // calculate dates and render basic calendar functions
 
+// USE `NODE_ENV=test npm run test:calendar` TO RUN TESTS
+
+const isTestEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
+// If in Jest test environment, mock localStorage
+
 // DOM element references
 const calendarGrid = document.getElementById('calendar-grid');
 const calendarDayLabel = document.getElementById('calendar-day-label');
@@ -303,7 +308,7 @@ function renderCalendar(date) {
 }
 
 // inital render on page load
-renderCalendar(currentDate);
+// renderCalendar(currentDate); // comment this out for Jest testing
 
 
 /**
@@ -406,191 +411,204 @@ function normalizeDatetimeKey(rawKey) {
 
 
 /* === EVENT LISTENERS === */
-
-// PATCHED form submission
-const assignForm = document.getElementById('assign-form');
-assignForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const recipeName = document.getElementById('recipe-select').value;
-  const date = document.getElementById('recipe-date').value;
-  const time = document.getElementById('recipe-time').value;
-  if (!recipeName || !date || !time) return;
-  const [y, m, d] = date.split("-");
-  const key = `${y}-${m}-${d} ${time}`;
-  const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
-  const authorText = document.getElementById('recipe-select').selectedOptions[0].dataset.author;
-  const selected = allRecipes.find(r => r.name === recipeName && r.author === authorText);
-
-  if (!selected) return;
-  function parseTimeEstimate(str) {
-    const match = str.match(/(?:(\d+)\s*hr)?\s*(?:(\d+)\s*min)?/i);
-    if (!match) return 60;
-    const hrs = parseInt(match[1]) || 0;
-    const mins = parseInt(match[2]) || 0;
-    return hrs * 60 + mins;
-  }
-
-  const entry = {
-    name: selected.name,
-    author: selected.author,
-    durationMinutes: selected.timeEstimate
-      ? parseTimeEstimate(selected.timeEstimate)
-      : (selected.durationMinutes || 60)
-  };
-
-  let current = [];
-  try {
-    current = JSON.parse(localStorage.getItem(key)) || [];
-  } catch {
-    current = [];
-  }
-  const duplicate = current.find(r => r.name === entry.name && r.author === entry.author);
-  if (!duplicate) {
-    current.push(entry);
-    localStorage.setItem(key, JSON.stringify(current));
-  }
+if (!isTestEnv) {
+  // Initial render on page load
   renderCalendar(currentDate);
-  assignForm.reset();
-});
 
+  // PATCHED form submission
+  const assignForm = document.getElementById('assign-form');
+  if (assignForm) {
+    assignForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const recipeName = document.getElementById('recipe-select').value;
+      const date = document.getElementById('recipe-date').value;
+      const time = document.getElementById('recipe-time').value;
+      if (!recipeName || !date || !time) return;
+      const [y, m, d] = date.split("-");
+      const key = `${y}-${m}-${d} ${time}`;
+      const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
+      const authorText = document.getElementById('recipe-select').selectedOptions[0].dataset.author;
+      const selected = allRecipes.find(r => r.name === recipeName && r.author === authorText);
 
-// navigation button handlers
-// adjusts currentDate based on view and re-render
-prevBtn.addEventListener('click', () => {
-  if (currentView === 'month') {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-  } else if (currentView === 'week') {
-    currentDate.setDate(currentDate.getDate() - 7);
-  } else if (currentView === 'day') {
-    currentDate.setDate(currentDate.getDate() - 1);
-  }
-  renderCalendar(currentDate);
-});
+      if (!selected) return;
+      function parseTimeEstimate(str) {
+        const match = str.match(/(?:(\d+)\s*hr)?\s*(?:(\d+)\s*min)?/i);
+        if (!match) return 60;
+        const hrs = parseInt(match[1]) || 0;
+        const mins = parseInt(match[2]) || 0;
+        return hrs * 60 + mins;
+      }
 
-nextBtn.addEventListener('click', () => {
-  if (currentView === 'month') {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-  } else if (currentView === 'week') {
-    currentDate.setDate(currentDate.getDate() + 7);
-  } else if (currentView === 'day') {
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-  renderCalendar(currentDate);
-});
+      const entry = {
+        name: selected.name,
+        author: selected.author,
+        durationMinutes: selected.timeEstimate
+          ? parseTimeEstimate(selected.timeEstimate)
+          : (selected.durationMinutes || 60)
+      };
 
-// view toggle buttons to switch between day, week, and month 
-document.querySelectorAll('.calendar-toggle button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentView = btn.dataset.view;
-    renderCalendar(currentDate); // re-render based on selected view
-  });
-});
-
-
-// when clicked on day in month view, go to day view of that day
-calendarGrid.addEventListener('click', (e) => {
-  const dayEl = e.target.closest('.day');
-  if (dayEl && currentView === 'month' && !e.target.classList.contains('delete-recipe')) {
-    const dateStr = dayEl.dataset.date;
-    if (dateStr) {
-      const [y, m, d] = dateStr.split('-');
-      currentDate = new Date(y, parseInt(m) - 1, d);
-      currentView = 'day';
+      let current = [];
+      try {
+        current = JSON.parse(localStorage.getItem(key)) || [];
+      } catch {
+        current = [];
+      }
+      const duplicate = current.find(r => r.name === entry.name && r.author === entry.author);
+      if (!duplicate) {
+        current.push(entry);
+        localStorage.setItem(key, JSON.stringify(current));
+      }
       renderCalendar(currentDate);
-    }
-  }
-});
-
-
-// search bar for recipes
-document.addEventListener('DOMContentLoaded', () => {
-  const searchInput = document.getElementById('search-input');
-  if (!searchInput) {
-    console.error('Search input element not found!');
-    return;
+      assignForm.reset();
+    });
   }
 
-  searchInput.addEventListener('input', (event) => {
-    const query = event.target.value.toLowerCase();
-    const notes = document.querySelectorAll('.note-block, .note');
-    notes.forEach(note => {
-      note.style.display = note.textContent.toLowerCase().includes(query) ? '' : 'none';
+
+  // navigation button handlers
+  // adjusts currentDate based on view and re-render
+  if (prevBtn){
+    prevBtn.addEventListener('click', () => {
+      if (currentView === 'month') {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+      } else if (currentView === 'week') {
+        currentDate.setDate(currentDate.getDate() - 7);
+      } else if (currentView === 'day') {
+        currentDate.setDate(currentDate.getDate() - 1);
+      }
+      renderCalendar(currentDate);
+    });
+  }
+
+  if(nextBtn){
+    nextBtn.addEventListener('click', () => {
+      if (currentView === 'month') {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      } else if (currentView === 'week') {
+        currentDate.setDate(currentDate.getDate() + 7);
+      } else if (currentView === 'day') {
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      renderCalendar(currentDate);
+    });
+  }
+
+  // view toggle buttons to switch between day, week, and month 
+  document.querySelectorAll('.calendar-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentView = btn.dataset.view;
+      renderCalendar(currentDate); // re-render based on selected view
     });
   });
-});
 
 
-// Delete recipe handler
-calendarGrid.addEventListener('click', (e) => {
-  const deleteBtn = e.target.closest('.delete-recipe');
-  if (!deleteBtn) return;
-
-  e.stopPropagation();
-
-  const note = deleteBtn.closest('.note-block, .note');
-  const recipeName = note.dataset.name;
-  const author = note.dataset.author;
-
-  let key = '';
-
-  if (currentView === 'month') {
-    const parentDay = note.closest('.day');
-    const recipeText = note.querySelector('.recipe-name')?.textContent.trim();
-    const match = recipeText.match(/^(\d{2}:\d{2})\s+–/);
-    if (!match || !parentDay) return;
-    const date = parentDay.dataset.date;
-    const time = match[1];
-    key = `${date} ${time}`;
-  } else if (currentView === 'day' || currentView === 'week') {
-    const slot = note.closest('.time-slot');
-    key = note.dataset.key;
-
-    Object.keys(localStorage).forEach(k => console.log("-", k));
-  }
-
-  if (!key) {
-    console.warn("Could not determine localStorage key");
-    return;
-  }
-
-  try {
-    const current = JSON.parse(localStorage.getItem(key)) || [];
-
-    const updated = current.filter(r => {
-      const nameMatch = r.name?.trim() === recipeName?.trim();
-      const authorMatch = (r.author || '').trim() === (author || '').trim();
-      return !(nameMatch && authorMatch);
+  if(calendarGrid){
+  // when clicked on day in month view, go to day view of that day
+    calendarGrid.addEventListener('click', (e) => {
+      const dayEl = e.target.closest('.day');
+      if (dayEl && currentView === 'month' && !e.target.classList.contains('delete-recipe')) {
+        const dateStr = dayEl.dataset.date;
+        if (dateStr) {
+          const [y, m, d] = dateStr.split('-');
+          currentDate = new Date(y, parseInt(m) - 1, d);
+          currentView = 'day';
+          renderCalendar(currentDate);
+        }
+      }
     });
+  }
 
-    if (updated.length > 0) {
-      localStorage.setItem(key, JSON.stringify(updated));
-    } else {
-      localStorage.removeItem(key);
+
+  // search bar for recipes
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    if (!searchInput) {
+      console.error('Search input element not found!');
+      return;
     }
 
+    searchInput.addEventListener('input', (event) => {
+      const query = event.target.value.toLowerCase();
+      const notes = document.querySelectorAll('.note-block, .note');
+      notes.forEach(note => {
+        note.style.display = note.textContent.toLowerCase().includes(query) ? '' : 'none';
+      });
+    });
+  });
+
+
+  // Delete recipe handler
+  calendarGrid.addEventListener('click', (e) => {
+    const deleteBtn = e.target.closest('.delete-recipe');
+    if (!deleteBtn) return;
+
+    e.stopPropagation();
+
+    const note = deleteBtn.closest('.note-block, .note');
+    const recipeName = note.dataset.name;
+    const author = note.dataset.author;
+
+    let key = '';
+
+    if (currentView === 'month') {
+      const parentDay = note.closest('.day');
+      const recipeText = note.querySelector('.recipe-name')?.textContent.trim();
+      const match = recipeText.match(/^(\d{2}:\d{2})\s+–/);
+      if (!match || !parentDay) return;
+      const date = parentDay.dataset.date;
+      const time = match[1];
+      key = `${date} ${time}`;
+    } else if (currentView === 'day' || currentView === 'week') {
+      const slot = note.closest('.time-slot');
+      key = note.dataset.key;
+
+      Object.keys(localStorage).forEach(k => console.log("-", k));
+    }
+
+    if (!key) {
+      console.warn("Could not determine localStorage key");
+      return;
+    }
+
+    try {
+      const current = JSON.parse(localStorage.getItem(key)) || [];
+
+      const updated = current.filter(r => {
+        const nameMatch = r.name?.trim() === recipeName?.trim();
+        const authorMatch = (r.author || '').trim() === (author || '').trim();
+        return !(nameMatch && authorMatch);
+      });
+
+      if (updated.length > 0) {
+        localStorage.setItem(key, JSON.stringify(updated));
+      } else {
+        localStorage.removeItem(key);
+      }
+
+      renderCalendar(currentDate);
+    } catch (err) {
+      console.error('Error during deletion:', err);
+    }
+  });
+
+
+  // Re-render calendar when screen is resized to apply new recipe limits
+  window.addEventListener('resize', () => {
     renderCalendar(currentDate);
-  } catch (err) {
-    console.error('Error during deletion:', err);
-  }
-});
-
-
-// Re-render calendar when screen is resized to apply new recipe limits
-window.addEventListener('resize', () => {
-  renderCalendar(currentDate);
-});
+  });
 
 
 
-// view recipe on card click
-document.addEventListener('click', (e) => {
-  const note = e.target.closest('.note-block');
-  // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
-  if (note && !e.target.classList.contains('delete-recipe')) {
-    const recipeName = note.querySelector('.recipe-name').textContent;
-    // TODO: render the recipe card view
-  }
-});
+  // view recipe on card click
+  document.addEventListener('click', (e) => {
+    const note = e.target.closest('.note-block');
+    // if (note && !e.target.classList.contains('edit-recipe') && !e.target.classList.contains('delete-recipe')) {
+    if (note && !e.target.classList.contains('delete-recipe')) {
+      const recipeName = note.querySelector('.recipe-name').textContent;
+      // TODO: render the recipe card view
+    }
+  });
+
+} // end of if !isTestEnv
 
 // === FOR JEST TESTING ===
 export {
