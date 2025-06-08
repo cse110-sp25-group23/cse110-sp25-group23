@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 /* 
 
-npx playwright test __tests__/calendar/calendar.e2e.test.js
+npx playwright test __tests__/calendar/e2e-calendar.test.js
 
 */
 
