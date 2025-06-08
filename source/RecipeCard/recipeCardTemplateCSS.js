@@ -1,6 +1,34 @@
 export function getRecipeCardTemplateCSS() {
     return `
+        .recipe-name {
+            font: pacifico-regular;
+            font-size: 2em;
+            margin: 0em 0em;
+
+            max-width: 5.8em;
+            width: 100%;
+
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Number of lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 3.2em; /* adjust for line height */
+
+            word-break: break-word;
+            overflow-wrap: break-word;
+
         
+        }
+
+        .recipe-author {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            max-width: 14em;
+        }
+
         .tags-wrapper {
             position: absolute;
             bottom: 5px;
@@ -54,10 +82,12 @@ export function getRecipeCardTemplateCSS() {
                 
         .flip-card:fullscreen .recipe-name {
             font-size: 5em;
+            max-width: 11.5em;
         }
 
         .flip-card:fullscreen .recipe-author {
             font-size: 2em;
+            max-width: 28.5em;
         }
 
         .flip-card:fullscreen .steps-list {
@@ -69,9 +99,9 @@ export function getRecipeCardTemplateCSS() {
         }
 
         .flip-card:fullscreen .recipe-image {
-            max-height: 20em;
+            max-height: 25em;
             height: 100%;
-            max-width: 20em;
+            max-width: 25em;
             width: 100%;
         }
 
