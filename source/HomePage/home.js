@@ -74,7 +74,9 @@ window.addEventListener('DOMContentLoaded', function() {
   const cart = JSON.parse(localStorage.getItem("recipeCart"));
 
   // favoritedRecipes (need to be connected with niroops favorite features in recipeCard)
-  const favorites = JSON.parse(localStorage.getItem("favoritedRecipes"));
+  const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
+  const favoriteRecipes = allRecipes.filter(recipe => recipe.favorite);
+  // const favorites = JSON.parse(localStorage.getItem("favoritedRecipes"));
 
   // Prevents reloading page if already on the said page
   document.querySelectorAll('a').forEach(link => {
@@ -98,44 +100,61 @@ window.addEventListener('DOMContentLoaded', function() {
    * @returns favorited recipes for user to view in batches of 10 and with see 
    * more button until no more favorites are left to display to the user.
    */
-  function renderFavorites() {
-    const container = document.getElementById("favorites-list");
-    container.innerHTML = ""; // Clearing previous content
+//   function renderFavorites() {
+//     const container = document.getElementById("favorites-list");
+//     container.innerHTML = ""; // Clearing previous content
 
-    if (!favorites || favorites.length === 0) {
-      container.innerHTML = `<p class="no-favorites">No favorites yet.<br><br><em>Browse to Store, Organize, and Share the Joy!</em></p>`;
-      document.getElementById("see-more-wrapper").style.display = "none";
-      return;
-    }
+//     if (!favorites || favorites.length === 0) {
+//       container.innerHTML = `<p class="no-favorites">No favorites yet.<br><br><em>Browse to Store, Organize, and Share the Joy!</em></p>`;
+//       document.getElementById("see-more-wrapper").style.display = "none";
+//       return;
+//     }
 
-    const startIndex = 0;
-    const endIndex = FAVORITES_PER_PAGE * favoritesPage;
-    const visibleFavorites = favorites.slice(startIndex, endIndex);
+//     const startIndex = 0;
+//     const endIndex = FAVORITES_PER_PAGE * favoritesPage;
+//     const visibleFavorites = favorites.slice(startIndex, endIndex);
 
-    visibleFavorites.forEach(recipe => {
-      container.innerHTML += `
-        <div class="favorite-card">
-          <img src="${recipe.image}" alt="${recipe.name}">
-          <h3>${recipe.name}</h3>
-          <div class="tags">${recipe.tags.join(', ')}</div>
-        </div>
-      `;
-  });
+//     visibleFavorites.forEach(recipe => {
+//       container.innerHTML += `
+//         <div class="favorite-card">
+//           <img src="${recipe.image}" alt="${recipe.name}">
+//           <h3>${recipe.name}</h3>
+//           <div class="tags">${recipe.tags.join(', ')}</div>
+//         </div>
+//       `;
+//   });
 
-  // Show/hide button based on remaining items
-  const seeMore = document.getElementById("see-more-wrapper");
-  if (favorites.length > endIndex) {
-    seeMore.style.display = "flex";
-  } else {
-    seeMore.style.display = "none";
+//   // Show/hide button based on remaining items
+//   const seeMore = document.getElementById("see-more-wrapper");
+//   if (favorites.length > endIndex) {
+//     seeMore.style.display = "flex";
+//   } else {
+//     seeMore.style.display = "none";
+//   }
+// }
+
+// document.getElementById("see-more-btn").addEventListener("click", () => {
+//   favoritesPage++; // increase page
+//   renderFavorites(); // now render new batch
+// });
+
+function renderFavoriteCards(recipes) {
+  const container = document.getElementById("favorites-list");
+  container.innerHTML = ""; // Clear previous content
+
+  if (!recipes || recipes.length === 0) {
+container.innerHTML = `<p class="no-favorites">No favorites yet.<br><br><em>Browse to Store, Organize, and Share the Joy!</em></p>`;
+return;
   }
+
+  recipes.forEach(recipe => {
+    const card = document.createElement("recipe-card");
+    card.setAttribute("readonly", "true"); // ✅ new line to mark as readonly
+
+    card.data = recipe;
+    container.appendChild(card);
+  });
 }
-
-document.getElementById("see-more-btn").addEventListener("click", () => {
-  favoritesPage++; // increase page
-  renderFavorites(); // now render new batch
-});
-
   /**
   * 
   * @returns a cart summary of the number of items they have in the cart
@@ -167,7 +186,42 @@ document.getElementById("see-more-btn").addEventListener("click", () => {
     totalDisplay.textContent = `Total Saved Items: ${total}`;
   }
 
-  renderCartSummary();
-  renderFavorites();
+  window.addEventListener('recipesUpdated', () => {
+    console.log('🧹 Updating favorites on homepage');
+  
+  
+    // Get updated recipes and filter favorites
+    const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
+    const updatedFavorites = allRecipes.filter(r => r.favorite);
+  
+    renderFavoriteCards(updatedFavorites);
+  });
 
+
+  // SEARCH BAR FUNCTIONALITY – redirects to my-recipes.html with query
+  const searchInput = document.getElementById('search-field-small');
+  const searchButton = document.querySelector('[type="submit"]');
+
+  function handleSearch() {
+    const query = searchInput.value.trim();
+    if (query !== '') {
+      localStorage.setItem('searchQuery', query);
+      window.location.href = '../RecipeCard/my-recipes.html';
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleSearch();
+      }
+    });
+  }
+
+  if (searchButton) {
+    searchButton.addEventListener('click', handleSearch);
+  }
+    
+  renderCartSummary();
+  renderFavoriteCards(favoriteRecipes);
 });

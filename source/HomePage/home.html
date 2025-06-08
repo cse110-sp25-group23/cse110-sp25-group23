@@ -1,6 +1,5 @@
 <!--
-  RN:
-  Do read-me for navigation and update calendar read me as well
+  Friday:
   ARIA tags
   Failure points
   end to end testing
@@ -21,6 +20,7 @@
 
 
   DONE:
+    Do read-me for navigation and update calendar read me as well - done
     dont refresh if click on its own icon page - done
     check footer and navbar bar links - done
     pick a recipe implementation on calendar - done
@@ -75,9 +75,9 @@
         
         <!-- text tabs -->
         <a href="../calendar/calendar.html">Calendar</a>
-        <a href="shelf.html">Shelf</a>
-        <a href="shelf.html">Create</a>
-        <a class="cart" href="shop.html">
+        <a href="../RecipeCard/my-recipes.html">Shelf</a>
+        <a href="../RecipeCard/recipeCard.html">Create</a>
+        <a class="cart" href="../ShoppingCart/shopping.html">
           <img src="images/shop.png" alt="shopping cart">
         </a>
       </nav>
@@ -97,11 +97,11 @@
           </a>
           
           <!-- create file does not exist until integrated with Thanh's work-->
-          <a href="../recipeCard/recipeImporter/recipeImport.html">
+          <a href="../recipeCard/recipeCard.html">
             <img src="images/plus.png" alt="plus for creating recipe">
           </a>
           
-          <a href="../recipeCard/recipeCard.html">
+          <a href="../recipeCard/my-recipes.html">
             <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
           </a>
           <a href="../ShoppingCart/shopping.html">
@@ -124,23 +124,29 @@
 
     <!-- Third Section - Favorited Recipes -->
     <div class="section-card" style="max-width: none;">
-      <h2> ♡ Favorited Recipes ♡ </h2>
-      <div id="favorites-list" class="favorites-container"></div>
-      <div id="see-more-wrapper">
+      <!-- <div id="favorites-list" class="favorites-container"></div> -->
+      <section id="homepage-favorites">
+        <h2> ♡ Favorited Recipes ♡ </h2>
+        <div id="favorites-list"></div>
+      </section>
+      
+      <!-- <div id="see-more-wrapper">
         <button id="see-more-btn" class="see-more-button">See More</button>
-      </div>
+      </div> -->
+
     </div>
 
       <footer class="site-footer">
         <div class="footer-links">
           <a href="home.html">Home</a>
-          <a href="../RecipeCard/recipeCard.html">Shelf</a>          
-          <a href="../RecipeCard/recipeImporter/recipeImport.html">Create</a>
+          <a href="../RecipeCard/my-recipes.html">Shelf</a>          
+          <a href="../RecipeCard/recipeCard.html">Create</a>
           <a href="../calendar/calendar.html">Calendar</a>
           <a href="../ShoppingCart/shopping.html">Shopping Cart</a>
         </div>
         <p class="footer-message">Check out some heart-warming recipes today!</p>    
     </footer>
     <script src="home.js"></script>
+    <script type="module" src="../RecipeCard/recipeCard.js"></script>
   </body>
 </html>

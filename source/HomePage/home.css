@@ -198,7 +198,7 @@ color: var(--text-dark);
   color: var(--red);
   
 }
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
   .site-footer{
       display: none;
   }
@@ -440,7 +440,7 @@ nav a:hover{
 }
 
 /* Show mobile nav on small screens */
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
   .mobile-nav {
     display: flex;
     position: fixed;
@@ -510,4 +510,16 @@ nav a:hover{
   display: flex;
   justify-content: center;
   margin-top: 1.5rem;
+}
+
+#favorites-list {
+  display: flex;
+  flex-wrap: wrap; /* allow wrapping to next line if needed */
+  gap: 20px;        /* spacing between cards */
+  justify-content: center; /* optional: center cards horizontally */
+  padding: 1rem;
+}
+
+recipe-card {
+  flex: 0 1 300px; /* each card will try to be 300px wide but can shrink */
 }

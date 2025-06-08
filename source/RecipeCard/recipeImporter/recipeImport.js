@@ -23,8 +23,20 @@ document.querySelectorAll('a').forEach(link => {
       }
     });
   });
-  
+
 importButton.addEventListener('click', async () => {
+     /** Properties Stored:
+         * const recipe = {
+			name,
+			author,
+			ingredients,
+			steps,
+			tags,
+			timeEstimate,
+			favorite,
+			createdAt
+		};
+         */
     try {
         errorMessage.style.display = 'none';
         successMessage.style.display = 'none';
@@ -34,27 +46,27 @@ importButton.addEventListener('click', async () => {
         
         recipeTitle.textContent = recipe.title;
         recipeImage.src = recipe.image || '';
-        recipeImage.alt = recipe.title || 'Recipe Image';
-        
+        recipeImage.alt = recipe.title || 'Recipe Dish Image';
+       
         recipeIngredients.innerHTML = '';
-        recipe.ingredients.forEach(ingredient => {
-            const li = document.createElement('li');
-            li.textContent = `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`.trim();
-            recipeIngredients.appendChild(li);
+        (recipe.ingredients || []).forEach(ingredient => {
+          const li = document.createElement('li');
+          li.textContent = `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`.trim();
+          recipeIngredients.appendChild(li);
         });
-        
+
         recipeInstructions.innerHTML = '';
-        recipe.instructions.forEach(step => {
-            const li = document.createElement('li');
-            li.textContent = step;
-            recipeInstructions.appendChild(li);
+        (recipe.instructions || []).forEach(step => {
+          const li = document.createElement('li');
+          li.textContent = step;
+          recipeInstructions.appendChild(li);
         });
         
         importedRecipeDisplay.style.display = 'block';
 
         saveImportedRecipe(recipe);
         
-        successMessage.textContent = `Successfully imported "${recipe.title}"!`;
+        successMessage.textContent = `Successfully imported "${recipe.name}"!`;
         successMessage.style.display = 'block';
         urlInput.value = '';
     } catch (error) {
