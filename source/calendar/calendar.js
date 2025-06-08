@@ -23,7 +23,7 @@ function highlightActiveToggle() {
 }
 
 // render a recipe block with name, author, and time
-function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60) {
+function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60, key = '') {
   const html = getRecipeBlockHtml(name, author);
   const temp = document.createElement('div');
   temp.innerHTML = html;
@@ -35,6 +35,10 @@ function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60) {
   note.style.height = `${heightPx}px`;
   note.style.left = '2px';
   note.style.right = '2px';
+
+  if (key) {
+    note.dataset.key = key;
+  }
 
   return note;
 }
@@ -182,13 +186,11 @@ function renderCalendar(date) {
               const stored = getStoredRecipeData(key);
               stored.forEach(({ name, author, durationMinutes = 60 }) => {
                 const heightPx = (durationMinutes / 60) * hourHeight; // 1 min = 1px
-                const note = renderRecipeBlock({ name, author }, offsetTop, heightPx);
+                const note = renderRecipeBlock({ name, author }, offsetTop, heightPx, key);
                 cell.appendChild(note);
               });
             }
           });
-
-
 
         }
 
@@ -264,7 +266,7 @@ function renderCalendar(date) {
             const slot = document.querySelectorAll('.time-slot')[slotIndex];
             if (slot) {
               const offsetTop = (minute / 60) * hourHeight;
-              const note = renderRecipeBlock({ name, author }, offsetTop, heightPx);
+              const note = renderRecipeBlock({ name, author }, offsetTop, heightPx, key);
               slot.appendChild(note);
             }
 
@@ -455,105 +457,79 @@ function getRecipeBlockHtml(name, author = '', time = '') {
 }
 
 
+// Normalize keys for deleting recipes
+function pad(n) {
+  return n.toString().padStart(2, '0');
+}
+
+function normalizeDatetimeKey(rawKey) {
+  const [date, time] = rawKey.split(' ');
+  const [y, m, d] = date.split('-').map(s => pad(parseInt(s)));
+  return `${y}-${pad(m)}-${pad(d)} ${time}`;
+}
 
 
 // Delete recipe handler
-document.addEventListener('click', (e) => {
-  if (e.target.classList.contains('delete-recipe')) {
-    e.stopPropagation();
+calendarGrid.addEventListener('click', (e) => {
+  const deleteBtn = e.target.closest('.delete-recipe');
+  if (!deleteBtn) return;
 
-    const note = e.target.closest('.note-block, .note');
-    const parent = note.closest('.day') || note.closest('.time-slot');
+  e.stopPropagation();
 
-    const recipeName = note.dataset.name;
-    const author = note.dataset.author;
+  const note = deleteBtn.closest('.note-block, .note');
+  const recipeName = note.dataset.name;
+  const author = note.dataset.author;
 
-    let key = '';
+  console.log("🔘 DELETE CLICK: ", recipeName, author, "in", currentView);
 
-    // Month view: extract from text "HH:MM – Recipe by Author"
-    if (parent.classList.contains('day')) {
-      const recipeText = note.querySelector('.recipe-name').textContent.trim();
-      const match = recipeText.match(/^(\d{2}:\d{2}) – /);
-      if (!match) {
-        console.warn('Time prefix not found in month view text:', recipeText);
-        return;
-      }
-      const time = match[1];
-      const date = parent.dataset.date;
-      key = `${date} ${time}`;
+  let key = '';
 
-    } else if (parent.classList.contains('time-slot')) {
-      // Day/week view: key is already stored
-      key = parent.dataset.datetime;
+  if (currentView === 'month') {
+    const parentDay = note.closest('.day');
+    const recipeText = note.querySelector('.recipe-name')?.textContent.trim();
+    const match = recipeText.match(/^(\d{2}:\d{2})\s+–/);
+    if (!match || !parentDay) return;
+    const date = parentDay.dataset.date;
+    const time = match[1];
+    key = `${date} ${time}`;
+  } else if (currentView === 'day' || currentView === 'week') {
+    const slot = note.closest('.time-slot');
+    key = note.dataset.key;
+
+
+    console.log("🔑 Normalized key:", key);
+    console.log("📦 Keys in localStorage:");
+    Object.keys(localStorage).forEach(k => console.log("-", k));
+  }
+
+  if (!key) {
+    console.warn("Could not determine localStorage key");
+    return;
+  }
+
+  try {
+    const current = JSON.parse(localStorage.getItem(key)) || [];
+
+    console.log("💾 localStorage[key]:", current);
+    console.log("🧹 Deleting recipe:", recipeName, "by", author);
+
+    const updated = current.filter(r => {
+      const nameMatch = r.name?.trim() === recipeName?.trim();
+      const authorMatch = (r.author || '').trim() === (author || '').trim();
+      return !(nameMatch && authorMatch);
+    });
+
+    if (updated.length > 0) {
+      localStorage.setItem(key, JSON.stringify(updated));
+    } else {
+      localStorage.removeItem(key);
     }
 
-    if (!key) {
-      console.warn("Could not determine localStorage key");
-      return;
-    }
-
-    try {
-      const existing = JSON.parse(localStorage.getItem(key)) || [];
-      const updated = existing.filter(
-        r => !(r.name === recipeName && r.author === author)
-      );
-
-      if (updated.length > 0) {
-        localStorage.setItem(key, JSON.stringify(updated));
-      } else {
-        localStorage.removeItem(key);
-      }
-
-      renderCalendar(currentDate);
-    } catch (err) {
-      console.error('Error during deletion:', err);
-    }
+    renderCalendar(currentDate);
+  } catch (err) {
+    console.error('Error during deletion:', err);
   }
 });
-
-
-
-
-// document.addEventListener('click', (e) => {
-//   if (e.target.classList.contains('delete-recipe')) {
-//     e.stopPropagation();
-//     const note = e.target.closest('.note-block, .note');
-//     const recipeText = note.querySelector('.recipe-name').textContent;
-//     const recipeStr = recipeText.replace(/\d{2}:\d{2} – /, '').trim();  // strip time prefix if exists
-//     const parentDayOrSlot = note.closest('.day') || note.closest('.time-slot');
-
-//     let key;
-//     if (parentDayOrSlot.classList.contains('day')) {
-//       const dateKey = parentDayOrSlot.dataset.date;
-//       // In month view, find the exact key by checking all localStorage keys with that date prefix
-//       for (let k in localStorage) {
-//         if (k.startsWith(dateKey) && localStorage.getItem(k).split(';').includes(recipeName)) {
-//           key = k;
-//           break; // found 
-//         }
-//       }
-//     } else if (parentDayOrSlot.classList.contains('time-slot')) {
-//       key = parentDayOrSlot.dataset.datetime;
-//     }
-
-//     // Remove only one occurrence of the recipe from storage
-//     try {
-//       const existing = JSON.parse(localStorage.getItem(key)) || [];
-//       const updated = existing.filter(r => !(r.name === recipeName || `${r.name} by ${r.author}` === recipeStr));
-//       if (updated.length) {
-//         localStorage.setItem(key, JSON.stringify(updated));
-//        } else {
-//         localStorage.removeItem(key);
-//       }
-//     } catch (e) {
-//       console.warn(`Error updating deletion for ${key}:`, e);
-//     }
-
-//   renderCalendar(currentDate);
-
-//   }
-  
-// });
 
 
 // Re-render calendar when screen is resized to apply new recipe limits
