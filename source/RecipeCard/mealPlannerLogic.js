@@ -76,7 +76,13 @@ window.addEventListener('DOMContentLoaded', () => {
             // Create the actual checkbox input
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';                             // make it a checkbox
-            checkbox.classList.add('meal-select-checkbox');         // add a class for later querying
+            checkbox.classList.add('meal-select-checkbox');
+            checkbox.style.width = '60px';
+            checkbox.style.height = '60px';
+            checkbox.style.cursor = 'pointer';
+            checkbox.style.accentColor = '#3f51b5';
+
+
             checkbox.dataset.createdAt = card._data.createdAt;      // store the card's unique ID
 
             // Add the checkbox to the wrapper
@@ -528,6 +534,10 @@ function startEditMeal(mealName, editBtn) {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.classList.add('meal-select-checkbox');
+        checkbox.style.width = '60px';
+        checkbox.style.height = '60px';
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#3f51b5';
 
         // Use createdAt as a unique ID to track the recipe
         checkbox.dataset.createdAt = card._data.createdAt;

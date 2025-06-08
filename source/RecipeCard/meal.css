@@ -18,6 +18,14 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
+
+    position: sticky;
+    top: 100px;
+    /* Adjust depending on your nav/header height */
+    align-self: flex-start;
+    z-index: 5;
+    height: fit-content;
+    /* Ensures the height doesn't push it out */
 }
 
 #right-panel {
@@ -175,4 +183,24 @@ main {
     padding-left: 0;
     /* Removes default indentation */
     margin: 0;
+}
+
+@media (max-width: 900px) {
+    #layout-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #left-panel,
+    #middle-panel,
+    #right-panel {
+        max-width: 100%;
+        width: 100%;
+        position: static;
+        top: auto;
+    }
+
+    main {
+        justify-content: center;
+    }
 }
