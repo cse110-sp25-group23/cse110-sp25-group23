@@ -108,6 +108,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // Hide meal creation UI
         document.getElementById('meal-controls').style.display = 'none';
+        cancelMealBtn.style.display = 'none';
 
         // Remove all checkboxes
         document.querySelectorAll('recipe-card').forEach(card => {
@@ -118,6 +119,13 @@ window.addEventListener('DOMContentLoaded', () => {
         // Clear the optional card selection area if it exists
         const selectionGrid = document.getElementById('meal-selection-cards');
         if (selectionGrid) selectionGrid.innerHTML = '';
+    });
+
+    const stopViewingBtn = document.getElementById('stop-viewing-btn');
+    stopViewingBtn.addEventListener('click', () => {
+        document.getElementById('meal-cards-display').innerHTML = '';
+        stopViewingBtn.style.display = 'none';
+        window.currentPreviewedMeal = null;
     });
 
     // Initial load: show stored recipes and available meals
@@ -137,6 +145,49 @@ window.addEventListener('DOMContentLoaded', () => {
 //     // If recipe cards are also shown on main, refresh them too:
 //     document.querySelector('main').innerHTML = '';
 //     addRecipesToDocument(getRecipesFromStorage());
+// });
+
+// window.addEventListener('recipesUpdated', () => {
+//     const allRecipes = getRecipesFromStorage();
+
+//     // Get all non-standard tags from remaining recipes
+//     const stillUsedTags = new Set();
+//     allRecipes.forEach(recipe => {
+//         (recipe.tags || []).forEach(tag => {
+//             if (!["Easy", "Advanced", "Pro"].includes(tag)) {
+//                 stillUsedTags.add(tag);
+//             }
+//         });
+//     });
+
+//     // Remove unused tags from all recipes
+//     const cleanedRecipes = allRecipes.map(recipe => {
+//         recipe.tags = (recipe.tags || []).filter(tag =>
+//             ["Easy", "Advanced", "Pro"].includes(tag) || stillUsedTags.has(tag)
+//         );
+//         return recipe;
+//     });
+
+//     // Save updated recipes with orphaned tags removed
+//     saveRecipesToStorage(cleanedRecipes);
+
+//     // Refresh UI
+//     document.getElementById('meal-cards-display').innerHTML = '';
+
+//     if (window.currentPreviewedMeal) {
+//         const stillExists = cleanedRecipes.some(r =>
+//             r.tags && r.tags.includes(window.currentPreviewedMeal)
+//         );
+//         if (stillExists) {
+//             showMealPreview(window.currentPreviewedMeal);
+//         } else {
+//             window.currentPreviewedMeal = null;
+//         }
+//     }
+
+//     renderMealList();
+//     document.querySelector('main').innerHTML = '';
+//     addRecipesToDocument(cleanedRecipes);
 // });
 
 window.addEventListener('recipesUpdated', () => {
@@ -166,6 +217,8 @@ window.addEventListener('recipesUpdated', () => {
     // Refresh UI
     document.getElementById('meal-cards-display').innerHTML = '';
 
+    const stopViewingBtn = document.getElementById('stop-viewing-btn');
+
     if (window.currentPreviewedMeal) {
         const stillExists = cleanedRecipes.some(r =>
             r.tags && r.tags.includes(window.currentPreviewedMeal)
@@ -174,14 +227,16 @@ window.addEventListener('recipesUpdated', () => {
             showMealPreview(window.currentPreviewedMeal);
         } else {
             window.currentPreviewedMeal = null;
+            stopViewingBtn.style.display = 'none';
         }
+    } else {
+        stopViewingBtn.style.display = 'none';
     }
 
     renderMealList();
     document.querySelector('main').innerHTML = '';
     addRecipesToDocument(cleanedRecipes);
 });
-
 
 
 function renderMealList() {
@@ -253,6 +308,11 @@ function showMealPreview(mealName) {
         display.appendChild(recipeCard);
     });
 
+
+    // ✅ Show the Stop Viewing button and set currentPreviewedMeal
+    window.currentPreviewedMeal = mealName;
+    const stopBtn = document.getElementById('stop-viewing-btn');
+    stopBtn.style.display = 'inline-block';
 }
 
 function startEditMeal(mealName, editBtn) {
