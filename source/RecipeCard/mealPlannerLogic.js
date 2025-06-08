@@ -2,14 +2,23 @@ import { getRecipesFromStorage, saveRecipesToStorage, addRecipesToDocument } fro
 
 window.addEventListener('DOMContentLoaded', () => {
     const createMealBtn = document.getElementById('create-meal-btn');
+    const cancelMealBtn = document.getElementById('cancel-meal-btn');
     const mealControls = document.getElementById('meal-controls');
     const mealNameInput = document.getElementById('meal-name-input');
     const saveMealBtn = document.getElementById('save-meal-btn');
 
     createMealBtn.addEventListener('click', () => {
+
+        const recipeCards = document.querySelectorAll('recipe-card');
+        if (recipeCards.length === 0) {
+            alert('Please create at least one recipe card before creating a meal.');
+            return;
+        }
+
         // Show the meal creation input and controls
         mealControls.style.display = 'block';
         mealNameInput.value = '';
+        cancelMealBtn.style.display = 'inline-block';
 
         // Clear any existing meal preview
         document.getElementById('meal-cards-display').innerHTML = '';
@@ -42,6 +51,20 @@ window.addEventListener('DOMContentLoaded', () => {
             container.insertBefore(checkboxWrapper, container.firstChild);
         });
     });
+
+    cancelMealBtn.addEventListener('click', () => {
+        // Hide the meal creation form
+        mealControls.style.display = 'none';
+        mealNameInput.value = '';
+        cancelMealBtn.style.display = 'none';
+
+        // Remove all checkboxes from recipe cards
+        document.querySelectorAll('recipe-card').forEach(card => {
+            const box = card.shadowRoot.querySelector('.card-checkbox-wrapper');
+            if (box) box.remove();
+        });
+    });
+
 
     saveMealBtn.addEventListener('click', () => {
         const mealName = mealNameInput.value.trim();
@@ -85,6 +108,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // Hide meal creation UI
         document.getElementById('meal-controls').style.display = 'none';
+        cancelMealBtn.style.display = 'none';
 
         // Remove all checkboxes
         document.querySelectorAll('recipe-card').forEach(card => {
@@ -97,12 +121,123 @@ window.addEventListener('DOMContentLoaded', () => {
         if (selectionGrid) selectionGrid.innerHTML = '';
     });
 
+    const stopViewingBtn = document.getElementById('stop-viewing-btn');
+    stopViewingBtn.addEventListener('click', () => {
+        document.getElementById('meal-cards-display').innerHTML = '';
+        stopViewingBtn.style.display = 'none';
+        window.currentPreviewedMeal = null;
+    });
+
     // Initial load: show stored recipes and available meals
     const recipes = getRecipesFromStorage();
     document.querySelector('main').innerHTML = '';
     addRecipesToDocument(recipes);
     renderMealList();
 });
+
+// window.addEventListener('recipesUpdated', () => {
+//     document.getElementById('meal-cards-display').innerHTML = '';
+//     if (currentPreviewedMeal) {
+//         showMealPreview(currentPreviewedMeal);
+//     }
+//     renderMealList();
+
+//     // If recipe cards are also shown on main, refresh them too:
+//     document.querySelector('main').innerHTML = '';
+//     addRecipesToDocument(getRecipesFromStorage());
+// });
+
+// window.addEventListener('recipesUpdated', () => {
+//     const allRecipes = getRecipesFromStorage();
+
+//     // Get all non-standard tags from remaining recipes
+//     const stillUsedTags = new Set();
+//     allRecipes.forEach(recipe => {
+//         (recipe.tags || []).forEach(tag => {
+//             if (!["Easy", "Advanced", "Pro"].includes(tag)) {
+//                 stillUsedTags.add(tag);
+//             }
+//         });
+//     });
+
+//     // Remove unused tags from all recipes
+//     const cleanedRecipes = allRecipes.map(recipe => {
+//         recipe.tags = (recipe.tags || []).filter(tag =>
+//             ["Easy", "Advanced", "Pro"].includes(tag) || stillUsedTags.has(tag)
+//         );
+//         return recipe;
+//     });
+
+//     // Save updated recipes with orphaned tags removed
+//     saveRecipesToStorage(cleanedRecipes);
+
+//     // Refresh UI
+//     document.getElementById('meal-cards-display').innerHTML = '';
+
+//     if (window.currentPreviewedMeal) {
+//         const stillExists = cleanedRecipes.some(r =>
+//             r.tags && r.tags.includes(window.currentPreviewedMeal)
+//         );
+//         if (stillExists) {
+//             showMealPreview(window.currentPreviewedMeal);
+//         } else {
+//             window.currentPreviewedMeal = null;
+//         }
+//     }
+
+//     renderMealList();
+//     document.querySelector('main').innerHTML = '';
+//     addRecipesToDocument(cleanedRecipes);
+// });
+
+window.addEventListener('recipesUpdated', () => {
+    const allRecipes = getRecipesFromStorage();
+
+    // Get all non-standard tags from remaining recipes
+    const stillUsedTags = new Set();
+    allRecipes.forEach(recipe => {
+        (recipe.tags || []).forEach(tag => {
+            if (!["Easy", "Advanced", "Pro"].includes(tag)) {
+                stillUsedTags.add(tag);
+            }
+        });
+    });
+
+    // Remove unused tags from all recipes
+    const cleanedRecipes = allRecipes.map(recipe => {
+        recipe.tags = (recipe.tags || []).filter(tag =>
+            ["Easy", "Advanced", "Pro"].includes(tag) || stillUsedTags.has(tag)
+        );
+        return recipe;
+    });
+
+    // Save updated recipes with orphaned tags removed
+    saveRecipesToStorage(cleanedRecipes);
+
+    // Refresh UI
+    document.getElementById('meal-cards-display').innerHTML = '';
+
+    const stopViewingBtn = document.getElementById('stop-viewing-btn');
+
+    if (window.currentPreviewedMeal) {
+        const stillExists = cleanedRecipes.some(r =>
+            r.tags && r.tags.includes(window.currentPreviewedMeal)
+        );
+        if (stillExists) {
+            showMealPreview(window.currentPreviewedMeal);
+        } else {
+            window.currentPreviewedMeal = null;
+            stopViewingBtn.style.display = 'none';
+        }
+    } else {
+        stopViewingBtn.style.display = 'none';
+    }
+
+    renderMealList();
+    document.querySelector('main').innerHTML = '';
+    addRecipesToDocument(cleanedRecipes);
+});
+
 
 function renderMealList() {
     const mealList = document.getElementById('meal-list');
@@ -172,6 +307,12 @@ function showMealPreview(mealName) {
         recipeCard.data = recipe;
         display.appendChild(recipeCard);
     });
+
+
+    // ✅ Show the Stop Viewing button and set currentPreviewedMeal
+    window.currentPreviewedMeal = mealName;
+    const stopBtn = document.getElementById('stop-viewing-btn');
+    stopBtn.style.display = 'inline-block';
 }
 
 function startEditMeal(mealName, editBtn) {
