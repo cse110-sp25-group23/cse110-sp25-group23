@@ -1,5 +1,5 @@
 # Shopping Cart Feature
-Contributors: Manan (research and main implementation) and Fnu Anu (layout reorganization, navbar-footer, css implementation and local storage coordination)
+Contributors: Manan (research, main implementation, testing, and local storage coordination) and Fnu Anu (layout reorganization, navbar-footer, css implementation and local storage coordination)
 
 **Note:** The main file here is shopping.css, shopping.html, shopping.js and cart.js
 Additional Folders: Images folder contains icons for mobile navigation bar to 
