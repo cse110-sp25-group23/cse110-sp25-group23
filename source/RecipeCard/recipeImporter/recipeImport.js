@@ -42,12 +42,14 @@ importButton.addEventListener('click', async () => {
         successMessage.style.display = 'none';
         importedRecipeDisplay.style.display = 'none';
         
+        document.getElementById('loadingSpinner').style.display = 'block';
+
         const recipe = await importRecipeFromUrl(urlInput.value);
         
         recipeTitle.textContent = recipe.title;
         recipeImage.src = recipe.image || '';
         recipeImage.alt = recipe.title || 'Recipe Dish Image';
-       
+
         recipeIngredients.innerHTML = '';
         (recipe.ingredients || []).forEach(ingredient => {
           const li = document.createElement('li');
@@ -62,6 +64,9 @@ importButton.addEventListener('click', async () => {
           recipeInstructions.appendChild(li);
         });
         
+        // hide the spinner after success
+        document.getElementById('loadingSpinner').style.display = 'none';
+
         importedRecipeDisplay.style.display = 'block';
 
         saveImportedRecipe(recipe);
@@ -70,6 +75,10 @@ importButton.addEventListener('click', async () => {
         successMessage.style.display = 'block';
         urlInput.value = '';
     } catch (error) {
+      
+      // hide the spinner on error too
+      document.getElementById('loadingSpinner').style.display = 'none';
+
         errorMessage.textContent = error.message;
         errorMessage.style.display = 'block';
         importedRecipeDisplay.style.display = 'none';

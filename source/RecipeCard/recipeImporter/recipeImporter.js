@@ -72,6 +72,10 @@ export async function importRecipeFromUrl(url) {
         if (!data.title || !data.extendedIngredients) {
             throw new Error('Could not extract recipe data from the provided URL');
         }
+
+        if (document.body.textContent.includes("undefined") || document.title.includes("error")) {
+            throw new Error("The recipe could not be found or the page has an error.");
+          }
         
         // Transform the Spoonacular response into our recipe card format
         return {
