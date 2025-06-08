@@ -443,8 +443,8 @@ h1{
  
  } 
 
-  /* Dropdown menu settings */
-.dropbtn {
+  /* Button menu settings */
+.button {
   background-color: #f6d173;
   color: rgb(255, 255, 255);
   padding: 16px;
@@ -452,48 +452,23 @@ h1{
   border: none;
   cursor: pointer;
   border-radius: 5px;
-}
-
-.dropdown {
-  position: absolute;
-  display: inline-block;
   right: 20px;  
-  top: 190px;   
-  display: inline-block;
-  z-index: 20;
-}
-
-.dropdown-content {
-  display: none;
+  top: 190px;
+  display: inline-block; 
   position: absolute;
-  background-color: #f9f9f9;
-  min-width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
   text-decoration: none;
-  display: block;
 }
 
-.dropdown-content a:hover {background-color: #fff2d2;}
 
-.dropdown:hover .dropdown-content {
-  display: block;
-}
 
-.dropdown:hover .dropbtn {
+.button:hover {
   background-color: #f8cb58;
 }
 
-/* Adjusting Dropdown menu at windowed mode */
-/* TODO: fix creat button in some window sizes to stop it with warping with card*/
+/* Adjusting Button menu at windowed mode */
 @media (max-width: 1330px) {
-  .dropdown {
-    top: 120px; 
+  .button {
+    top: 50px; 
   }
 }
 
