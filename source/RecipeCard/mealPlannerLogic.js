@@ -207,6 +207,19 @@ window.addEventListener('DOMContentLoaded', () => {
         if (selectionGrid) selectionGrid.innerHTML = '';
     });
 
+    // Handle "Import a Recipe Card" button
+    const importBtn = document.getElementById('import-btn');
+
+    if (importBtn) {
+        importBtn.addEventListener('click', () => {
+            // Exit any current preview or edit state
+            resetMealUI();
+
+            // Redirect to recipe import or creation page
+            window.location.href = '../recipeImporter/myrecipes.html'; // Change path if different
+        });
+    }
+
 
     /**
     * Triggered when the "Stop Viewing" button is clicked.
@@ -229,84 +242,102 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
+
+
+function exitMealCreationMode() {
+    const mealControls = document.getElementById('meal-controls');
+    const cancelMealBtn = document.getElementById('cancel-meal-btn');
+    const mealNameInput = document.getElementById('meal-name-input');
+
+    if (mealControls) mealControls.style.display = 'none';
+    if (cancelMealBtn) cancelMealBtn.style.display = 'none';
+    if (mealNameInput) mealNameInput.value = '';
+
+    document.querySelectorAll('recipe-card').forEach(card => {
+        const box = card.shadowRoot.querySelector('.card-checkbox-wrapper');
+        if (box) box.remove();
+    });
+}
+
+
+
+function resetMealUI() {
+    exitMealCreationMode();
+
+    window.currentPreviewedMeal = null;
+
+    document.querySelectorAll('.meal-action-container').forEach(container => {
+        container.style.display = 'none';
+    });
+
+    document.querySelectorAll('.save-edit-btn').forEach(btn => btn.remove());
+
+    const recipes = getRecipesFromStorage();
+    document.querySelector('main').innerHTML = '';
+    addRecipesToDocument(recipes);
+}
+
+
 /**
  * Event listener for when the recipe data is updated (e.g., after saving or deleting a recipe).
  * This ensures that orphaned meal tags are removed and the UI stays consistent.
  */
 window.addEventListener('recipesUpdated', () => {
-    // Get all current recipes from localStorage
     const allRecipes = getRecipesFromStorage();
 
-    // Cancel Create Meal mode if active
-    const cancelMealBtn = document.getElementById('cancel-meal-btn');
-    if (cancelMealBtn && cancelMealBtn.style.display !== 'none') {
-        cancelMealBtn.click();
-    }
+    // Exit meal creation mode if active
+    exitMealCreationMode();
 
+    // Exit meal preview mode if active
+    window.currentPreviewedMeal = null;
 
-    // Create a Set to track tags that are still used (excluding standard tags)
+    // Remove all meal preview buttons (Edit, Delete, Stop Viewing)
+    document.querySelectorAll('.meal-action-container').forEach(container => {
+        container.style.display = 'none';
+    });
+
+    // Remove all 'Save changes' buttons from previous edit mode
+    document.querySelectorAll('.save-edit-btn').forEach(btn => btn.remove());
+
+    // --- Clean up unused meal tags ---
     const stillUsedTags = new Set();
 
-    // Loop through all recipes and collect non-standard tags that are still in use
     allRecipes.forEach(recipe => {
         (recipe.tags || []).forEach(tag => {
             if (!["Easy", "Advanced", "Pro"].includes(tag)) {
-                stillUsedTags.add(tag);  // Only add custom meal names
+                stillUsedTags.add(tag);
             }
         });
     });
 
-    // Remove unused custom tags from each recipe's tag list
     const cleanedRecipes = allRecipes.map(recipe => {
         recipe.tags = (recipe.tags || []).filter(tag =>
             ["Easy", "Advanced", "Pro"].includes(tag) || stillUsedTags.has(tag)
         );
-        return recipe; // Return the updated recipe
+        return recipe;
     });
 
-    // Save the cleaned-up recipes back into localStorage
     saveRecipesToStorage(cleanedRecipes);
 
-    // Select the main card display area and clear it
+    // Re-render all cards
     const main = document.querySelector('main');
     main.innerHTML = '';
+    addRecipesToDocument(cleanedRecipes);
 
-
-    // If the user was viewing a specific meal before the update...
-    if (window.currentPreviewedMeal) {
-        // Check if that meal still exists in the cleaned data
-        const stillExists = cleanedRecipes.some(r =>
-            r.tags && r.tags.includes(window.currentPreviewedMeal)
-        );
-
-        if (stillExists) {
-            // If the meal still exists, re-show only those recipes
-            showMealPreview(window.currentPreviewedMeal);
-        } else {
-            // If the meal was removed, reset the preview state
-            window.currentPreviewedMeal = null;
-
-
-            // Show all recipe cards instead
-            addRecipesToDocument(cleanedRecipes);
-        }
-    } else {
-        // If no meal was being previewed, just show all recipe cards
-        addRecipesToDocument(cleanedRecipes);
-    }
-
-    // Always refresh the meal list on the left to reflect tag cleanup
+    // Re-render meal list
     renderMealList();
 });
+
 
 /**
  * Event listener for when a new recipe is created.
  * Updates the meal list on the sidebar to reflect any new tags/meals introduced by the new recipe.
  */
 window.addEventListener('recipeCreated', () => {
-    // Re-renders the meal list based on updated recipe data
+    resetMealUI();
     renderMealList();
 });
+
 
 /**
  * Renders the list of meals in the UI.
