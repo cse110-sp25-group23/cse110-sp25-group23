@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+/* 
+
+npx playwright test __tests__/calendar/calendar.e2e.test.js
+
+*/
+
 test.describe('Calendar App', () => {
   const baseURL = 'http://127.0.0.1:5502/source/calendar/calendar.html';
 
