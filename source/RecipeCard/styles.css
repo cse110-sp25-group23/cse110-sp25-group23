@@ -365,7 +365,7 @@ nav a:hover{
 }
 
 /* Show mobile nav on small screens */
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
   .mobile-nav {
     display: flex;
     position: fixed;
@@ -490,7 +490,7 @@ nav a:hover{
   color: var(--red);
   
 }
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
   .site-footer{
       display: none;
   }
@@ -506,7 +506,7 @@ nav a:hover{
   cursor: pointer;
   border-radius: 5px;
   right: 20px;  
-  top: 190px;
+  top: 250px;
   display: inline-block; 
   position: absolute;
   text-decoration: none;
@@ -518,8 +518,8 @@ nav a:hover{
   background-color: #f8cb58;
 }
 
-/* Adjusting Button menu at windowed mode */
-@media (max-width: 1330px) {
+/* Adjusting Create Button Location */
+@media (max-width: 1205px) {
   .button {
     top: 50px; 
   }
