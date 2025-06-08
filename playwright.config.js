@@ -8,6 +8,7 @@ export default defineConfig({
     //     reuseExistingServer: !process.env.CI
     // },
     testDir: './__tests__',
+    testMatch: 'e2e-*.test.js',
     use: {
         baseURL: "http://localhost:5502/",
     }
