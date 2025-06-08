@@ -11,7 +11,13 @@ const nextBtn = document.getElementById('next-month');
 let currentDate = new Date();
 let currentView = 'month';
 
-// highlight the active toggle button
+/* === FUNCTIONS === */
+
+/**
+ * Updates the appearance of calendar view toggle buttons.
+ * Highlights the button corresponding to the current view ("day", "week", or "month")
+ * by adding the 'active' CSS class and removing it from the others.
+ */
 function highlightActiveToggle() {
   document.querySelectorAll('.calendar-toggle button').forEach(button => {
     if (button.dataset.view === currentView) {
@@ -22,7 +28,17 @@ function highlightActiveToggle() {
   });
 }
 
-// render a recipe block with name, author, and time
+/**
+ * Creates a positioned note element representing a scheduled recipe.
+ * 
+ * @param {Object} recipe - The recipe details.
+ * @param {string} recipe.name - Name of the recipe.
+ * @param {string} [recipe.author=''] - Author of the recipe.
+ * @param {number} [topPx=0] - Top position in pixels.
+ * @param {number} [heightPx=60] - Height in pixels.
+ * @param {string} [key=''] - The associated localStorage key.
+ * @returns {HTMLElement} A positioned note DOM element.
+ */
 function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60, key = '') {
   const html = getRecipeBlockHtml(name, author);
   const temp = document.createElement('div');
@@ -43,8 +59,13 @@ function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60, key 
   return note;
 }
 
-// renders calendar based on the current view
-// fills in cells using data from localStorage 
+/**
+ * Renders the calendar UI based on the current view ("day", "week", or "month") 
+ * and the provided date. It dynamically generates the calendar grid and populates
+ * it with recipe blocks based on data stored in localStorage.
+ * 
+ * @param {Date} date - The reference date to render the calendar from.
+ */
 function renderCalendar(date) {
   highlightActiveToggle();
   // Reset calendar content and update view-specific class names
@@ -284,6 +305,108 @@ function renderCalendar(date) {
 // inital render on page load
 renderCalendar(currentDate);
 
+
+/**
+ * Stores a selected recipe to localStorage under a datetime key.
+ * 
+ * @param {string} key - LocalStorage key in "YYYY-MM-DD HH:MM" format.
+ * @param {string} recipeName - Name of the recipe to store.
+ * @param {Array<Object>} recipesList - List of available recipes.
+ */
+function storeRecipeToCalendar(key, recipeName, recipesList) {
+  const selected = recipesList.find(r => r.name === recipeName);
+  const toStore = selected ? { name: selected.name, author: selected.author } : recipeName;
+  localStorage.setItem(key, JSON.stringify(toStore));
+}
+
+/**
+ * Retrieves stored recipe data from localStorage for a given key.
+ * 
+ * @param {string} key - LocalStorage key (e.g., "2025-06-07 18:00").
+ * @returns {Array<Object>} An array of recipe objects.
+ */
+function getStoredRecipeData(key) {
+  const raw = localStorage.getItem(key);
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    } else if (typeof parsed === 'object' && parsed !== null) {
+      return [parsed];
+    }
+  } catch (e) {
+    // fallback: treat raw string as recipe name
+    if (typeof raw === 'string') {
+      return [{ name: raw, author: '' }];
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Populates the recipe dropdown form with options from localStorage.
+ */
+function populateRecipeDropdown() {
+  const dropdown = document.getElementById('recipe-select');
+  const recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+
+  for (const recipe of recipes) {
+    const option = document.createElement('option');
+    option.value = recipe.name;
+    option.textContent = recipe.name;
+    option.dataset.author = recipe.author;
+    dropdown.appendChild(option);
+  }
+}
+
+populateRecipeDropdown();
+
+/**
+ * Generates the inner HTML string for a recipe note block.
+ * 
+ * @param {string} name - Recipe name.
+ * @param {string} [author=''] - Author of the recipe.
+ * @param {string} [time=''] - Time string (e.g., "18:00").
+ * @returns {string} HTML string for rendering.
+ */
+function getRecipeBlockHtml(name, author = '', time = '') {
+  return `
+    <div class="note-block" data-name="${name}" data-author="${author}">
+      <span class="recipe-name">
+        ${time ? `${time} – ` : ''}${name}${author ? ` by ${author}` : ''}
+      </span>
+      <button class="delete-recipe" title="Delete">&times;</button>
+    </div>`;
+}
+
+
+/**
+ * Pads a number with leading zeros to ensure two-digit format.
+ * 
+ * @param {number|string} n - The number to pad.
+ * @returns {string} The padded string (e.g., "07").
+ */
+function pad(n) {
+  return n.toString().padStart(2, '0');
+}
+
+/**
+ * Normalizes a datetime key to the format "YYYY-MM-DD HH:MM".
+ * 
+ * @param {string} rawKey - Unformatted datetime key.
+ * @returns {string} Normalized key.
+ */
+function normalizeDatetimeKey(rawKey) {
+  const [date, time] = rawKey.split(' ');
+  const [y, m, d] = date.split('-').map(s => pad(parseInt(s)));
+  return `${y}-${pad(m)}-${pad(d)} ${time}`;
+}
+
+
+/* === EVENT LISTENERS === */
+
 // PATCHED form submission
 const assignForm = document.getElementById('assign-form');
 assignForm.addEventListener('submit', (event) => {
@@ -331,40 +454,6 @@ assignForm.addEventListener('submit', (event) => {
 });
 
 
-
-// Store recipe to localStorage under a specific key
-// key is a string like "YYYY-MM-DD HH:MM"
-// recipeName is the name of the recipe to store
-// recipesList is an array of recipe objects with name and author properties
-function storeRecipeToCalendar(key, recipeName, recipesList) {
-  const selected = recipesList.find(r => r.name === recipeName);
-  const toStore = selected ? { name: selected.name, author: selected.author } : recipeName;
-  localStorage.setItem(key, JSON.stringify(toStore));
-}
-
-
-function getStoredRecipeData(key) {
-  const raw = localStorage.getItem(key);
-
-  try {
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return parsed;
-    } else if (typeof parsed === 'object' && parsed !== null) {
-      return [parsed];
-    }
-  } catch (e) {
-    // fallback: treat raw string as recipe name
-    if (typeof raw === 'string') {
-      return [{ name: raw, author: '' }];
-    }
-  }
-
-  return [];
-}
-
-
-
 // navigation button handlers
 // adjusts currentDate based on view and re-render
 prevBtn.addEventListener('click', () => {
@@ -397,21 +486,6 @@ document.querySelectorAll('.calendar-toggle button').forEach(btn => {
   });
 });
 
-//add recipies by name to the dropdown in the form
-function populateRecipeDropdown() {
-  const dropdown = document.getElementById('recipe-select');
-  const recipes = JSON.parse(localStorage.getItem('recipes')) || [];
-
-  for (const recipe of recipes) {
-    const option = document.createElement('option');
-    option.value = recipe.name;
-    option.textContent = recipe.name;
-    option.dataset.author = recipe.author;
-    dropdown.appendChild(option);
-  }
-}
-
-populateRecipeDropdown();
 
 // when clicked on day in month view, go to day view of that day
 calendarGrid.addEventListener('click', (e) => {
@@ -445,29 +519,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Helper function to generate HTML for a recipe block
-function getRecipeBlockHtml(name, author = '', time = '') {
-  return `
-    <div class="note-block" data-name="${name}" data-author="${author}">
-      <span class="recipe-name">
-        ${time ? `${time} – ` : ''}${name}${author ? ` by ${author}` : ''}
-      </span>
-      <button class="delete-recipe" title="Delete">&times;</button>
-    </div>`;
-}
-
-
-// Normalize keys for deleting recipes
-function pad(n) {
-  return n.toString().padStart(2, '0');
-}
-
-function normalizeDatetimeKey(rawKey) {
-  const [date, time] = rawKey.split(' ');
-  const [y, m, d] = date.split('-').map(s => pad(parseInt(s)));
-  return `${y}-${pad(m)}-${pad(d)} ${time}`;
-}
-
 
 // Delete recipe handler
 calendarGrid.addEventListener('click', (e) => {
@@ -479,8 +530,6 @@ calendarGrid.addEventListener('click', (e) => {
   const note = deleteBtn.closest('.note-block, .note');
   const recipeName = note.dataset.name;
   const author = note.dataset.author;
-
-  console.log("🔘 DELETE CLICK: ", recipeName, author, "in", currentView);
 
   let key = '';
 
@@ -496,9 +545,6 @@ calendarGrid.addEventListener('click', (e) => {
     const slot = note.closest('.time-slot');
     key = note.dataset.key;
 
-
-    console.log("🔑 Normalized key:", key);
-    console.log("📦 Keys in localStorage:");
     Object.keys(localStorage).forEach(k => console.log("-", k));
   }
 
@@ -509,9 +555,6 @@ calendarGrid.addEventListener('click', (e) => {
 
   try {
     const current = JSON.parse(localStorage.getItem(key)) || [];
-
-    console.log("💾 localStorage[key]:", current);
-    console.log("🧹 Deleting recipe:", recipeName, "by", author);
 
     const updated = current.filter(r => {
       const nameMatch = r.name?.trim() === recipeName?.trim();
