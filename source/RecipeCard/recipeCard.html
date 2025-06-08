@@ -9,9 +9,79 @@
     <script src="recipeCard.js" type="module"></script>
     <script src="mealPlannerLogic.js" type="module"></script>
     <script src="../LocalStorage/storage.js" type="module"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cooklection</title>
+
+    <!-- Home.css Style sheet connected-->
+    <link rel="stylesheet" href="nav-bar.css">
+
+    <!-- Inter font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+
+    <!-- Pacifier font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
+    <!-- Desktop Navigation -->
+    <header class="desktop-nav">
+        <nav class="nav-tabs">
+            <a class="logo" href="home.html">
+                <img src="images/logo.png" alt="Logo">
+            </a>
+            <h1 id="brand">Cooklection </h1>
+            <div role="search">
+                <input id="search-field-small" type="search" name="search"
+                    placeholder="Dish it out – what are you hungry for?"> </input>
+                <button type="submit"> </button>
+            </div>
+
+            <!-- text tabs -->
+            <a href="../calendar/calendar.html">Calendar</a>
+            <a href="shelf.html">Shelf</a>
+            <a href="shelf.html">Create</a>
+            <a class="cart" href="shop.html">
+                <img src="images/shop.png" alt="shopping cart">
+            </a>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-header">
+        <img src="images/logo.png" alt="Logo">
+        <h1>Cooklection</h1>
+    </div>
+    <nav class="mobile-nav">
+        <a href="../../HomePage/home.html">
+            <img src="images/home.png" alt="Home page of website for summary">
+        </a>
+        <a href="../../calendar/calendar.html">
+            <img src="images/calendar.png" alt="Calendar for meal planning">
+        </a>
+
+        <!-- create file does not exist until integrated with Thanh's work-->
+        <a href="../../recipeCard/create.html">
+            <img src="images/plus.png" alt="plus for creating recipe">
+        </a>
+
+        <a href="../../recipeCard/recipeCard.html">
+            <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+        </a>
+        <a href="../../ShoppingCart/shopping.html">
+            <img src="images/shop.png" alt="Cart for shopping ingredients saved">
+        </a>
+    </nav>
+
+
     <div id="layout-container">
         <!-- Left: Create Recipe -->
         <section id="left-panel">
@@ -106,19 +176,22 @@
 
         <!-- Right: Recipe Cards -->
         <section id="right-panel">
-            <button id="stop-viewing-btn" style="display: none;">Stop Viewing</button>
             <search>
                 <input type="search" placeholder="Search" />
             </search>
-            <!-- Meal action buttons row (initially hidden) -->
-            <div id="meal-action-bar" style="display: none;">
-                <button id="stop-viewing-btn">Stop Viewing</button>
-                <button id="right-edit-btn">Edit</button>
-                <button id="right-delete-btn">Delete</button>
-            </div>
             <main id="cardsContainer"></main>
         </section>
     </div>
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="../../HomePage/home.html">Home</a>
+            <a href="../../RecipeCard/recipeCard.html">Shelf</a>
+            <a href="../../RecipeCard/recipeImporter/recipeImport.html">Create</a>
+            <a href="../../calendar/calendar.html">Calendar</a>
+            <a href="../../ShoppingCart/shopping.html">Shopping Cart</a>
+        </div>
+        <p class="footer-message">Check out some heart-warming recipes today!</p>
+    </footer>
 </body>
 
 </html>

@@ -97,3 +97,13 @@ main {
     align-items: flex-start;
     padding: 10px;
 }
+
+.meal-action-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.meal-list-item {
+    margin-bottom: 12px;
+}

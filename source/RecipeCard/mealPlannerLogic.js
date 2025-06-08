@@ -21,8 +21,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Get the "Save Meal" button which saves the selected recipes under a meal name
     const saveMealBtn = document.getElementById('save-meal-btn');
 
-    // Get the "Stop Viewing" button that exits meal preview mode and restores full recipe list
-    const stopViewingBtn = document.getElementById('stop-viewing-btn');
 
     /**
     * Triggered when the "Create Meal" button is clicked.
@@ -32,7 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // Exit preview mode if user was viewing a specific meal
         window.currentPreviewedMeal = null;
-        stopViewingBtn.style.display = 'none';
 
         // Show all recipes again
         document.querySelector('main').innerHTML = '';
@@ -133,6 +130,17 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // If the meal name is too long, alert the user to use less
+        if (mealName.length > 30) {
+            alert('Meal name is too long. Please use 30 characters or fewer.');
+            return;
+        }
+
+        if (existingMeals.has(mealName)) {
+            alert('A meal with this name already exists. Please choose another name.');
+            return;
+        }
+
         // Initialize an array to hold IDs (createdAt) of selected recipe cards
         const selectedCreatedAts = [];
 
@@ -204,27 +212,7 @@ window.addEventListener('DOMContentLoaded', () => {
     * Triggered when the "Stop Viewing" button is clicked.
     * Exits meal preview mode and restores the full list of all recipe cards.
     */
-    stopViewingBtn.addEventListener('click', () => {
-        // Select the <main> element where recipe cards are shown
-        const main = document.querySelector('main');
 
-        // Clear out all currently displayed recipe cards
-        main.innerHTML = '';
-
-        // Hide any visible Edit/Delete panels
-        document.querySelectorAll('.meal-action-container').forEach(container => {
-            container.style.display = 'none';
-        });
-
-        // Re-render all recipes from localStorage (shows every card again)
-        addRecipesToDocument(getRecipesFromStorage());
-
-        // Hide the Stop Viewing button now that preview mode is over
-        stopViewingBtn.style.display = 'none';
-
-        // Clear the global state that tracks which meal was being previewed
-        window.currentPreviewedMeal = null;
-    });
     // Initial load: show stored recipes and available meals
 
     // Retrieve all recipe data from localStorage
@@ -283,8 +271,6 @@ window.addEventListener('recipesUpdated', () => {
     const main = document.querySelector('main');
     main.innerHTML = '';
 
-    // Select the Stop Viewing button
-    const stopViewingBtn = document.getElementById('stop-viewing-btn');
 
     // If the user was viewing a specific meal before the update...
     if (window.currentPreviewedMeal) {
@@ -300,15 +286,12 @@ window.addEventListener('recipesUpdated', () => {
             // If the meal was removed, reset the preview state
             window.currentPreviewedMeal = null;
 
-            // Hide the Stop Viewing button
-            stopViewingBtn.style.display = 'none';
 
             // Show all recipe cards instead
             addRecipesToDocument(cleanedRecipes);
         }
     } else {
         // If no meal was being previewed, just show all recipe cards
-        stopViewingBtn.style.display = 'none';
         addRecipesToDocument(cleanedRecipes);
     }
 
@@ -370,7 +353,6 @@ function renderMealList() {
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'meal-delete-btn';
         deleteBtn.addEventListener('click', () => {
-            document.getElementById('stop-viewing-btn').style.display = 'none';
             window.currentPreviewedMeal = null;
 
             const updated = getRecipesFromStorage().map(recipe => {
@@ -384,6 +366,19 @@ function renderMealList() {
             addRecipesToDocument(updated);
         });
         actionContainer.appendChild(deleteBtn);
+
+
+        // Stop Viewing button (clone)
+        const stopBtn = document.createElement('button');
+        stopBtn.textContent = 'Stop Viewing';
+        stopBtn.className = 'meal-stop-btn';
+        stopBtn.addEventListener('click', () => {
+            window.currentPreviewedMeal = null;
+            document.querySelector('main').innerHTML = '';
+            addRecipesToDocument(getRecipesFromStorage());
+            renderMealList(); // Re-hide all action containers
+        });
+        actionContainer.appendChild(stopBtn);
 
         // Button click: show meal preview & toggle current menu, hide all others
         viewBtn.addEventListener('click', () => {
@@ -439,8 +434,6 @@ function showMealPreview(mealName) {
     // Store the current previewed meal globally for tracking/view management
     window.currentPreviewedMeal = mealName;
 
-    // Make the "Stop Viewing" button visible so the user can exit the preview
-    document.getElementById('stop-viewing-btn').style.display = 'inline-block';
 }
 
 /**
@@ -453,7 +446,6 @@ function showMealPreview(mealName) {
  */
 function startEditMeal(mealName, editBtn) {
     // Hide the Stop Viewing button in case it was visible
-    document.getElementById('stop-viewing-btn').style.display = 'none';
 
     // Clear any currently previewed meal
     window.currentPreviewedMeal = null;
@@ -576,3 +568,41 @@ function startEditMeal(mealName, editBtn) {
         saveChangesBtn.remove();
     };
 }
+
+// 
+
+window.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-field-small');
+    const searchButton = document.querySelector('[type="submit"]');
+
+    function handleSearch() {
+        const query = searchInput.value.trim();
+        if (query !== '') {
+            localStorage.setItem('searchQuery', query);
+            // navigate to my-recipes
+            window.location.href = '../RecipeCard/my-recipes.html';
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+    }
+
+    if (searchButton) {
+        searchButton.addEventListener('click', handleSearch);
+    }
+});
+
+// Prevents reloading page if already on the said page
+document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function (event) {
+        const current = window.location.pathname;
+        const target = new URL(this.href).pathname;
+        if (current === target) {
+            event.preventDefault();
+            console.log('You are already on this tab.');
+        }
+    });
+});
