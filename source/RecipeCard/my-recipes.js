@@ -2,6 +2,22 @@ import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/sto
 
 window.addEventListener('DOMContentLoaded', init);      //runs the init function when dom content loads
 
+// if screen becomes too small, redisplay shelves so they only display 2 cards
+window.addEventListener('resize', () => {
+    // do not redisplay shelves if you're simply going fullscreen
+    if (document.fullscreenElement) {
+        return;
+    }
+    document.getElementById("shelf-container").innerHTML = "";
+    displayShelves();
+});
+
+// custom event: if a card's edit, delete, or favorite button is pressed, update all shelf displays
+window.addEventListener('recipesUpdated', () => {
+    document.getElementById("shelf-container").innerHTML = "";
+    displayShelves();
+});
+
 function init() {
     // displays shelves (each representing a category), adds event listeners to "See All" elements
 	displayShelves();
@@ -87,8 +103,11 @@ function displayShelves() {
     }
     
 
-    // limit how many recipes can be displayed on shelf to avoid overflow
-    const recipesToShow = 2;
+    // decides how many cards to show based on screen size
+    let recipesToShow = 3;
+    if (window.innerWidth < 1500) {
+        recipesToShow = 2; 
+    }
     const someRecipes = shelfRecipes.slice(0, recipesToShow);
 
     // the container for this individual shelf (will contain label, img, and cards)

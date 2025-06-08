@@ -35,11 +35,11 @@ export class RecipeCard extends HTMLElement {
                 <div class="flip-card-front">
                     <button class="toggle">Fullscreen</button>
                     <button class="favorite-btn ${recipeData.favorite ? 'favorited' : ''}" aria-label="Favorite">♥</button>
-                    <img src="${recipeData.image}" alt="${recipeData.name}" style="width:200px;height:200px;" class="recipe-image">
-                    <h3>${recipeData.name}</h3>
-                    <p>Author: ${recipeData.author}</p>
+                    <img src="${recipeData.image}" alt="${recipeData.name}" class="recipe-image">
+                    <p class="recipe-name">${recipeData.name}</p>
+                    <p class="recipe-author">Author: ${recipeData.author}</p>
                     <p>Ingredients:</p>
-                    <div class="ingredients-class">
+                    <div class="ingredients-scroll">
                         <ul>
                             ${recipeData.ingredients.map(ing => `<li>${ing.name}${ing.unit ? ' - ' + ing.unit : ''}</li>`).join('')}
                         </ul>
@@ -123,6 +123,9 @@ export class RecipeCard extends HTMLElement {
                 localRecipes[index].favorite = this._data.favorite;
                 saveRecipesToStorage(localRecipes);
             }
+
+            // dispatch this custom event, will update my-recipes shelf to show this change
+            window.dispatchEvent(new Event('recipesUpdated'));
         });
 
         //event handling for clicking fullscreen button
@@ -280,6 +283,9 @@ export function update_card(shadowRoot, hostElement, recipeData){
                 localRecipes[index] = finalData;
                 saveRecipesToStorage(localRecipes);
             }
+
+            // dispatch this custom event, will update my-recipes shelf to show this change
+            window.dispatchEvent(new Event('recipesUpdated'));
         });
     });
 }
@@ -322,6 +328,9 @@ function delete_card(shadowRoot, hostElement) {
             localStorage.setItem('recipes', JSON.stringify(recipes));
 
             hostElement.remove();
+
+            // dispatch this custom event, will update my-recipes shelf to show this change
+            window.dispatchEvent(new Event('recipesUpdated'));
         });
     }
 }

@@ -39,11 +39,40 @@ export function getRecipeCardTemplateCSS() {
         }
 
         .recipe-image{
-            position: absolute;
-            right: 30px;
-            top: 55px;
+            float: right;
+            max-height: 200px;
+            max-width: 200px;
+            height: 100%;
+            width: 100%;
+            margin-top: 1.5em;
+            margin-right: 0em;
+            margin-bottom: 1em;
+            margin-left: 1em;
             width: fit-content;
             border-radius: 8px;
+        }
+                
+        .flip-card:fullscreen .recipe-name {
+            font-size: 5em;
+        }
+
+        .flip-card:fullscreen .recipe-author {
+            font-size: 2em;
+        }
+
+        .flip-card:fullscreen .steps-list {
+            font-size: 1.5em;
+        }
+
+        .flip-card:fullscreen .steps-title {
+            font-size: 2em;
+        }
+
+        .flip-card:fullscreen .recipe-image {
+            max-height: 20em;
+            height: 100%;
+            max-width: 20em;
+            width: 100%;
         }
 
         .steps-list li {
@@ -78,31 +107,34 @@ export function getRecipeCardTemplateCSS() {
             color: white;
         }
 
+        /*Fullscreen toggle button*/
+        .toggle {
+            position: absolute;
+            bottom: 1em;  
+            right: 1em;   
+            cursor: pointer;
+        }
 
         /*Card flip animation */
 
         .flip-card {
-            font-family: inter;
+            font-family: pacifo regular;
             background-color: transparent;
-            width: 500px;
-            height: 300px;
+            width: 100%;
+            max-width: 32em;
+            height: 20em;
             border-radius: 16px;
-            overflow: visible;
             perspective: 1000px;
-            margin: 0.5rem;
-            will-change: transform;
+            margin: 1em;
+            overflow: visible;
+            min-width: 440px;
         }
+
+        * Specific styling for when the card is in fullscreen mode*/
 
         .flip-card:fullscreen {
-            background-color: pink;
-            padding: 20px; 
-        }
-
-        .toggle {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            cursor: pointer;
+            background-color: #ba3226;
+            margin: 2rem;
         }
           
         /*For positioning front and back side of card */
@@ -113,9 +145,6 @@ export function getRecipeCardTemplateCSS() {
             height: 100%;
             transition: transform 1s, border 0.3s ease 1s, box-shadow 0.3s ease 1s;
             transform-style: preserve-3d;
-            border-radius: 16px;
-            transform-origin: center center;
-            text-align: left;
         }
         
         /* Recipe card will flip when hovered over with mouse */
@@ -125,6 +154,8 @@ export function getRecipeCardTemplateCSS() {
             box-shadow: 0 0 12px rgba(255, 255, 255, 0.5); /* optional glow effect */
             z-index: 1; /* optional: brings hovered card to front if overlapping */
         }
+            
+        /* Card flip animation information */
 
         .flip-card.flipped .flip-card-inner {
             transform: rotateY(180deg);
@@ -140,29 +171,40 @@ export function getRecipeCardTemplateCSS() {
             backface-visibility: hidden;
             border-radius: 16px;
             background-color: #ffffff;
-            padding: 20px;
-            box-sizing: border-box; 
+            box-sizing: border-box;
         }
+        
+        .flip-card-front {
+            padding: 2em;
+            overflow: hidden;
+            text-align: left;
+        }
+        
         
         .flip-card-back {
             transform: rotateY(180deg);
             text-align: center;
             overflow: scroll;
+            padding: 1em;
         }
-        
-        .ingredients-class {
-            max-height: 6rem; /* adjust as needed */
-            max-width: 12rem;
+
+        p + .ingredients-scroll {
+            margin-top: -0.7em; 
+        }
+
+        .ingredients-scroll {
+            max-height: 5.2rem; /* adjust as needed */
+            max-width: 14rem;
             overflow-y: scroll;
             padding-right: 0.5em; /* optional: avoids cutting off scrollbar */
             border: 3px ridge #ba3226;
         }
 
-        .ingredients-class::-webkit-scrollbar {
+        .ingredients-scroll::-webkit-scrollbar {
             width: 6px;
         }
 
-        .ingredients-class::-webkit-scrollbar-thumb {
+        .ingredients-scroll::-webkit-scrollbar-thumb {
             background-color: #ccc;
             border-radius: 4px;
         }

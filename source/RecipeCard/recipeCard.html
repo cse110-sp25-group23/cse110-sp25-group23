@@ -116,7 +116,7 @@
 
         <!-- Create Meal button -->
         <button id="create-meal-btn">Create Meal</button>
-
+        <button id="cancel-meal-btn" style="display: none;">Cancel</button>
 
         <!-- Meal Creation Panel -->
         <div id="meal-controls" style="display: none; margin-top: 10px;">
@@ -131,13 +131,6 @@
         <div id="meal-list-container" style="margin-top: 20px;">
             <h3>Created Meals:</h3>
             <ul id="meal-list">
-                <!-- Example structure:
-        <li>
-            <button class="meal-view-btn">Thanksgiving Dinner</button>
-            <button class="meal-edit-btn">Edit</button>
-            <button class="meal-delete-btn">Delete</button>
-        </li>
-        -->
             </ul>
         </div>
 
@@ -152,6 +145,7 @@
     <!-- Container where selected meal cards will be shown -->
     <section id="meal-display-container" style="margin-top: 20px;">
         <h3>Meal Preview:</h3>
+        <button id="stop-viewing-btn" style="display: none;">Stop Viewing</button>
         <div id="meal-cards-display"></div>
     </section>
 
