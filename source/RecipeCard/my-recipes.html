@@ -7,6 +7,17 @@
   <link rel="stylesheet" href="styles.css"></link>
   <script src="../RecipeCard/recipeCard.js" type="module"></script>
   <script src="my-recipes.js" type="module"></script>
+
+
+  <!-- Inter font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+  <!-- Pacifier font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
 
 
@@ -14,38 +25,48 @@
   <!-- Desktop Navigation -->
   <header class="desktop-nav">
     <nav class="nav-tabs">
-      <a class="logo" href="home.html">
-        <img src="../home-page/images/logo.png" alt="Logo">
+      <a class="logo" href="../home-page/home.html">
+        <img src="images/logo.png" alt="Logo">
       </a>
       <h1 id="brand">Cooklection </h1>
       <div role="search">
         <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?"> </input>
         <button type="submit"> </button>
       </div>
-     
+      
       <!-- text tabs -->
       <a href="../calendar/calendar.html">Calendar</a>
-      <a href="../RecipeCard/my-recipes.html">Shelf</a>
-      <a href="../RecipeCard/recipeCard.html">Create</a>
-      <a class="cart" href="shop.html">
-        <img src="../home-page/images/shop.png" alt="shopping cart">
+      <a href="my-recipes.html">Shelf</a>
+      <a href="recipeCard.html">Create</a>
+      <a class="cart" href="../shoppingCart/shopping.html">
+        <img src="images/shop.png" alt="shopping cart">
       </a>
     </nav>
   </header>
 
-   <!-- Mobile Navigation -->
-   <nav class="mobile-nav">
-    <a href="home.html">
-      <img src="../home-page/images/home.png" alt="Home">
+  <!-- Mobile Navigation -->
+  <div class="mobile-header">
+    <img src="images/logo.png" alt="Logo">
+    <h1>Cooklection</h1>
+  </div>
+  <nav class="mobile-nav">
+    <a href="../HomePage/home.html">
+      <img src="images/home.png" alt="Home page of website for summary">
     </a>
     <a href="../calendar/calendar.html">
-      <img src="../home-page/images/calendar.png" alt="Calendar">
+      <img src="images/calendar.png" alt="Calendar for meal planning">
     </a>
-    <a href="my-recipes.html">
-      <img src="../home-page/images/shelf.png" alt="Shelf">
+    
+    <!-- create file does not exist until integrated with Thanh's work-->
+    <a href="recipeCard.html">
+      <img src="images/plus.png" alt="plus for creating recipe">
     </a>
-    <a href="cart.html">
-      <img src="../home-page/images/shop.png" alt="Cart">
+    
+    <a href="../my-recipes.html">
+      <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+    </a>
+    <a href="../ShoppingCart/shopping.html">
+      <img src="images/shop.png" alt="Cart for shopping ingredients saved">
     </a>
   </nav>
 
@@ -58,14 +79,15 @@
   <div id="shelf-container"></div>
   
   <!-- Footer -->
-  <footer class="site-footer">
+  <<footer class="site-footer">
     <div class="footer-links">
-      <a href="home.html">Home</a>
-      <a href="../RecipeCard/shelf.html">Shelf</a>
+      <a href="../HomePage/home.html">Home</a>
+      <a href="my-recipes.html">Shelf</a>
+      <a href="recipeCard.html">Create</a>
       <a href="../calendar/calendar.html">Calendar</a>
-      <a href="cart.html">Shopping Cart</a>
+      <a href="../ShoppingCart/shopping.html">Shopping Cart</a>
     </div>
-    <p class="footer-message">Check out some heart-warming recipes today!</p>   
+    <p class="footer-message">Check out some heart-warming recipes today!</p>    
 </footer>
 
 
