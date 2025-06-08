@@ -16,15 +16,5 @@
     "jest-localstorage-mock": "^2.4.26",
     "stylelint": "^16.19.1",
     "stylelint-config-standard": "^38.0.0"
-  },
-  "jest": {
-    "transform": {},
-    "verbose": true,
-    "testMatch": [
-      "**/?(*.)+(test).js"
-    ],
-    "setupFiles": [
-      "jest-localstorage-mock"
-    ]
   }
 }
