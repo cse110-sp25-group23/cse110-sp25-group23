@@ -5,7 +5,7 @@
   "scripts": {
     "start": "http-server . -p 8081",
     "cy:open": "cypress open",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "jest",
     "lint": "eslint .",
     "stylelint": "stylelint ./__tests__/*.css ./source/*.css",
     "htmlhint": "htmlhint ."
@@ -17,13 +17,5 @@
     "jest-environment-jsdom": "^30.0.0-beta.3",
     "stylelint": "^16.19.1",
     "stylelint-config-standard": "^38.0.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "transform": {},
-    "verbose": true,
-    "testMatch": [
-      "**/?(*.)+(test).js"
-    ]
   }
 }
