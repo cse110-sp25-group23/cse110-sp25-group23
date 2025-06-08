@@ -72,6 +72,7 @@ function initFormHandler() {
 	const ingredientsArray = [];
 
 	const ingredientInput = document.getElementById('ingredientInput');
+	const ingredientUnitInput = document.getElementById('ingredientUnitInput');
 	const addIngredientBtn = document.getElementById('addIngredientBtn');
 	const ingredientsList = document.getElementById('ingredientsList');
 
@@ -164,7 +165,21 @@ function initFormHandler() {
 		}
 	});
 
+	ingredientUnitInput.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			addIngredientBtn.click();
+		}
+	});
 
+	// prevent enter key from submiting whole form when inputting things like hours, name, etc
+	form.addEventListener('keydown', (event) => {
+		const allowedIds = ['ingredientInput', 'ingredientUnitInput', 'stepInput'];
+
+		if (event.key === 'Enter' && !allowedIds.includes(event.target.id)) {
+			event.preventDefault();
+		}
+	});
 
 	form.addEventListener('submit', (event) => {
 		//prevent page from reloading
@@ -177,6 +192,8 @@ function initFormHandler() {
 		const author = formData.get("author");
 		const steps = [...stepsArray];
 		const ingredients = [...ingredientsArray];
+		const favorite = false;
+		const createdAt = new Date().toISOString();
 		
 		//Time Estimate for recipe
 		const hours = parseInt(formData.get("timeHours") || "0");
@@ -222,8 +239,10 @@ function initFormHandler() {
 			ingredients,
 			steps,
 			tags,
-			timeEstimate
-		}
+			timeEstimate,
+			favorite,
+			createdAt
+		};
 
 		//If User is Using URL, get image url 
 		if(urlInput){
@@ -342,5 +361,6 @@ function toggleInputs() {
 
 export {
   addRecipesToDocument,
+  getRecipesFromStorage,
   saveRecipesToStorage
 };

@@ -8,34 +8,72 @@
         <link rel="stylesheet" href="calendar.css" > 
         <script src="calendar.js" defer></script>
 
+        <!-- Inter font style -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+        <!-- Pacifier font style -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     </head>
 
     <body>
-        <!--Nav Bar to Other Features-->
-        <nav class="main-nav">
-            <a href="../home-page/index.html">Home</a>
-<!--            <a href="home.html">Home</a>  -->
-            <a href="../RecipeCard/recipeCard.html">Recipes</a>
-            <a href="calendar.html">Meal Planner</a>
+          <!-- Desktop Navigation -->
+    <header class="desktop-nav">
+        <nav class="nav-tabs">
+          <a class="logo" href="home.html">
+            <img src="images/logo.png" alt="Logo">
+          </a>
+          <h1 id="brand">Cooklection </h1>
+          <div role="search">
+            <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?"> </input>
+            <button type="submit"> </button>
+          </div>
+          
+          <!-- text tabs -->
+          <a href="../calendar/calendar.html">Calendar</a>
+          <a href="shelf.html">Shelf</a>
+          <a class="cart" href="shop.html">
+            <img src="images/shop.png" alt="shopping cart">
+          </a>
+        </nav>
+      </header>
+  
+      <!-- Mobile Navigation -->
+      <nav class="mobile-nav">
+        <a href="home.html">
+          <img src="images/home.png" alt="Home">
+        </a>
+        <a href="calendar.html">
+          <img src="images/calendar.png" alt="Calendar">
+        </a>
+        <a href="shelf.html">
+          <img src="images/shelf.png" alt="Shelf">
+        </a>
+        <a href="cart.html">
+          <img src="images/shop.png" alt="Cart">
+        </a>
+      </nav>
+
+        <!--Add Recipe to Calendar-->
+        <nav class="add-recipes">
+            <form id="assign-form">
+            <select id="recipe-select">
+                <option value="">-- pick a recipe --</option>
+            </select>
+            <input type="date" id="recipe-date" required>
+            <input type="time" id="recipe-time" step="3600" required>
+            <button type="submit">Schedule</button>
+            </form>
         </nav>
 
         <!--Calender View Toggle-->
         <nav class="calendar-toggle">
             <button data-view="day">Day</button>
             <button data-view="week">Week</button>
-            <button data-view="month" class="active">Month</button>
-        </nav>
-
-        <!--Add Recipe to Calendar-->
-        <nav class="add-recipes">
-        <form id="assign-form">
-        <select id="recipe-select">
-            <option value="">-- pick a recipe --</option>
-            </select>
-            <input type="date" id="recipe-date" required>
-            <input type="time" id="recipe-time" step="3600" required>
-            <button type="submit">Schedule</button>
-        </form>
+            <button data-view="month">Month</button>
         </nav>
 
 

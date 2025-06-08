@@ -1,0 +1,105 @@
+<!--
+  TO DO LIST: 
+  DOCUMENTATION ON JS
+  ARIA tags
+  Failure points
+  footer
+  organize css file (remove tags I ended up deleting)
+  end to end testing
+  unit testing
+  fix the navigation bar and screen sizes
+  Clean image folder
+  On calendar page, center the days in the week lab and secondly apply font decided and fix the week to day selection?, 
+  search bar for calendar page functionality; 
+  Search bar functionality on nav bar
+  local storage coordination
+  change niroops css file to my-recipe.css (uniformed)
+  pick a recipe bar implementation on calendar
+  delete kevin's old navigation bar folder - done 
+  Do read-me for navigation and update calendar read me as well
+  nav-bar.js implementation after luis confirms it
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooklection</title>
+
+    <!-- Home.css Style sheet connected-->
+    <link rel="stylesheet" href="home.css">
+
+    <!-- Inter font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <!-- Pacifier font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <!-- Desktop Navigation -->
+    <header class="desktop-nav">
+      <nav class="nav-tabs">
+        <a class="logo" href="home.html">
+          <img src="images/logo.png" alt="Logo">
+        </a>
+        <h1 id="brand">Cooklection </h1>
+        <div role="search">
+          <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?"> </input>
+          <button type="submit"> </button>
+        </div>
+        
+        <!-- text tabs -->
+        <a href="../calendar/calendar.html">Calendar</a>
+        <a href="shelf.html">Shelf</a>
+        <a class="cart" href="shop.html">
+          <img src="images/shop.png" alt="shopping cart">
+        </a>
+      </nav>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+      <a href="home.html">
+        <img src="images/home.png" alt="Home">
+      </a>
+      <a href="calendar.html">
+        <img src="images/calendar.png" alt="Calendar">
+      </a>
+      <a href="shelf.html">
+        <img src="images/shelf.png" alt="Shelf">
+      </a>
+      <a href="cart.html">
+        <img src="images/shop.png" alt="Cart">
+      </a>
+    </nav>
+
+    <!-- First Section -->
+    <h1>Today's Meals</h1>
+    <div id="breakfast" class="meal-card"></div>
+    <div id="lunch" class="meal-card"></div>
+    <div id="dinner" class="meal-card"></div>
+
+    <!-- Second Section -->
+    <div class="cart-summary">
+      <h2>Cart Summary</h2>
+      <ul id="cart-items"></ul>
+      <p class="total" id="cart-total"></p>
+    </div>
+
+    <!-- Third Section -->
+    <div class="section-card" style="max-width: none;">
+      <h2> ♡ Favorited Recipes ♡ </h2>
+      <div id="favorites-list" class="favorites-container"></div>
+    </div>
+
+    <footer>
+
+    </footer>
+    <script src="home.js"></script>
+  </body>
+</html>

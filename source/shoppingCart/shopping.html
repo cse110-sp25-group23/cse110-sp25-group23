@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Shopping List</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    body {
+      font-family: 'Just Another Hand', cursive;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 2.25rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .remove {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+    .remove:hover {
+      background-color: #218838;
+    }
+    .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    #clear {
+      background-color: #dc3545;
+    }
+    #buy-now {
+      background-color: #007bff;
+    }
+    .actions button {
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+    #clear:hover {
+      background-color: #c82333;
+    }
+    #buy-now:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your Shopping List</h1>
+    <ul id="cart"></ul>
+    <div class="actions">
+      <button id="clear">Clear cart</button>
+      <button id="buy-now">Buy now</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { Cart } from './cart.js';
+
+    const ul = document.getElementById('cart');
+
+    function render() {
+      ul.innerHTML = '';
+      Cart.list().forEach(({ id, name, qty, unit }) => {
+        const li = document.createElement('li');
+        li.dataset.id = id;
+        li.innerHTML = `
+          <span>${qty ? qty + ' ' + unit : ''} ${name}</span>
+          <button class="remove">Remove</button>
+        `;
+        ul.append(li);
+      });
+    }
+
+    // remove handler
+    ul.addEventListener('click', e => {
+      if (e.target.matches('.remove')) {
+        const id = e.target.closest('li').dataset.id;
+        Cart.remove(id);
+      }
+    });
+
+    // clear cart handler
+
+    document.getElementById('clear').addEventListener('click', () => {
+      Cart.clear();
+    });
+
+    document.getElementById('buy-now').addEventListener('click', () => {
+    });
+
+    document.addEventListener('cart:update', render);
+    render();
+  </script>
+</body>
+</html>
