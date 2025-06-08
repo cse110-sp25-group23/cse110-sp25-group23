@@ -524,14 +524,15 @@ h1{
 
 .shelf-cards {
   display: flex;
-  gap: 80px;
+  gap: 10px;
   justify-content: center;
   position: absolute;
   top: 45%;              
-  left: 50%;
+  left: 49%;
   transform: translate(-50%, -50%);  
+  max-width:100%;
   min-height: 120px;     
-  width: 50%;
+  width: 90%;
   z-index: 10;
   margin-top: 10px;
 }
@@ -562,11 +563,11 @@ h1{
 }
 
 .shelf-arrow.left {
-    left: 40px;
+    left: 10px;
 }
 
 .shelf-arrow.right {
-    right: 40px;
+    right: 10px;
 }
 
 .shelf-arrow.disabled {
