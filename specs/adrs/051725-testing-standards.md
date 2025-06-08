@@ -91,12 +91,12 @@ We chose to integrate linting tools into our GitHub Actions workflow to provide 
 
 3. **Autofix Option**: We later enabled the `--fix` flag (where supported) in our linters to automatically correct fixable issues, reducing the manual burden on developers.
 
-#### Consequences
+### Results
 - Improved visibility into the full range of linting issues during each CI run.
 - Reduced developer overhead thanks to automatic fixes for common style/code issues.
 - Improved enforcement of coding standards across the entire project.
 
-#### Future Work
+### Future Work
 - Enforce lint pass requirement before merge via branch protection rules.
   
 ### June 2, 2025
@@ -109,8 +109,6 @@ JSDoc is a command-line tool that parses source code and extracts structured doc
 
 We initially aimed to automate this process by integrating JSDoc into our CI/CD workflow and publishing the documentation using GitHub Pages.
 
-## Decision
-
 ### Initial Approach and Problems
 - A `jsdoc` script was added to our `package.json`, configured to output generated documentation to the `./docs` folder.
 - We attempted to automate this as part of our `.github/workflows/main.yml`, but ran into several blocking issues, including:
@@ -119,22 +117,70 @@ We initially aimed to automate this process by integrating JSDoc into our CI/CD 
 - As a workaround, issue #18 shows that we manually ran JSDoc locally and pushed the resulting documentation files to the `docs/` directory.
 - We also attempted to publish documentation via **GitHub Pages** by setting the repository to serve from the `/docs` folder. However, rendering failed due to either missing or incomplete files at build time.
 
-### Final Strategy
+### conclusion:
 - Documentation is generated **locally** using `npm run jsdoc` and then committed to the repository under the `docs/` directory.
 - The `index.html` inside `/docs` serves as the entry point for all rendered documentation.
 - Later in the project, we added a **dedicated `docs` job** to the GitHub Actions workflow to handle JSDoc generation independently of test and lint jobs. However, documentation is still committed manually due to publishing challenges.
 
-## Consequences
+### results:
 - Developers can generate and view up-to-date documentation locally before committing.
 - Documentation is hosted directly in the repo under `/docs`, allowing users to browse it through GitHub Pages.
 - Despite not being fully automated, this hybrid solution ensures that documentation remains accessible and version-controlled.
 
-## Alternatives Considered
+### Alternatives Considered
 - Full GitHub Pages integration via CI/CD: Abandoned due to workflow limitations and branch protection settings.
 - Artifact-only publishing: Rejected as it does not provide persistent documentation in the GitHub UI or Pages.
 
-## Future Work
+### Future Work
 - Explore using GitHub Actions deploy keys or GitHub Pages Actions to automate pushing JSDoc output to a `gh-pages` branch.
 - Add checks to warn or fail workflow runs if `/docs` is out of sync with source code changes.
 - Improve documentation style and structure using a custom JSDoc theme.
 
+---
+### June 2nd, 2025
+## ADR: Unit Testing with Jest
+
+### description: 
+To ensure the correctness of our application logic and reduce the likelihood of regressions, we adopted unit testing as a key part of our development and CI/CD process.
+
+We selected **Jest** as our unit testing framework due to its simplicity, rich feature set, and strong support for JavaScript projects.
+
+### Setup
+- We use **Jest** to run unit tests as part of our CI workflow defined in `.github/workflows/main.yml`.
+- Unit test files must:
+  - Be named with a `.test.js` suffix (e.g., `example.test.js`).
+  - Be located inside the `__tests__` directory at the root or within relevant module directories.
+- The test command is defined in `package.json` and executed as part of the pipeline using `npm test` or `npx jest`.
+
+### Workflow Integration
+- Jest is included as part of the test job in our GitHub Actions pipeline.
+- On every push or pull
+
+---
+## June 7, 2025
+## ADR: End-to-End Testing with Playwright
+
+### Description:
+To complement our unit testing and ensure that core user interactions and flows work as expected in the browser, we added **end-to-end (E2E) testing** using [Playwright](https://playwright.dev/).
+
+Playwright provides a powerful and reliable way to automate browser actions across Chromium, Firefox, and WebKit, allowing us to validate functionality from the user’s perspective.
+
+### Setup
+- We chose **Playwright** for E2E testing due to its:
+  - Cross-browser support
+  - Built-in auto-waiting
+  - Easy configuration and fast parallel test execution
+- E2E test files must:
+  - Use the `.test.js` suffix (e.g., `login.test.js`)
+  - Be placed in the `__tests__` directory, consistent with our unit testing convention
+- Tests simulate real user behavior (e.g., clicking buttons, filling forms, navigation) and assert outcomes in a real browser environment.
+
+### Workflow Integration
+- Playwright tests are included in the GitHub Actions CI pipeline as a dedicated job or as part of the main testing workflow.
+- Browsers are installed and launched in headless mode to execute the tests efficiently in CI.
+- Failures in E2E tests will block pull requests from being merged.
+
+### REsults
+- Increases confidence in critical flows such as navigation, form submission, and rendering.
+- Detects issues that unit tests alone may not catch, such as integration bugs or UI regressions.
+- Adds more setup and maintenance overhead, but provides high-value feedback.
