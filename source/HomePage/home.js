@@ -6,12 +6,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // e.g. "2025-06-04"
   const todayStr = new Date().toLocaleDateString("en-CA"); 
-  
-  //DELETE LATER
-  // localStorage.setItem("2025-06-04 21:00", JSON.stringify({name:"Fnu"}));
-  // localStorage.setItem("2025-06-04 12:00", JSON.stringify("yay"));
-  // localStorage.setItem("2025-06-04 13:00", JSON.stringify("yup"));
-  // localStorage.setItem('recipeCart', JSON.stringify([{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2},{name:"garlic", qty:2}]));
 
   console.log("✅ Running meal loader. Today = ", todayStr);
   const breakfastMeals = [];
@@ -28,12 +22,12 @@ window.addEventListener('DOMContentLoaded', function() {
       console.log("hour", hour);
       const meal = JSON.parse(localStorage.getItem(key));
 
-      if (hour >= 5 && hour < 11) {
-        breakfastMeals.push({meal,hour});
-      } else if (hour >= 11 && hour < 16) {
-        lunchMeals.push({meal,hour});
+      if (hour >= 5 && hour < 12) {
+        breakfastMeals.push({meal,timePart});
+      } else if (hour >= 12 && hour < 16) {
+        lunchMeals.push({meal,timePart});
       } else if (hour >= 16 && hour <= 23) {
-        dinnerMeals.push({meal,hour});
+        dinnerMeals.push({meal,timePart});
       }
     }
   }
@@ -60,11 +54,20 @@ window.addEventListener('DOMContentLoaded', function() {
       return `<h2>${label}</h2>`+`<p>No ${lower} scheduled.<br>Plan something delicious now!</p>`;
     } 
     return `<h2>${label}</h2>` + meals.map(item => {
-      const name = typeof item.meal === 'string' ? item.meal : item.meal.name;
-      const timeLabel = `${item.hour.toString().padStart(2, '0')}:00`;
+      const [hourStr, minuteStr] = item.timePart.split(":");
+      const hour = parseInt(hourStr);
+      const ampm = hour < 12 ? "AM" : "PM";
+      const timeLabel = `<span class="time-label">${item.timePart} ${ampm}</span>`;
+
+      // Build a list of all recipe names + authors
+      const mealDetails = Array.isArray(item.meal)
+        ? item.meal.map(r => `<p class="meal-name"><i>${r.name}</i> by ${r.author}</p>`).join('')
+        : `<p>Unnamed Meal</p>`;
+
       return `
         <div class="meal-card">
-          <p><b>${timeLabel}</b> — <i>${name}</i></p>
+          <p><b>${timeLabel}</b></p>
+          ${mealDetails}
         </div>
       `;
     }).join('\n');
@@ -91,53 +94,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-
-  let favoritesPage = 1;
-  const FAVORITES_PER_PAGE = 10;
-
-  /**
-   * 
-   * @returns favorited recipes for user to view in batches of 10 and with see 
-   * more button until no more favorites are left to display to the user.
-   */
-//   function renderFavorites() {
-//     const container = document.getElementById("favorites-list");
-//     container.innerHTML = ""; // Clearing previous content
-
-//     if (!favorites || favorites.length === 0) {
-//       container.innerHTML = `<p class="no-favorites">No favorites yet.<br><br><em>Browse to Store, Organize, and Share the Joy!</em></p>`;
-//       document.getElementById("see-more-wrapper").style.display = "none";
-//       return;
-//     }
-
-//     const startIndex = 0;
-//     const endIndex = FAVORITES_PER_PAGE * favoritesPage;
-//     const visibleFavorites = favorites.slice(startIndex, endIndex);
-
-//     visibleFavorites.forEach(recipe => {
-//       container.innerHTML += `
-//         <div class="favorite-card">
-//           <img src="${recipe.image}" alt="${recipe.name}">
-//           <h3>${recipe.name}</h3>
-//           <div class="tags">${recipe.tags.join(', ')}</div>
-//         </div>
-//       `;
-//   });
-
-//   // Show/hide button based on remaining items
-//   const seeMore = document.getElementById("see-more-wrapper");
-//   if (favorites.length > endIndex) {
-//     seeMore.style.display = "flex";
-//   } else {
-//     seeMore.style.display = "none";
-//   }
-// }
-
-// document.getElementById("see-more-btn").addEventListener("click", () => {
-//   favoritesPage++; // increase page
-//   renderFavorites(); // now render new batch
-// });
-
 function renderFavoriteCards(recipes) {
   const container = document.getElementById("favorites-list");
   container.innerHTML = ""; // Clear previous content
@@ -149,7 +105,7 @@ return;
 
   recipes.forEach(recipe => {
     const card = document.createElement("recipe-card");
-    card.setAttribute("readonly", "true"); // ✅ new line to mark as readonly
+    card.setAttribute("readonly", "true"); // new line to mark as readonly
 
     card.data = recipe;
     container.appendChild(card);
@@ -222,6 +178,29 @@ return;
     searchButton.addEventListener('click', handleSearch);
   }
     
+  const mobileSearchInput = document.getElementById('search-field-mobile');
+const mobileSearchButton = document.getElementById('search-button-mobile');
+
+function handleMobileSearch() {
+  const query = mobileSearchInput.value.trim();
+  if (query !== '') {
+    localStorage.setItem('searchQuery', query);
+    window.location.href = '../RecipeCard/my-recipes.html';
+  }
+}
+
+if (mobileSearchInput) {
+  mobileSearchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      handleMobileSearch();
+    }
+  });
+}
+
+if (mobileSearchButton) {
+  mobileSearchButton.addEventListener('click', handleMobileSearch);
+}
+
   renderCartSummary();
   renderFavoriteCards(favoriteRecipes);
 });
