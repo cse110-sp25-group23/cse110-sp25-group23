@@ -5,6 +5,8 @@
  */
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
 import { getRecipeCardTemplateCSS } from '../RecipeCard/recipeCardTemplateCSS.js';
+// Import the existing Cart helper from your shoppingCart folderAdd commentMore actions
+import { Cart } from '../ShoppingCart/cart.js';
 
 export class RecipeCard extends HTMLElement {
     constructor() {
@@ -44,6 +46,9 @@ export class RecipeCard extends HTMLElement {
                             ${recipeData.ingredients.map(ing => `<li>${ing.name}${ing.unit ? ' - ' + ing.unit : ''}</li>`).join('')}
                         </ul>
                     </div>
+                    <!-- INSERTED “Buy ingredients” button -->        
+                    <!-- —— NEW: “Add to cart” button (no redirect) —— -->
+                    <button class="add-to-cart-btn">Add to cart</button>
                     <div class="tags-wrapper">
                         <div class="tags-class">
                             ${recipeData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
@@ -66,6 +71,33 @@ export class RecipeCard extends HTMLElement {
         //add this div container to shadow root
         this.shadowRoot.appendChild(container);
 
+        // —— NEW: “Add to cart” button logic (identical to buyBtn except no redirect) —— //
+        const addCartBtn = container.querySelector('.add-to-cart-btn');
+        addCartBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            // Build the same miniRecipe object
+            const miniRecipe = {
+                id: `cart-${recipeData.id}`,
+                ingredients: recipeData.ingredients.map(ing => ({
+                id: `${recipeData.id}-${ing.name}`,
+                name: ing.name,
+                qty: ing.qty,
+                unit: ing.unit || ''
+                }))
+            };
+
+            // Add to Cart
+            Cart.addRecipe(miniRecipe);
+
+            // Instant UI feedback on this button only (no redirect)
+            addCartBtn.textContent = '✔ In Cart';
+            addCartBtn.disabled = true;
+            setTimeout(() => {
+                addCartBtn.textContent = 'Add to cart';
+                addCartBtn.disabled = false;
+            }, 1500);
+        });
         /* Structure of our recipe-card
         <recipe-card ....>
             <style>
