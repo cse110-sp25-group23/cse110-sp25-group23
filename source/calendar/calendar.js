@@ -4,32 +4,15 @@
 const isTestEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
 // If in Jest test environment, mock localStorage
 
-//  === DOM ACCESSORS ===
-// const calendarGrid = document.getElementById('calendar-grid');
-// const calendarDayLabel = document.getElementById('calendar-day-label');
-// const monthYear = document.getElementById('month-year');
-// const prevBtn = document.getElementById('prev-month');
-// const nextBtn = document.getElementById('next-month');
-
-// For testing purposes, we are mocking the above elements for Jest compatibility
-function getCalendarGrid() {
-  return document.getElementById('calendar-grid');
-}
-function getCalendarDayLabel() {
-  return document.getElementById('calendar-day-label');
-}
-function getMonthYear() {
-  return document.getElementById('month-year');
-}
-function getPrevBtn() {
-  return document.getElementById('prev-month');
-}
-function getNextBtn() {
-  return document.getElementById('next-month');
-}
+// DOM element references
+const calendarGrid = document.getElementById('calendar-grid');
+const calendarDayLabel = document.getElementById('calendar-day-label');
+const monthYear = document.getElementById('month-year');
+const prevBtn = document.getElementById('prev-month');
+const nextBtn = document.getElementById('next-month');
 
 
-// === STATE ===
+
 let currentDate = new Date();
 let currentView = 'month';
 
@@ -89,10 +72,6 @@ function renderRecipeBlock({ name, author = '' }, topPx = 0, heightPx = 60, key 
  * @param {Date} date - The reference date to render the calendar from.
  */
 function renderCalendar(date) {
-  const calendarGrid = getCalendarGrid();
-  const calendarDayLabel = getCalendarDayLabel();
-  const monthYear = getMonthYear();
-  
   highlightActiveToggle();
   // Reset calendar content and update view-specific class names
   calendarGrid.innerHTML = '';
