@@ -591,3 +591,14 @@ document.addEventListener('click', (e) => {
     // TODO: render the recipe card view
   }
 });
+
+// === FOR JEST TESTING ===
+export {
+  renderRecipeBlock,
+  getRecipeBlockHtml,
+  getStoredRecipeData,
+  normalizeDatetimeKey,
+  pad
+};
+
+
