@@ -531,10 +531,11 @@ nav a:hover{
   z-index: 3;
   box-sizing: border-box;
   min-height: 48px;
-  overflow: hidden;
+  /* overflow: hidden; */
   position: absolute;
   max-width: calc(100% - 4px);
   height: auto;
+  overflow-x: scroll;
 }
 
 /* Recipe block in week and day view */
