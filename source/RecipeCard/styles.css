@@ -381,7 +381,7 @@ nav a:hover {
 }
 
 /* Show mobile nav on small screens */
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
   .mobile-nav {
     display: flex;
     position: fixed;
@@ -507,7 +507,7 @@ nav a:hover {
 
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
   .site-footer {
     display: none;
   }
@@ -536,7 +536,7 @@ nav a:hover {
 }
 
 /* Adjusting Create Button Location */
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
   .button {
     top: 50px;
   }
