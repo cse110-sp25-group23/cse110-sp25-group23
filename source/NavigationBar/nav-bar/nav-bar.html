@@ -1,16 +1,3 @@
-<!--
-  TO DO LIST: 
-  DOCUMENTATION ON JS
-  ARIA tags
-  Failure points
-  footer
-  organize css file (remove tags I ended up deleting)
-  end to end testing
-  unit testing
-  fix the navigation bar and screen sizes
-  Clean image folder
--->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -48,6 +35,7 @@
         <!-- text tabs -->
         <a href="../calendar/calendar.html">Calendar</a>
         <a href="shelf.html">Shelf</a>
+        <a href="shelf.html">Create</a>
         <a class="cart" href="shop.html">
           <img src="images/shop.png" alt="shopping cart">
         </a>
@@ -55,25 +43,29 @@
     </header>
 
     <!-- Mobile Navigation -->
+    <div class="mobile-header">
+      <img src="images/logo.png" alt="Logo">
+      <h1>Cooklection</h1>
+    </div>
     <nav class="mobile-nav">
-      <a href="home.html">
-        <img src="images/home.png" alt="Home">
+      <a href="../../HomePage/home.html">
+        <img src="images/home.png" alt="Home page of website for summary">
       </a>
-      <a href="calendar.html">
-        <img src="images/calendar.png" alt="Calendar">
+      <a href="../../calendar/calendar.html">
+        <img src="images/calendar.png" alt="Calendar for meal planning">
       </a>
-      <a href="shelf.html">
-        <img src="images/shelf.png" alt="Shelf">
+      
+      <!-- create file does not exist until integrated with Thanh's work-->
+      <a href="../../recipeCard/create.html">
+        <img src="images/plus.png" alt="plus for creating recipe">
       </a>
-      <a href="cart.html">
-        <img src="images/shop.png" alt="Cart">
+      
+      <a href="../../recipeCard/recipeCard.html">
+        <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+      </a>
+      <a href="../../ShoppingCart/shopping.html">
+        <img src="images/shop.png" alt="Cart for shopping ingredients saved">
       </a>
     </nav>
-
-
-    <footer>
-
-    </footer>
-    <script src="home.js"></script>
   </body>
 </html>
