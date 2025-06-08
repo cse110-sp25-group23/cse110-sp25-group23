@@ -62,13 +62,14 @@
 
   <body>
     <!-- Desktop Navigation -->
-    <header class="desktop-nav">
+    <header class="desktop-nav"  aria-label="Main Desktop Navigation">
       <nav class="nav-tabs">
         <a class="logo" href="home.html">
-          <img src="images/logo.png" alt="Logo">
+          <img src="images/logo.png" alt="Cooklection Logo" onerror="this.outerHTML='<div class=\'img-fallback\'>Cooklection Logo</div>';">
         </a>
         <h1 id="brand">Cooklection </h1>
         <div role="search">
+          <label for="search-field-small" class="visually-hidden">Search recipes</label>
           <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?"> </input>
           <button type="submit"> </button>
         </div>
@@ -78,7 +79,7 @@
         <a href="../RecipeCard/my-recipes.html">Shelf</a>
         <a href="../RecipeCard/recipeCard.html">Create</a>
         <a class="cart" href="../ShoppingCart/shopping.html">
-          <img src="images/shop.png" alt="shopping cart">
+          <img src="images/shop.png" alt="shopping cart" onerror="this.outerHTML='<div class=\'img-fallback\'>Shop</div>';">
         </a>
       </nav>
     </header>
@@ -88,53 +89,53 @@
           <img src="images/logo.png" alt="Logo">
           <h1>Cooklection</h1>
         </div>
-        <nav class="mobile-nav">
+        <nav class="mobile-nav"  aria-label="Mobile navigation">
           <a href="../HomePage/home.html">
-            <img src="images/home.png" alt="Home page of website for summary">
+            <img src="images/home.png" alt="Home page of website for summary" onerror="this.outerHTML='<div class=\'img-fallback\'>Home</div>';">
           </a>
           <a href="../calendar/calendar.html">
-            <img src="images/calendar.png" alt="Calendar for meal planning">
+            <img src="images/calendar.png" alt="Calendar for meal planning" onerror="this.outerHTML='<div class=\'img-fallback\'>Calendar</div>';">
           </a>
           
           <!-- create file does not exist until integrated with Thanh's work-->
           <a href="../recipeCard/recipeCard.html">
-            <img src="images/plus.png" alt="plus for creating recipe">
+            <img src="images/plus.png" alt="Plus for creating recipe" onerror="this.outerHTML='<div class=\'img-fallback\'>Create</div>';">
           </a>
           
           <a href="../recipeCard/my-recipes.html">
-            <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+            <img src="images/shelf.png" alt="Shelf for browsing through certain categories" onerror="this.outerHTML='<div class=\'img-fallback\'>Shelf</div>';">
           </a>
           <a href="../ShoppingCart/shopping.html">
-            <img src="images/shop.png" alt="Cart for shopping ingredients saved">
+            <img src="images/shop.png" alt="Cart for shopping ingredients saved" onerror="this.outerHTML='<div class=\'img-fallback\'>Shop</div>';">
           </a>
         </nav>
 
-    <!-- First Section - Schedule Meals planned -->
-    <h1>Today's Meals</h1>
-    <div id="breakfast" class="meal-card"></div>
-    <div id="lunch" class="meal-card"></div>
-    <div id="dinner" class="meal-card"></div>
+        <!-- First Section - Schedule Meals planned -->
+      <h1>Today's Meals</h1>
+      <div id="breakfast" class="meal-card"></div>
+      <div id="lunch" class="meal-card"></div>
+      <div id="dinner" class="meal-card"></div>
 
-    <!-- Second Section - Summary of items in the shopping cart -->
-    <div class="cart-summary">
-      <h2>Cart Summary</h2>
-      <ul id="cart-items"></ul>
-      <p class="total" id="cart-total"></p>
-    </div>
+      <!-- Second Section - Summary of items in the shopping cart -->
+      <div class="cart-summary">
+        <h2>Cart Summary</h2>
+        <ul id="cart-items"></ul>
+        <p class="total" id="cart-total"></p>
+      </div>
 
-    <!-- Third Section - Favorited Recipes -->
-    <div class="section-card" style="max-width: none;">
-      <!-- <div id="favorites-list" class="favorites-container"></div> -->
-      <section id="homepage-favorites">
-        <h2> ♡ Favorited Recipes ♡ </h2>
-        <div id="favorites-list"></div>
-      </section>
-      
-      <!-- <div id="see-more-wrapper">
-        <button id="see-more-btn" class="see-more-button">See More</button>
-      </div> -->
+      <!-- Third Section - Favorited Recipes -->
+      <div class="section-card" style="max-width: none;">
+        <!-- <div id="favorites-list" class="favorites-container"></div> -->
+        <section id="homepage-favorites">
+          <h2> ♡ Favorited Recipes ♡ </h2>
+          <div id="favorites-list"></div>
+        </section>
+        
+        <!-- <div id="see-more-wrapper">
+          <button id="see-more-btn" class="see-more-button">See More</button>
+        </div> -->
 
-    </div>
+      </div>
 
       <footer class="site-footer">
         <div class="footer-links">
@@ -146,7 +147,12 @@
         </div>
         <p class="footer-message">Check out some heart-warming recipes today!</p>    
     </footer>
-    <script src="home.js"></script>
+    <script src="home.js" defer></script>
     <script type="module" src="../RecipeCard/recipeCard.js"></script>
+    <noscript>
+      <div class="noscript-warning">
+        JavaScript is required for full functionality. Please enable it in your browser settings.
+      </div>
+    </noscript>
   </body>
 </html>

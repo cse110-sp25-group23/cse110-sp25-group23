@@ -75,7 +75,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // favoritedRecipes (need to be connected with niroops favorite features in recipeCard)
   const allRecipes = JSON.parse(localStorage.getItem('recipes')) || [];
-  const favoriteRecipes = allRecipes.filter(recipe => recipe.favorite);
+  const favoriteRecipes = allRecipes.filter(recipe => recipe.favorite === true);
   // const favorites = JSON.parse(localStorage.getItem("favoritedRecipes"));
 
   // Prevents reloading page if already on the said page

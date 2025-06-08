@@ -8,6 +8,7 @@
   --card-bg: #ffffff ;
   --font: 'Inter';
   --fontlabel: pacifico-regular;
+   --hour-height: 60px;
 }
 
 /* === Previous/Next Buttons === */
@@ -102,64 +103,16 @@
   box-sizing: border-box;
   font-family: var(--font);
   padding-bottom: 40px; 
+  max-height: 80vh;
+  overflow-y: auto;
+
+  /* overrides */
+  height:auto;
+  /* overflow: visible; */
+  position: relative;
 }
 
-/*=== NAV BAR ===*/
-/*
-.main-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #ffe49e;
-  font-family: Arial;
-  padding: 10px 20px;
-}
-
-.main-nav a {
-  margin: 0 10px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: #fff3cc;
-  color: black;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.main-nav a:hover {
-  background: #fcefb2;
-}
-
-.main-nav input[type="text"] {
-  width: 100%;
-  max-width: 300px;
-  margin-left: auto;
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.nav-icon {
-  mix-blend-mode: multiply;
-  width: 20px;      
-  height: 20px;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-
-.main-nav .search-bar {
-  max-width: 300px;
-  margin-left: auto; 
-}
-
-.search-bar {
-  flex: 1; 
-  display: flex;
-  justify-content: flex-end; 
-}
-*/
 /* Desktop Navigation */
-
 
 body {
   font-family: var(--font);
@@ -383,19 +336,6 @@ nav a:hover{
   overflow: hidden; /* optional: hides overflow */
 }
 
-
-/* .nav-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 24px;
-  padding: 12px 20px;
-  max-width: 960px;
-  background-color: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-} */
-
 .nav-inner a {
   white-space: nowrap;
   overflow: hidden;
@@ -508,8 +448,6 @@ nav a:hover{
   text-align: center;
   width: 100%;
   box-sizing: border-box;
-  /* overflow-y: auto;                  for scrollability
-  max-height: calc(100vh - 120px); */
 }
 
 /* Row displaying the days of the week (Sun, Mon, ...) */
@@ -540,7 +478,6 @@ nav a:hover{
 /* Day cells styling */
 .day {
   cursor: pointer;
-  /* transition: background 0.1s ease; */
 }
 
 /* Hover effect for day cells */
@@ -576,26 +513,41 @@ nav a:hover{
 .note-block, .note {
   aspect-ratio: 1/1 fixed;
   flex: 0 0 auto;
-  background-color: #ffe49e !important; /* force color to show */
+  background-color: var(--bg-color) !important; /* force color to show */
   border-radius: 4px;
-  border: 1px solid #d4a03d !important; /* force border to show */
+  border: 1px solid var(--accent) !important; /* force border to show */
   font-size: 0.7rem;
   font-weight: bold;
   margin: 1px 0; 
   padding: 1px 2px;
   max-width: 95%;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   line-height: 1.2;
   max-height: 30px; 
   cursor: pointer;
 }
 
+.note-block {
+  z-index: 3;
+  box-sizing: border-box;
+  min-height: 48px;
+  /* overflow: hidden; */
+  position: absolute;
+  max-width: calc(100% - 4px);
+  height: auto;
+  overflow-x: scroll;
+}
+
 /* Recipe block in week and day view */
 .note {
+  position:absolute;
   font-size: 1rem;
   max-height: 48px; 
+  width: 100%;
+  overflow: hidden;
+  overflow-x: scroll;
+  min-height: 48px;
+  height: auto !important;
 }
 
 .recipe-name {
@@ -628,8 +580,28 @@ nav a:hover{
 /* === DAY VIEW Customizations === */
 
 /* DAY view layout: 1 column + time labels */
+
+.day-overlay {
+  position: absolute;
+  top: 0;
+  left: 50px;
+  width: calc(100% - 50px);
+  height: 1440px;
+  pointer-events: none; /* allows interaction to pass through */
+  z-index: 2;
+  background-color: transparent !important;
+  box-sizing: border-box;
+}
+
+
+
 .calendar-grid.day-view {
+  position: relative;
+  display: grid;
   grid-template-columns: 50px 1fr;
+  grid-template-rows: repeat(24, var(--hour-height)); ;
+  overflow: visible;
+  height: 1440px;
 }
 
 /* Day view cells (hour slots) */
@@ -659,7 +631,10 @@ nav a:hover{
 
 /* WEEK view layout: 1 label column + 7 days */
 .calendar-grid.week-view {
+  display: grid;
   grid-template-columns: 50px repeat(7, 1fr);
+  grid-template-rows: repeat(24, var(--hour-height));
+
 }
 
 /* In week view, display recipe blocks in the same hour slot side by side */
@@ -683,11 +658,6 @@ nav a:hover{
 
 /* === TIME STRUCTURE for day/week views === */
 
-/* Styles for the hour seperator */
-:root {
-  --hour-height: 60px;
-}
-
 /* Base for day and week views */
 /* Shared vertical layout: 24 hour slots (24 rows) */
 .calendar-grid.day-view,
@@ -698,18 +668,35 @@ nav a:hover{
 }
 
 /* Hour label */
+
+.calendar-grid.day-view .time-label{
+  text-align: right;
+  padding: 6px;
+  font-size: 0.85rem;
+  border-right: 1px solid #ccc;
+  height: 60px; /* 1 hour height */
+}
+
 .time-label {
   text-align: right;
-  padding: 2px 6px;
-  font-size: 0.9rem;
+  padding: 6px;
+  font-size: 0.85rem;
   border-right: 1px solid #ccc;
 }
 
 /* Hour box */
 .time-slot {
   position: relative;
+  min-height: 48px;
+  height: auto;
   border-top: 1px solid #eee;
+  overflow: visible; /* allows time blocks to flow into the next hour */;
 }
+
+.day-view .time-slot {
+  height: 60px;
+}
+
 
 /* 30-min dash */
 .time-slot::after {
@@ -735,6 +722,13 @@ nav a:hover{
   }
 }
 
+/* === RESPONSIVE RECIPE BLOCK LIMITS === */
+
+@media (max-width: 768px) {
+  .calendar-grid.month-view .day .notes-container {
+    max-height: 90px;
+  }
+}
 
 
 /* == ADDING RECIPES ==*/
@@ -750,15 +744,15 @@ nav a:hover{
   top: 30px;
   left: 0;
   right: 0;
-  bottom: 0;
-  max-height: 75px;
+  bottom: 5px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 0 2px;
+  padding: 2px; 
   box-sizing: border-box;
-  overflow: hidden;
   border: none;
+  overflow-y: auto; 
+  max-height: calc(100% - 35px);
 }
 
 .calendar-grid.month-view .day .day-number {
@@ -768,10 +762,6 @@ nav a:hover{
 
 
 /* === DELETE RECIPES (edit is gone) === */
-/* .note-block .edit-recipe, .note .edit-recipe {
-  top: 3px;
-  left: 3px;
-} */
 
 .note-block .delete-recipe, 
 .note .delete-recipe {
@@ -795,27 +785,15 @@ nav a:hover{
   cursor: pointer;
 }
 
-/* .note-block .edit-recipe {
-  top: 3px;
-  left: 3px;
-} */
-
 .note-block .delete-recipe {
   top: 3px;
   right: 3px;
+  background-color: #e9dab4;
 }
 
 /* Show on hover */
 .note-block:hover button {
   display: block; 
-}
-
-
-/* DEBUGGING */
-
-/* Limit month view to show only first two recipe cards */
-.calendar-grid.month-view .notes-container .note-block:nth-of-type(n+3) {
-  display: none;
 }
 
 /* === footer === */

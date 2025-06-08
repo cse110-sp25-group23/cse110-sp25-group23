@@ -523,3 +523,35 @@ nav a:hover{
 recipe-card {
   flex: 0 1 300px; /* each card will try to be 300px wide but can shrink */
 }
+
+/* === ARIA tags === */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Fallback style for users with JavaScript disabled */
+.noscript-warning {
+  padding: 1rem;
+  background-color: #ffeeee;
+  color: #990000;
+  text-align: center;
+  font-weight: bold;
+  font-family: var(--font, sans-serif);
+}
+
+.img-fallback {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ba3226;
+  padding: 0.25rem;
+  text-align: center;
+}
