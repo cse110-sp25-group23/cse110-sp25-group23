@@ -554,3 +554,33 @@ nav a:hover {
         display: none;
     }
 }
+
+#layout-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1205px) {
+    #layout-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #left-panel,
+    #middle-panel,
+    #right-panel {
+        width: 100%;
+        max-width: 100%;
+        position: static;
+        margin-bottom: 20px;
+    }
+
+    main {
+        justify-content: center;
+    }
+}
