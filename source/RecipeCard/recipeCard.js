@@ -80,10 +80,10 @@ export class RecipeCard extends HTMLElement {
             const miniRecipe = {
                 id: `cart-${recipeData.id}`,
                 ingredients: recipeData.ingredients.map(ing => ({
-                id: `${recipeData.id}-${ing.name}`,
-                name: ing.name,
-                qty: ing.qty,
-                unit: ing.unit || ''
+                    id: `${recipeData.id}-${ing.name}`,
+                    name: ing.name,
+                    qty: ing.qty,
+                    unit: ing.unit || ''
                 }))
             };
 
@@ -173,9 +173,14 @@ export class RecipeCard extends HTMLElement {
         });
 
 
-        // Initialize delete and update logic
-        delete_card(this.shadowRoot, this);
-        update_card(this.shadowRoot, this, recipeData);
+        // // Initialize delete and update logic
+        // delete_card(this.shadowRoot, this);
+        // update_card(this.shadowRoot, this, recipeData);
+
+        if (!this.hasAttribute('readonly')) {
+            delete_card(this.shadowRoot, this);
+            update_card(this.shadowRoot, this, recipeData);
+        }
     }
 }
 
