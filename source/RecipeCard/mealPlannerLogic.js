@@ -222,7 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
             resetMealUI();
 
             // Redirect to recipe import or creation page
-            window.location.href = '../recipeImporter/myrecipes.html'; // Change path if different
+            window.location.href = 'recipeImporter/recipeImport.html'; // Change path if different
         });
     }
 
