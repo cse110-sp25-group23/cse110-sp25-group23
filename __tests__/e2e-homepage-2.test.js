@@ -6,7 +6,7 @@ test.describe('Recipe Homepage', () => {
 
     test('localStorage is empty on initial load', async ({ page }) => {
         // Clear localStorage before visiting the page
-        await page.goto('http://127.0.0.1:5504/source/HomePage/home.html');
+        await page.goto('/source/HomePage/home.html');
         
         await page.reload();
       
