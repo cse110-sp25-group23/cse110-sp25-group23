@@ -1,6 +1,5 @@
 console.log("JS file loaded");
 
-// const meals = JSON.parse(localStorage.getItem("todaysMeals"));
 window.addEventListener('DOMContentLoaded', function () {
   console.log("Script running after DOM ready");
 
@@ -14,7 +13,7 @@ window.addEventListener('DOMContentLoaded', function () {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
 
-    // Match keys that start with today’s date
+    // Match keys that start with today’s date and filter meals from there
     if (key.startsWith(todayStr)) {
       const timePart = key.split(" ")[1];
       console.log("time", timePart);
@@ -22,11 +21,12 @@ window.addEventListener('DOMContentLoaded', function () {
       console.log("hour", hour);
       const meal = JSON.parse(localStorage.getItem(key));
 
-      if (hour >= 5 && hour < 12) {
+      // Time standards of how we defined certain certain recipes scheduled to be considered a breakfast, lunch or dinner meal
+      if (hour >= 0 && hour < 12) {
         breakfastMeals.push({ meal, timePart });
       } else if (hour >= 12 && hour < 16) {
         lunchMeals.push({ meal, timePart });
-      } else if (hour >= 16 && hour <= 23) {
+      } else if (hour >= 16 && hour <= 24) {
         dinnerMeals.push({ meal, timePart });
       }
     }
