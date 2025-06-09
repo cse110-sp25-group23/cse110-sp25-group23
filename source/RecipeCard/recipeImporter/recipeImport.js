@@ -100,12 +100,12 @@ importButton.addEventListener('click', async () => {
         recipeIngredients.innerHTML = '';
         (recipe.ingredients || []).forEach(ingredient => {
             const li = document.createElement('li');
-            li.textContent = `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`.trim();
+            li.textContent = `${ingredient.unit} ${ingredient.name}`.trim();
             recipeIngredients.appendChild(li);
         });
 
         recipeInstructions.innerHTML = '';
-        (recipe.instructions || []).forEach(step => {
+        (recipe.steps || []).forEach(step => {
             const li = document.createElement('li');
             li.textContent = step;
             recipeInstructions.appendChild(li);
