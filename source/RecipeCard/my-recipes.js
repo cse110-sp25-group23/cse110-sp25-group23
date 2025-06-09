@@ -305,3 +305,8 @@ function displaySearchResultsShelf(query) {
     // Insert at the very top
     container.prepend(shelfDiv);
   }
+
+export {
+    displayShelves,
+    updateShelfCards
+};
