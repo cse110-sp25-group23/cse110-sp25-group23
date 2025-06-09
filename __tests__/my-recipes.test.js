@@ -62,10 +62,10 @@ describe('Test My-Recipes Shelves', () => {
 
             const shelfTitles = [...shelves].map(shelf => shelf.querySelector('h2').textContent);
 
-            // These categories should appear based on your displayShelves logic:
             expect(shelfTitles).toContain('All Recipes');
             expect(shelfTitles).toContain('Favorites');
             expect(shelfTitles).toContain('Easy');
+            expect(shelfTitles).toContain('Recently Created');
             expect(shelfTitles).toContain('Breakfast');
        
     });
