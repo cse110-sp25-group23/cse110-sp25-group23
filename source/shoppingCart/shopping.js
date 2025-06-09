@@ -66,7 +66,7 @@ const mobileSearchInput = document.getElementById('search-field-mobile');
 const mobileSearchButton = document.getElementById('search-button-mobile');
 
 /**
- * handles redirection to shelf shalf page with results from mobile navigation search bar
+ * handles redirection to shelf shalf page with results from mobile search bar
  */
 function handleMobileSearch() {
     const query = mobileSearchInput.value.trim();

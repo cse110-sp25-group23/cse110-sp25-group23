@@ -6,7 +6,7 @@
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
 import { getRecipeCardTemplateCSS } from '../RecipeCard/recipeCardTemplateCSS.js';
 // Import the existing Cart helper from your shoppingCart folderAdd commentMore actions
-import { Cart } from '../ShoppingCart/cart.js';
+import { Cart } from '../shoppingCart/cart.js';
 
 export class RecipeCard extends HTMLElement {
     constructor() {
