@@ -21,7 +21,7 @@ test.describe('Recipe Homepage', () => {
           { name: 'Pizza', author: 'Dan', favorite: false }
         ];
       
-        await page.goto('http://127.0.0.1:5504/source/HomePage/home.html');
+        await page.goto('/source/HomePage/home.html');
       
         // Put the test array into localStorage
         await page.evaluate((arr) => {
