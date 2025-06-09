@@ -32,7 +32,6 @@ window.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-
   // Render to homepage
   document.getElementById("breakfast").innerHTML = renderMealCards(breakfastMeals, "Breakfast");
   document.getElementById("lunch").innerHTML = renderMealCards(lunchMeals, "Lunch");
@@ -94,6 +93,11 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  /**
+   * @param recipes - from local storage, general recipes are then filtered for 
+   * favorite property that is true/false.
+   * @returns nothing, but updates DOM to be showcased on UI after.
+   */
   function renderFavoriteCards(recipes) {
     const container = document.getElementById("favorites-list");
     container.innerHTML = ""; // Clear previous content
@@ -111,10 +115,11 @@ window.addEventListener('DOMContentLoaded', function () {
       container.appendChild(card);
     });
   }
+
   /**
-  * 
-  * @returns a cart summary of the number of items they have in the cart
-  */
+   * 
+   * @returns a cart summary of the number of items they have in the cart
+   */
   function renderCartSummary() {
     const list = document.getElementById("cart-items");
     const totalDisplay = document.getElementById("cart-total");
@@ -143,7 +148,7 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   window.addEventListener('recipesUpdated', () => {
-    console.log('🧹 Updating favorites on homepage');
+    console.log('Updating favorites on homepage');
 
 
     // Get updated recipes and filter favorites
@@ -158,6 +163,9 @@ window.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.getElementById('search-field-small');
   const searchButton = document.querySelector('[type="submit"]');
 
+  /**
+   * HandleSearch handles search requests to self page from desktop
+   */
   function handleSearch() {
     const query = searchInput.value.trim();
     if (query !== '') {
@@ -181,6 +189,9 @@ window.addEventListener('DOMContentLoaded', function () {
   const mobileSearchInput = document.getElementById('search-field-mobile');
   const mobileSearchButton = document.getElementById('search-button-mobile');
 
+  /**
+   * handleMobileSearch handles search requests to self page from mobile screen
+   */
   function handleMobileSearch() {
     const query = mobileSearchInput.value.trim();
     if (query !== '') {
@@ -201,6 +212,7 @@ window.addEventListener('DOMContentLoaded', function () {
     mobileSearchButton.addEventListener('click', handleMobileSearch);
   }
 
+  //calling other functions like cart summary and favorite sections to be called
   renderCartSummary();
   renderFavoriteCards(favoriteRecipes);
 });
