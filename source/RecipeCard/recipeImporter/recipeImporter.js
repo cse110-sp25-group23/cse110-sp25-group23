@@ -1,3 +1,5 @@
+import { getRecipesFromStorage, saveRecipesToStorage, addRecipesToDocument } from '../LocalStorage/storage.js';
+
 // Recipe importer module using Spoonacular API
 const SPOONACULAR_API_KEY = '84180a4b77f2405597b0c117c850eb62';
 const MAX_RETRIES = 2;
