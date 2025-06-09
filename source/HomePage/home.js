@@ -141,7 +141,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //If more than 10, show "click cart" message
     if (cart.length > 10) {
-      list.innerHTML += `<li><em>More items in cart. Click <a href="../ShoppingCart/shopping.html">cart</a> to view all.</em></li>`;
+      list.innerHTML += `<li><em>More items in cart. Click <a href="../shoppingCart/shopping.html">cart</a> to view all.</em></li>`;
     }
 
     totalDisplay.textContent = `Total Saved Items: ${total}`;
