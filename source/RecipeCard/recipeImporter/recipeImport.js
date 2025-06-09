@@ -32,7 +32,7 @@ function handleSearch() {
 const query = searchInput.value.trim();
 if (query !== '') {
     localStorage.setItem('searchQuery', query);
-    window.location.href = '../RecipeCard/my-recipes.html';
+    window.location.href = '../my-recipes.html';
 }
 }
 
@@ -55,7 +55,7 @@ function handleMobileSearch() {
 const query = mobileSearchInput.value.trim();
 if (query !== '') {
     localStorage.setItem('searchQuery', query);
-    window.location.href = '../RecipeCard/my-recipes.html';
+    window.location.href = '../my-recipes.html';
 }
 }
 
