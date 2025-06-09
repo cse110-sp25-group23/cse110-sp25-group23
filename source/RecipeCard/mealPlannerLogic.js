@@ -21,7 +21,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Get the "Save Meal" button which saves the selected recipes under a meal name
     const saveMealBtn = document.getElementById('save-meal-btn');
 
-
     /**
     * Triggered when the "Create Meal" button is clicked.
     * Displays the meal creation UI and injects checkboxes into all recipe cards for selection.
@@ -64,10 +63,8 @@ window.addEventListener('DOMContentLoaded', () => {
             if (oldWrapper) oldWrapper.remove();
         });
 
-
         // Loop through each recipe card and inject a checkbox for meal selection
         const cards = document.querySelectorAll('recipe-card');
-
         cards.forEach((card, index) => {
             // Create a wrapper div to hold the checkbox and apply visual styling
             const checkboxWrapper = document.createElement('div');
@@ -81,8 +78,6 @@ window.addEventListener('DOMContentLoaded', () => {
             checkbox.style.height = '60px';
             checkbox.style.cursor = 'pointer';
             checkbox.style.accentColor = '#3f51b5';
-
-
             checkbox.dataset.createdAt = card._data.createdAt;      // store the card's unique ID
 
             // Add the checkbox to the wrapper
@@ -98,7 +93,6 @@ window.addEventListener('DOMContentLoaded', () => {
             container.insertBefore(checkboxWrapper, container.firstChild);
         });
     });
-
 
     /**
     * Triggered when the "Cancel" button is clicked during meal creation.
@@ -123,8 +117,6 @@ window.addEventListener('DOMContentLoaded', () => {
             if (box) box.remove();
         });
     });
-
-
 
     /**
     * Triggered when the "Save Meal" button is clicked.
@@ -215,7 +207,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Handle "Import a Recipe Card" button
     const importBtn = document.getElementById('import-btn');
-
     if (importBtn) {
         importBtn.addEventListener('click', () => {
             // Exit any current preview or edit state
@@ -225,14 +216,6 @@ window.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'recipeImporter/recipeImport.html'; // Change path if different
         });
     }
-
-
-    /**
-    * Triggered when the "Stop Viewing" button is clicked.
-    * Exits meal preview mode and restores the full list of all recipe cards.
-    */
-
-    // Initial load: show stored recipes and available meals
 
     // Retrieve all recipe data from localStorage
     const recipes = getRecipesFromStorage();
@@ -245,44 +228,72 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Render the list of meals (meal names with View/Edit/Delete buttons)
     renderMealList();
-
 });
 
-
-
+/**
+ * Exits the meal creation mode by hiding the controls, clearing input,
+ * and removing any checkbox UI elements from recipe cards.
+ */
 function exitMealCreationMode() {
+    // Get the meal controls container (input + save/cancel buttons)
     const mealControls = document.getElementById('meal-controls');
+
+    // Get the cancel button element
     const cancelMealBtn = document.getElementById('cancel-meal-btn');
+
+    // Get the input field for the meal name
     const mealNameInput = document.getElementById('meal-name-input');
 
+    // Hide the meal controls if they exist
     if (mealControls) mealControls.style.display = 'none';
+
+    // Hide the cancel button if it exists
     if (cancelMealBtn) cancelMealBtn.style.display = 'none';
+
+    // Clear the meal name input if it exists
     if (mealNameInput) mealNameInput.value = '';
 
+    // For each recipe card on the page
     document.querySelectorAll('recipe-card').forEach(card => {
+        // Get the checkbox wrapper inside the shadow DOM of the card
         const box = card.shadowRoot.querySelector('.card-checkbox-wrapper');
+
+        // Remove the checkbox wrapper if it exists
         if (box) box.remove();
     });
 }
 
-
-
+/**
+ * Resets the meal UI by:
+ * - Exiting meal creation mode
+ * - Hiding all meal action buttons
+ * - Removing edit/save buttons
+ * - Reloading recipe cards from localStorage
+ */
 function resetMealUI() {
+    // Exit meal creation mode and remove any UI artifacts
     exitMealCreationMode();
 
+    // Clear the globally tracked currently viewed meal
     window.currentPreviewedMeal = null;
 
+    // Hide all action containers (Edit/Delete/Stop Viewing) for each meal
     document.querySelectorAll('.meal-action-container').forEach(container => {
         container.style.display = 'none';
     });
 
+    // Remove all Save Edit buttons if present
     document.querySelectorAll('.save-edit-btn').forEach(btn => btn.remove());
 
+    // Fetch all recipes from local storage
     const recipes = getRecipesFromStorage();
+
+    // Clear all current recipe cards displayed in the <main> container
     document.querySelector('main').innerHTML = '';
+
+    // Add all recipe cards back to the DOM
     addRecipesToDocument(recipes);
 }
-
 
 /**
  * Event listener for when the recipe data is updated (e.g., after saving or deleting a recipe).
@@ -337,66 +348,83 @@ window.addEventListener('recipesUpdated', () => {
 
 /**
  * Event listener for when a new recipe is created.
- * Updates the meal list on the sidebar to reflect any new tags/meals introduced by the new recipe.
+ * This ensures the meal UI is reset and the sidebar meal list is refreshed
+ * to reflect any new tags or meals introduced by the new recipe.
  */
 window.addEventListener('recipeCreated', () => {
+    // Reset the meal interface (e.g., hide edit controls, clear selections)
     resetMealUI();
+
+    // Re-render the list of meals in the sidebar based on updated data
     renderMealList();
 });
 
-
 /**
  * Renders the list of meals in the UI.
- * Each meal gets a list item with buttons to view, edit, or delete the associated recipe group.
+ * Extracts meal names from recipe tags (excluding skill levels),
+ * creates UI buttons to view, edit, delete, and stop viewing each meal.
  */
 function renderMealList() {
+    // Get the <ul> element where meal list items will be inserted
     const mealList = document.getElementById('meal-list');
+
+    // Clear the existing list to avoid duplicates
     mealList.innerHTML = '';
 
+    // Fetch all recipes from localStorage
     const allRecipes = getRecipesFromStorage();
+
+    // Use a Set to collect unique meal names from tags
     const mealNames = new Set();
 
+    // Iterate through each recipe to extract meal tags (excluding skill levels)
     allRecipes.forEach(recipe => {
         (recipe.tags || []).forEach(tag => {
             if (!["Easy", "Advanced", "Pro"].includes(tag)) {
-                mealNames.add(tag);
+                mealNames.add(tag); // Add valid meal tag to the set
             }
         });
     });
 
+    // Create a UI entry for each unique meal
     mealNames.forEach(meal => {
+        // Create the <li> for the meal
         const li = document.createElement('li');
         li.className = 'meal-list-item';
 
-        // Meal name button
+        // === Meal Name Button ===
         const viewBtn = document.createElement('button');
-        viewBtn.textContent = meal;
-        viewBtn.className = 'meal-name-btn';
+        viewBtn.textContent = meal;            // Set button text to the meal name
+        viewBtn.className = 'meal-name-btn';   // Apply styling class
 
-        // Action container (Edit/Delete)
+        // === Action Button Container (Edit/Delete/Stop Viewing) ===
         const actionContainer = document.createElement('div');
         actionContainer.className = 'meal-action-container';
-        actionContainer.style.display = 'none'; // Initially hidden
+        actionContainer.style.display = 'none'; // Hide it by default
 
-        // Edit button
+        // === Edit Button ===
         const editBtn = document.createElement('button');
         editBtn.textContent = 'Edit';
         editBtn.className = 'meal-edit-btn';
+        // When clicked, start editing this meal
         editBtn.addEventListener('click', () => startEditMeal(meal, editBtn));
         actionContainer.appendChild(editBtn);
 
-        // Delete button
+        // === Delete Button ===
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'meal-delete-btn';
         deleteBtn.addEventListener('click', () => {
+            // Clear any previewed meal
             window.currentPreviewedMeal = null;
 
+            // Remove the meal tag from all recipes
             const updated = getRecipesFromStorage().map(recipe => {
                 const tags = (recipe.tags || []).filter(tag => tag !== meal);
                 return { ...recipe, tags };
             });
 
+            // Save updated recipes and re-render everything
             saveRecipesToStorage(updated);
             renderMealList();
             document.querySelector('main').innerHTML = '';
@@ -404,44 +432,47 @@ function renderMealList() {
         });
         actionContainer.appendChild(deleteBtn);
 
-
-        // Stop Viewing button (clone)
+        // === Stop Viewing Button ===
         const stopBtn = document.createElement('button');
         stopBtn.textContent = 'Stop Viewing';
         stopBtn.className = 'meal-stop-btn';
         stopBtn.addEventListener('click', () => {
+            // Reset view and reload all recipes
             window.currentPreviewedMeal = null;
             document.querySelector('main').innerHTML = '';
             addRecipesToDocument(getRecipesFromStorage());
-            renderMealList(); // Re-hide all action containers
+            renderMealList(); // Hides all action containers again
         });
         actionContainer.appendChild(stopBtn);
 
-        // Button click: show meal preview & toggle current menu, hide all others
+        // === View Meal Button Click Handler ===
         viewBtn.addEventListener('click', () => {
-            // If we're in Create Meal mode, cancel it
+            // If user is in the middle of creating a meal, cancel it
             const cancelMealBtn = document.getElementById('cancel-meal-btn');
             if (cancelMealBtn && cancelMealBtn.style.display !== 'none') {
-                cancelMealBtn.click();
+                cancelMealBtn.click(); // Triggers exitMealCreationMode
             }
 
+            // Show recipe cards that are part of the selected meal
             showMealPreview(meal);
 
-            // Hide all other action containers
+            // Hide all other action containers (only show this one)
             document.querySelectorAll('.meal-action-container').forEach(container => {
                 container.style.display = 'none';
             });
 
-            // Show only the clicked one
+            // Reveal the action container for the selected meal
             actionContainer.style.display = 'flex';
         });
 
+        // Assemble the <li>: add view button and actions container
         li.appendChild(viewBtn);
         li.appendChild(actionContainer);
+
+        // Add the constructed list item to the meal list in the DOM
         mealList.appendChild(li);
     });
 }
-
 
 /**
  * Displays only the recipe cards that belong to a specific meal.
@@ -616,63 +647,86 @@ function startEditMeal(mealName, editBtn) {
     };
 }
 
-// 
-
+/**
+ * Handles all DOMContentLoaded initialization tasks.
+ * Sets up search bar behavior for both desktop and mobile,
+ * saving the query and redirecting to `my-recipes.html` if input is not empty.
+ */
 window.addEventListener('DOMContentLoaded', () => {
-     // SEARCH BAR FUNCTIONALITY – redirects to my-recipes.html with query
-  const searchInput = document.getElementById('search-field-small');
-  const searchButton = document.querySelector('[type="submit"]');
+    // === DESKTOP SEARCH BAR SETUP ===
 
-  function handleSearch() {
-    const query = searchInput.value.trim();
-    if (query !== '') {
-      localStorage.setItem('searchQuery', query);
-      window.location.href = '../RecipeCard/my-recipes.html';
+    // Get desktop search input and button elements
+    const searchInput = document.getElementById('search-field-small');
+    const searchButton = document.querySelector('[type="submit"]');
+
+    /**
+     * Saves the desktop search query to localStorage and redirects to recipe page
+     */
+    function handleSearch() {
+        const query = searchInput.value.trim(); // Remove extra whitespace
+        if (query !== '') {
+            localStorage.setItem('searchQuery', query); // Save query
+            window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
+        }
     }
-  }
 
-  if (searchInput) {
-    searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        handleSearch();
-      }
-    });
-  }
-
-  if (searchButton) {
-    searchButton.addEventListener('click', handleSearch);
-  }
-
-  const mobileSearchInput = document.getElementById('search-field-mobile');
-  const mobileSearchButton = document.getElementById('search-button-mobile');
-
-  function handleMobileSearch() {
-    const query = mobileSearchInput.value.trim();
-    if (query !== '') {
-      localStorage.setItem('searchQuery', query);
-      window.location.href = '../RecipeCard/my-recipes.html';
+    // If the input exists, allow Enter key to trigger search
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
     }
-  }
 
-  if (mobileSearchInput) {
-    mobileSearchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        handleMobileSearch();
-      }
-    });
-  }
+    // If the button exists, add click event to trigger search
+    if (searchButton) {
+        searchButton.addEventListener('click', handleSearch);
+    }
 
-  if (mobileSearchButton) {
-    mobileSearchButton.addEventListener('click', handleMobileSearch);
-  }
+    // === MOBILE SEARCH BAR SETUP ===
 
+    // Get mobile search input and button
+    const mobileSearchInput = document.getElementById('search-field-mobile');
+    const mobileSearchButton = document.getElementById('search-button-mobile');
+
+    /**
+     * Saves the mobile search query to localStorage and redirects to recipe page
+     */
+    function handleMobileSearch() {
+        const query = mobileSearchInput.value.trim(); // Remove extra whitespace
+        if (query !== '') {
+            localStorage.setItem('searchQuery', query); // Save query
+            window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
+        }
+    }
+
+    // If input exists, allow Enter key to trigger mobile search
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleMobileSearch();
+            }
+        });
+    }
+
+    // If button exists, add click event to trigger mobile search
+    if (mobileSearchButton) {
+        mobileSearchButton.addEventListener('click', handleMobileSearch);
+    }
 });
 
-// Prevents reloading page if already on the said page
+
+/**
+ * Prevents navigation from reloading the current page
+ * Useful for tabs or links where you're already on the target path
+ */
 document.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', function (event) {
-        const current = window.location.pathname;
-        const target = new URL(this.href).pathname;
+        const current = window.location.pathname;        // Current page path
+        const target = new URL(this.href).pathname;      // Link target path
+
+        // If user clicks on a link to the current page, block reload
         if (current === target) {
             event.preventDefault();
             console.log('You are already on this tab.');
