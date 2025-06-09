@@ -159,7 +159,7 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
 
-  // SEARCH BAR FUNCTIONALITY – redirects to my-recipes.html with query
+  //search bar functionality – redirects to my-recipes.html with query
   const searchInput = document.getElementById('search-field-small');
   const searchButton = document.querySelector('[type="submit"]');
 
