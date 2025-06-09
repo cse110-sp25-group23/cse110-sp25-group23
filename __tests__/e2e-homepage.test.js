@@ -4,7 +4,7 @@ import {test, expect} from '@playwright/test'
 
 test.describe('Recipe Homepage', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('http://127.0.0.1:5504/source/HomePage/home.html');
+        await page.goto('/source/HomePage/home.html');
 
         await page.evaluate(() => {
             const today = new Date().toLocaleDateString("en-CA");
@@ -49,6 +49,7 @@ test.describe('Recipe Homepage', () => {
         await expect(page.locator('#dinner')).toContainText('18:45');
         await expect(page.locator('#dinner')).toContainText('PM');
     });
+
 
     //All of the tests for the Display of the cart summary
     test('Displays cart summary correctly with 0 items', async ({ page }) => {

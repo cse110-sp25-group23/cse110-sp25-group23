@@ -1,10 +1,45 @@
+import { getRecipesFromStorage, saveRecipesToStorage, addRecipesToDocument } from '../LocalStorage/storage.js';
+
 // Recipe importer module using Spoonacular API
 const SPOONACULAR_API_KEY = '84180a4b77f2405597b0c117c850eb62';
+const MAX_RETRIES = 2;
+const TIMEOUT_MS = 10000; // 10 seconds timeout
+
+//import { finalizeRecipe } from '../../LocalStorage/storage.js';
+function finalizeRecipe(recipe) {
+    const container = document.querySelector('main');
+    
+    //Create Recipe
+    const recipeCard = document.createElement('recipe-card');
+    recipeCard.data = recipe;
+    container.appendChild(recipeCard);
+
+    //Add Recipe to Storage
+    const localRecipes = getRecipesFromStorage();
+    localRecipes.push(recipe);
+    saveRecipesToStorage(localRecipes);
+
+    window.dispatchEvent(new Event('recipeCreated'));
+
+    //Clear Inputs
+    form.reset();
+    //Reset image input and radio buttons
+    document.getElementById('imageSourceFile').checked = true;
+    toggleInputs();
+
+    //reset ingredients list
+    ingredientsArray.length = 0;
+    ingredientsList.innerHTML = '';
+
+    //reset steps list
+    stepsArray.length = 0;
+    stepsList.innerHTML = '';
+}
 
 /**
- * Validates a URL string.
- * @param {string} url - The URL string to validate.
- * @returns {boolean} True if the URL is valid, false otherwise.
+ * Validates a URL
+ * @param {string} url - The URL to validate
+ * @returns {boolean} Whether the URL is valid
  */
 function isValidUrl(url) {
     try {
@@ -16,35 +51,33 @@ function isValidUrl(url) {
 }
 
 /**
- * Formats a time estimate in minutes into a human-readable string.
- * @param {number} minutes - The total number of minutes.
- * @returns {string} A formatted string representing the time estimate (e.g., "45 minutes", "1 hour", "1 hour 30 minutes"). Returns "Unknown" if minutes is null, undefined, or 0.
+ * Formats a total number of minutes into a human-readable time estimate string.
+ * @param {number} totalMinutes - The total number of minutes.
+ * @returns {string} The formatted time estimate (e.g., "1 hr 30 min").
  */
-function formatTimeEstimate(minutes) {
-    if (!minutes) return 'Unknown';
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours === 0) return `${mins} minutes`;
-    if (mins === 0) return `${hours} hours`;
-    return `${hours} hours ${mins} minutes`;
+function formatMinutesToTimeEstimate(totalMinutes) {
+    if (totalMinutes === 0) {
+        return '';
+    }
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    let timeEstimate = '';
+    if (hours > 0) {
+        timeEstimate += `${hours} hr`;
+    }
+    if (hours > 0 && minutes > 0) {
+        timeEstimate += ' ';
+    }
+    if (minutes > 0) {
+        timeEstimate += `${minutes} min`;
+    }
+    return timeEstimate.trim();
 }
 
 /**
- * Imports a recipe from a given URL using the Spoonacular API.
- * Validates the URL, handles potential API errors (quota, not found, network), and transforms the API response into the application's recipe schema.
- * @param {string} url - The URL of the recipe to import.
- * @returns {Promise<Object>} A promise that resolves with the imported recipe data in the application's schema format. The object includes:
- *   - name: string
- *   - author: string
- *   - image: string
- *   - ingredients: Array<{name: string, unit: string}>
- *   - steps: string[]
- *   - tags: string[]
- *   - timeEstimate: string
- *   - favorite: boolean
- *   - createdAt: string (ISO date)
- *   - sourceurl: string (original URL)
- * @throws {Error} Throws an error if the URL is invalid, API errors occur, extraction fails, or a network issue prevents the fetch.
+ * Imports a recipe from a URL using Spoonacular's API
+ * @param {string} url - The URL of the recipe to import
+ * @returns {Promise<Object>} The imported recipe data
  */
 export async function importRecipeFromUrl(url) {
     // Validate URL
@@ -52,92 +85,121 @@ export async function importRecipeFromUrl(url) {
         throw new Error('Please enter a valid URL');
     }
 
-    try {
-        const response = await fetch(`https://api.spoonacular.com/recipes/extract?url=${encodeURIComponent(url)}&apiKey=${SPOONACULAR_API_KEY}`);
+    let retryCount = 0;
+    
+    while (retryCount <= MAX_RETRIES) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-        if (response.status === 402) {
-            throw new Error('API quota exceeded. Please try again later.');
+            const response = await fetch(
+                `https://api.spoonacular.com/recipes/extract?url=${encodeURIComponent(url)}&apiKey=${SPOONACULAR_API_KEY}`,
+                { signal: controller.signal }
+            );
+            
+            clearTimeout(timeoutId);
+            
+            if (response.status === 402) {
+                throw new Error('API quota exceeded. Please try again later or contact support.');
+            }
+            
+            if (response.status === 404) {
+                throw new Error('Recipe not found. Please check the URL and try again.');
+            }
+            
+            if (response.status === 429) {
+                throw new Error('Too many requests. Please wait a moment and try again.');
+            }
+            
+            if (response.status === 500 || response.status === 503) {
+                throw new Error('Spoonacular service is temporarily unavailable. Please try again in a few minutes.');
+            }
+            
+            if (!response.ok) {
+                throw new Error(`Failed to import recipe: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            if (!data.title || !data.extendedIngredients) {
+                throw new Error('Could not extract recipe data from the provided URL. The recipe format may not be supported.');
+            }
+            
+            // Transform the Spoonacular response into our recipe card format
+            return {
+                name: data.title,
+                author: 'Imported',
+                ingredients: data.extendedIngredients.map(ing => ({
+                    name: ing.name,
+                    amount: ing.amount,
+                    unit: ing.unit
+                })),
+                steps: data.analyzedInstructions[0]?.steps.map(step => step.step) || [],
+                tags: [],
+                timeEstimate: formatMinutesToTimeEstimate(data.readyInMinutes || 0),
+                favorite: false,
+                createdAt: new Date().toISOString(),
+                image: data.image || '',
+                sourceUrl: url // Store the source URL for duplicate detection
+            };
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new Error('Request timed out. Please check your internet connection and try again.');
+            }
+            
+            if (error.message.includes('Failed to fetch')) {
+                if (retryCount < MAX_RETRIES) {
+                    retryCount++;
+                    // Wait for 1 second before retrying
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    continue;
+                }
+                throw new Error('Network error. Please check your internet connection and try again.');
+            }
+            
+            // If it's a known error (like quota exceeded), don't retry
+            if (error.message.includes('API quota exceeded') || 
+                error.message.includes('Recipe not found') ||
+                error.message.includes('Too many requests')) {
+                throw error;
+            }
+            
+            // For other errors, retry if we haven't exceeded max retries
+            if (retryCount < MAX_RETRIES) {
+                retryCount++;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                continue;
+            }
+            
+            throw error;
         }
-
-        if (response.status === 404) {
-            throw new Error('Recipe not found. Please check the URL and try again.');
-        }
-
-        if (!response.ok) {
-            throw new Error(`Failed to import recipe: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        if (!data.title || !data.extendedIngredients) {
-            throw new Error('Could not extract recipe data from the provided URL');
-        }
-
-        if (document.body.textContent.includes("undefined") || document.title.includes("error")) {
-            throw new Error("The recipe could not be found or the page has an error.");
-        }
-
-        // Transform the Spoonacular response into our recipe card format
-        return {
-            name: data.title,
-            author: data.sourceName || 'Imported Recipe',
-            image: data.image,
-            ingredients: data.extendedIngredients.map(ing => ({
-                name: ing.name,
-                unit: ing.unit ? `${ing.amount} ${ing.unit}` : ing.amount.toString()
-            })),
-            steps: data.analyzedInstructions[0]?.steps.map(step => step.step) || [],
-            tags: [],
-            timeEstimate: formatTimeEstimate(data.readyInMinutes),
-            favorite: false,
-            createdAt: new Date().toISOString(),
-            sourceurl: url
-        };
-    } catch (error) {
-        if (error.message.includes('Failed to fetch')) {
-            throw new Error('Network error. Please check your internet connection.');
-        }
-        throw error;
     }
 }
 
 /**
- * Saves a recipe object to the browser's local storage under the 'recipes' key.
- * Checks for duplicate recipes based on name and author before saving.
- * @param {Object} recipe - The recipe object to save. Must conform to the application's recipe schema, including:
- *   - name: string
- *   - author: string
- *   - image: string
- *   - ingredients: Array<{name: string, unit: string}>
- *   - steps: string[]
- *   - tags: string[]
- *   - timeEstimate: string
- *   - favorite: boolean
- *   - createdAt: string (ISO date)
- *   - sourceurl: string (original URL)
- * @returns {Object} The recipe object that was successfully saved.
- * @throws {Error} Throws an error if the recipe is a duplicate or if localStorage operations fail.
+ * Saves an imported recipe to localStorage
+ * @param {Object} recipe - The recipe to save
  */
 export function saveImportedRecipe(recipe) {
     try {
         // Get existing recipes from localStorage
         const existingRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
-
-        // Check for duplicate recipes by name and author
-        const isDuplicate = existingRecipes.some(r =>
-            r.name === recipe.name && r.author === recipe.author
-        );
-
+        
+        // Check for duplicate recipes
+        const isDuplicate = existingRecipes.some(r => r.sourceUrl === recipe.sourceUrl);
         if (isDuplicate) {
             throw new Error('This recipe has already been imported');
         }
-
+        
         // Add the new recipe
         existingRecipes.push(recipe);
-
+        
         // Save back to localStorage
         localStorage.setItem('recipes', JSON.stringify(existingRecipes));
-
+        
+        // Create and display the recipe card
+        finalizeRecipe(recipe);
+        
         return recipe;
     } catch (error) {
         console.error('Error saving recipe:', error);
