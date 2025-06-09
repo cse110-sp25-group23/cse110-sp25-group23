@@ -121,6 +121,8 @@ jobs:
         run: npx wait-on http://localhost:5502
 
       - name: Run Cypress tests
+        env:
+          CYPRESS_BASE_URL: http://localhost:5502
         run: npx cypress run
 
 
