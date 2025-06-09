@@ -2,23 +2,23 @@ window.addEventListener('DOMContentLoaded', init);      //runs the init function
 
 function init() {
 	let recipes = getRecipesFromStorage();
-	document.addEventListener('DOMContentLoaded', () => {
-		addRecipesToDocument(recipes);
-		// adds event listeners to form elements
-		initFormHandler();
-		//adds search
-		initSearch();
+	//document.addEventListener('DOMContentLoaded', () => {
+	addRecipesToDocument(recipes);
+	// adds event listeners to form elements
+	initFormHandler();
+	//adds search
+	initSearch();
 
-		//Declare buttons for image input type
-		const fileRadio = document.getElementById('imageSourceFile');
-		const urlRadio = document.getElementById('imageSourceURL');
+	//Declare buttons for image input type
+	const fileRadio = document.getElementById('imageSourceFile');
+	const urlRadio = document.getElementById('imageSourceURL');
 
-		//change which is displayed when button changes
-		fileRadio.addEventListener('change', toggleInputs);
-		urlRadio.addEventListener('change', toggleInputs);
-		toggleInputs();
+	//change which is displayed when button changes
+	fileRadio.addEventListener('change', toggleInputs);
+	urlRadio.addEventListener('change', toggleInputs);
+	toggleInputs();
 
-	});
+	//});
 }
 
 /**
