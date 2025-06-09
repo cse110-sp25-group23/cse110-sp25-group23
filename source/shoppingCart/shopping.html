@@ -1,134 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Your Shopping List</title>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap"
-    rel="stylesheet"
-  >
+  <!-- Home.css Style sheet connected-->
+  <link rel="stylesheet" href="shopping.css">
 
-  <style>
-    body {
-      font-family: 'Just Another Hand', cursive;
-      background: #f7f7f7;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
-    }
-    .container {
-      max-width: 500px;
-      width: 100%;
-    }
-    h1 {
-      font-size: 2.25rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 1rem;
-    }
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 0.75rem 1rem;
-      margin-bottom: 0.5rem;
-    }
-    .remove {
-      background-color: #28a745;
-      color: #fff;
-      border: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background .2s ease;
-    }
-    .remove:hover {
-      background-color: #218838;
-    }
-    .actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-    }
-    #clear {
-      background-color: #dc3545;
-    }
-    #buy-now {
-      background-color: #007bff;
-    }
-    .actions button {
-      color: #fff;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background .2s ease;
-    }
-    #clear:hover {
-      background-color: #c82333;
-    }
-    #buy-now:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <!-- Inter font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+
+  <!-- Pacifier font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
+
 <body>
+  <header class="desktop-nav">
+    <nav class="nav-tabs">
+      <a class="logo" href="../HomePage/home.html">
+        <img src="images/logo.png" alt="Logo">
+      </a>
+      <h1 id="brand">Cooklection </h1>
+      <div role="search">
+        <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?">
+        </input>
+        <button type="submit"> </button>
+      </div>
+
+      <!-- text tabs -->
+      <a href="../calendar/calendar.html">Calendar</a>
+      <a href="../RecipeCard/my-recipes.html">Shelf</a>
+      <a href="../RecipeCard/recipeCard.html">Create</a>
+      <a class="cart" href="../ShoppingCart/shopping.html">
+        <img src="images/shop.png" alt="shopping cart">
+      </a>
+    </nav>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-header">
+    <img src="images/logo.png" alt="Logo">
+    <h1>Cooklection</h1>
+  </div>
+  <nav class="mobile-nav">
+    <a href="../HomePage/home.html">
+      <img src="images/home.png" alt="Home page of website for summary">
+    </a>
+    <a href="../calendar/calendar.html">
+      <img src="images/calendar.png" alt="Calendar for meal planning">
+    </a>
+
+    <!-- create file does not exist until integrated with Thanh's work-->
+    <a href="../recipeCard/recipeCard.html">
+      <img src="images/plus.png" alt="plus for creating recipe">
+    </a>
+
+    <a href="../recipeCard/my-recipes.html">
+      <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+    </a>
+    <a href="../ShoppingCart/shopping.html">
+      <img src="images/shop.png" alt="Cart for shopping ingredients saved">
+    </a>
+  </nav>
+
+
   <div class="container">
     <h1>Your Shopping List</h1>
     <ul id="cart"></ul>
+
+    <!-- Clear Cart button -->
     <div class="actions">
       <button id="clear">Clear cart</button>
-      <button id="buy-now">Buy now</button>
     </div>
   </div>
 
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="../HomePage/home.html">Home</a>
+      <a href="../RecipeCard/my-recipes.html">Shelf</a>
+      <a href="../RecipeCard/recipeCard.html">Create</a>
+      <a href="../calendar/calendar.html">Calendar</a>
+      <a href="../ShoppingCart/shopping.html">Shopping Cart</a>
+    </div>
+    <p class="footer-message">Check out some heart-warming recipes today!</p>
+  </footer>
+
   <script type="module">
-    import { Cart } from './cart.js';
-
-    const ul = document.getElementById('cart');
-
-    function render() {
-      ul.innerHTML = '';
-      Cart.list().forEach(({ id, name, qty, unit }) => {
-        const li = document.createElement('li');
-        li.dataset.id = id;
-        li.innerHTML = `
-          <span>${qty ? qty + ' ' + unit : ''} ${name}</span>
-          <button class="remove">Remove</button>
-        `;
-        ul.append(li);
-      });
-    }
-
-    // remove handler
-    ul.addEventListener('click', e => {
-      if (e.target.matches('.remove')) {
-        const id = e.target.closest('li').dataset.id;
-        Cart.remove(id);
-      }
-    });
-
-    // clear cart handler
-
-    document.getElementById('clear').addEventListener('click', () => {
-      Cart.clear();
-    });
-
-    document.getElementById('buy-now').addEventListener('click', () => {
-    });
-
-    document.addEventListener('cart:update', render);
-    render();
   </script>
+  <script type="module" src="shopping.js" defer></script>
+
 </body>
+
 </html>
