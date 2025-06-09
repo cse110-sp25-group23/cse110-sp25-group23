@@ -189,21 +189,46 @@ const searchButton = document.querySelector('[type="submit"]');
  */
 function handleSearch() {
   const query = searchInput.value.trim();
-  if (query) {
+  if (query !== '') {
     localStorage.setItem('searchQuery', query);
-    window.location.href = 'my-recipes.html';
+    window.location.href = '../RecipeCard/my-recipes.html';
   }
 }
 
-if (searchInput && searchButton) {
+if (searchInput) {
   searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter'){
-        handleSearch();
-    } 
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   });
+}
 
+if (searchButton) {
   searchButton.addEventListener('click', handleSearch);
 }
+
+const mobileSearchInput = document.getElementById('search-field-mobile');
+const mobileSearchButton = document.getElementById('search-button-mobile');
+
+function handleMobileSearch() {
+  const query = mobileSearchInput.value.trim();
+  if (query !== '') {
+    localStorage.setItem('searchQuery', query);
+    window.location.href = '../RecipeCard/my-recipes.html';
+  }
+}
+
+if (mobileSearchInput) {
+  mobileSearchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      handleMobileSearch();
+    }
+  });
+}
+
+  if (mobileSearchButton) {
+    mobileSearchButton.addEventListener('click', handleMobileSearch);
+  }
 
 function displaySearchResultsShelf(query) {
     const container = document.getElementById("shelf-container");
@@ -269,7 +294,8 @@ function displaySearchResultsShelf(query) {
         updateShelfCards(cardsContainer, matchingRecipes, index, 3, leftBtn, rightBtn);
       }
     });
-  
+
+ 
     shelfDiv.appendChild(leftBtn);
     shelfDiv.appendChild(rightBtn);
   

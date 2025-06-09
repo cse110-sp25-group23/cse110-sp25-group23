@@ -8,6 +8,11 @@
     box-sizing: border-box;
 }
 
+
+#mobile-search {
+    display: none;
+  }
+
 /* === Column Panels === */
 #left-panel,
 #middle-panel {
@@ -478,6 +483,14 @@ nav a:hover {
 
 /* Show mobile nav on small screens */
 @media (max-width: 1205px) {
+    #mobile-search {
+    display: block;
+    position: relative;
+    margin: 16px auto;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
     .mobile-nav {
         display: flex;
         position: fixed;
@@ -563,8 +576,54 @@ nav a:hover {
 
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1205px) {
     .site-footer {
         display: none;
     }
 }
+
+/* === ARIA tags === */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+
+#search-field-mobile {
+    width: 100%;
+    padding: 12px 16px;
+    padding-right: 40px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    outline: none;
+    font-style: italic;
+    box-sizing: border-box;
+  }
+  
+  #search-button-mobile {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: url('https://img.icons8.com/ios7/600/search.png') no-repeat center center;
+    background-size: 20px 20px;
+    background-color: #ffffff;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  #search-button-mobile:hover {
+    background-color: #d18572;
+  }
