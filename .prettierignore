@@ -1,0 +1,12 @@
+# Skip dependency folder
+node_modules/
+
+# Skip generated docs
+docs/
+
+# Skip configuration files
+.prettierignore
+prettier.config.js
+jest.config.js
+jsdoc.json
+

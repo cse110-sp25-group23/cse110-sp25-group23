@@ -1,9 +1,9 @@
 /* Some styling for the form to make everything less condensed */
 form {
   display: flex;
-  flex-wrap: wrap;          
-  gap: 1rem;                
-  align-items: flex-end;    
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
 }
 
 form label {
@@ -12,6 +12,6 @@ form label {
   font-weight: bold;
 }
 
-h1{
+h1 {
   color: black;
 }

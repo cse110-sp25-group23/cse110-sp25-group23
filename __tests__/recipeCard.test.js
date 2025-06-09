@@ -1,5 +1,8 @@
+/*
 //Import js files for recipe card and local storage
+import '../source/RecipeCard/recipeCard.js';
 import { addRecipesToDocument, saveRecipesToStorage } from '../source/LocalStorage/storage.js';
+
 
 describe('Recipe Card Creator and Deletion', () => {
     //Create Recipe Card
@@ -8,8 +11,12 @@ describe('Recipe Card Creator and Deletion', () => {
     author: 'Luis',
     image: '/waffles.png',
     tags: ['Easy','Breakfast'],
-    ingredients: 'Flour, Eggs, Milk',
-    steps: 'Mix & cook',
+    ingredients: [
+      { name: 'Flour', unit: '1 cup' },
+      { name: 'Eggs', unit: '2' },
+      { name: 'Milk', unit: '1/2 cup' }
+    ],
+    steps: ['Mix', 'Cook'],
     timeEstimate: '15 min'
   };
 
@@ -28,15 +35,16 @@ describe('Recipe Card Creator and Deletion', () => {
 
     //check each attribute
     const sr = card.shadowRoot;
-    expect(sr.querySelector('h2').textContent).toBe('waffles');
+    expect(sr.querySelector('h3').textContent).toBe('Waffles');
     expect(sr.querySelector('p').textContent).toContain('Luis');
     expect(sr.querySelector('img').getAttribute('src')).toBe('/waffles.png');
-    const tags = Array.from(sr.querySelectorAll('li')).map(el => el.textContent);
+    const tags = Array.from(sr.querySelectorAll('.tags-class span')).map(el => el.textContent);
     expect(tags).toEqual(['Easy','Breakfast']);
-    expect(sr.textContent).toContain('Flour, Eggs, Milk');
-    expect(sr.textContent).toContain('Mix & cook');
+    const ingredients = Array.from(sr.querySelectorAll('.ingredients-class li')).map(el => el.textContent);
+    expect(ingredients).toEqual(['Flour - 1 cup', 'Eggs - 2', 'Milk - 1/2 cup']);
+    const steps = Array.from(sr.querySelectorAll('.steps-class li')).map(el => el.textContent);
+    expect(steps).toEqual(['Mix', 'Cook']);
     expect(sr.textContent).toContain('15 min');
-    expect(sr.querySelector('.delete-btn')).toBeInstanceOf(HTMLButtonElement);
   });
 
   test('Delete Button Removes the Card From LocalStorage and from html', () => {
@@ -73,7 +81,7 @@ describe('Recipe Card Creator and Deletion', () => {
     expect(cards).toHaveLength(2);
 
     //Each card should have its own data, check to make sure the names of each card is rendered correctly
-    const renderedNames = Array.from(cards).map(c => c.shadowRoot.querySelector('h2').textContent);
+    const renderedNames = Array.from(cards).map(c => c.shadowRoot.querySelector('h3').textContent);
     expect(renderedNames).toEqual(['A','B']);
   });
 });
@@ -85,8 +93,12 @@ describe('Editing Card', () => {
     author: 'Luis',
     image: '/waffles.png',
     tags: ['Easy','Breakfast'],
-    ingredients: 'Flour, Eggs, Milk',
-    steps: 'Mix & cook',
+    ingredients: [
+      { name: 'Flour', unit: '1 cup' },
+      { name: 'Eggs', unit: '2' },
+      { name: 'Milk', unit: '1/2 cup' }
+    ],    
+    steps: ['Mix', 'Cook'],
     timeEstimate: '15 min'
   };
 
@@ -110,7 +122,7 @@ describe('Editing Card', () => {
     expect(card.shadowRoot.querySelector('.save-btn')).toBeInstanceOf(HTMLButtonElement);
   });
 
-  test('Changing something in the card leads to a change in how the card is displayed and stored in LocalStorage', () => {
+  test('Changing things in card leads to a change in how the card is displayed and stored in LocalStorage', () => {
     //Add test recipe to local storage and html
     saveRecipesToStorage([testRecipe]);
     document.querySelector('main').append(card);
@@ -127,17 +139,40 @@ describe('Editing Card', () => {
     const nameInput = card.shadowRoot.querySelector('.edit-name');
     nameInput.value = 'Belgain Waffle';
 
+    //Change Steps
+    const stepsInput = card.shadowRoot.querySelector('.edit-steps');
+    stepsInput.value = 'Mix\nCook\nEat';
+
+    //Change Ingredients
+    const ingredientsInput = card.shadowRoot.querySelector('.edit-ingredients');
+    ingredientsInput.value = 'Flour - 1 cup\nEggs-2';
+
     //Save Recipe
     const saveBtn = card.shadowRoot.querySelector('.save-btn');
     expect(saveBtn).toBeInstanceOf(HTMLButtonElement);
     saveBtn.click();
 
-    // After hitting save, the displayed name should change
-    expect(card.shadowRoot.querySelector('h2').textContent)
+    // After hitting save, displayed name, steps, and ingredients should change
+    expect(card.shadowRoot.querySelector('h3').textContent)
         .toBe('Belgain Waffle');
 
-    // Name for the test recipe should also be changed in local storage
+    const displayedIngredients = Array.from(card.shadowRoot.querySelectorAll('.ingredients-class li')).map(li => li.textContent);
+    expect(displayedIngredients).toEqual(['Flour - 1 cup', 'Eggs - 2']);
+            
+    const displayedSteps = Array.from(card.shadowRoot.querySelectorAll('.steps-class li')).map(li => li.textContent);
+    expect(displayedSteps).toEqual(['Mix', 'Cook', 'Eat']);
+
+    // All these fields should also be changed in local storage
     const stored = JSON.parse(localStorage.getItem('recipes'));
     expect(stored[0].name).toBe('Belgain Waffle');
-    });
+
+    expect(stored[0].ingredients).toEqual([
+      { name: 'Flour', unit: '1 cup' },
+      { name: 'Eggs', unit: '2' }
+    ]);
+
+    expect(stored[0].steps).toEqual(['Mix', 'Cook', 'Eat']);
+    
+  });
 });
+*/

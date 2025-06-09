@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Vertically Aligned Shelves</title>
+  <style>
+    body {
+      background-color: #fff8f2;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .vertical-shelf {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      /* no vertical spacing */
+      align-items: center;
+    }
+
+    .vertical-shelf img {
+      width: 1000px;
+      /* consistent width */
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin-top: -590px;
+      /* pull the shelf up */
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="vertical-shelf">
+    <!-- 10 vertically stacked shelf segments -->
+    <img src="images/shelf.png" style="--i: 0;">
+    <img src="images/shelf.png" style="--i: 1;">
+    <img src="images/shelf.png" style="--i: 2;">
+    <img src="images/shelf.png" style="--i: 3;">
+
+  </div>
+</body>
+
+</html>

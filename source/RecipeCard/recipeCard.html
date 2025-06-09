@@ -1,107 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Planner</title>
+    <link rel="stylesheet" href="mealPlan.css">
+    <script src="recipeCard.js" type="module"></script>
+    <script src="mealPlannerLogic.js" type="module"></script>
+    <script src="../LocalStorage/storage.js" type="module"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../home-page/styles.css"></link>
-    <link rel = "stylesheet" href="recipeCard.css">
-    <script src="recipeCard.js" type="module"></script>
-    <script src="../LocalStorage/storage.js" type="module"></script>
-    <title>Recipe Card</title>
+
+    <title>Cooklection</title>
+
+    <!-- Inter font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+
+    <!-- Pacifier font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
-    <h1>Create a Recipe Card!</h1>
+    <!-- Desktop Navigation -->
+    <header class="desktop-nav">
+        <nav class="nav-tabs">
+            <a class="logo" href="../HomePage/home.html">
+                <img src="images/logo.png" alt="Logo">
+            </a>
+            <h1 id="brand">Cooklection </h1>
+            <div role="search">
+                <input id="search-field-small" type="search" name="search"
+                    placeholder="Dish it out – what are you hungry for?"> </input>
+                <button type="submit"> </button>
+            </div>
 
-    <form id="new-recipe">
-        <!-- Recipe Name/Title -->
-        <label for="name"> 
-            Recipe Name:
-            <input type="text" name="name" id ="recipeName" placeholder="Recipe Name" required>
-        </label>
+            <!-- text tabs -->
+            <a href="../calendar/calendar.html">Calendar</a>
+            <a href="my-recipes.html">Shelf</a>
+            <a href="recipeCard.html">Create</a>
+            <a class="cart" href="../shoppingCart/shopping.html">
+                <img src="images/shop.png" alt="shopping cart">
+            </a>
+        </nav>
+    </header>
 
-        <!-- Author Name -->
-        <label for="author">
-            Author:
-            <input type="text" name="author" id="authorName" placeholder="Author Name" required>
-        </label>
-        
-        <!-- Radio Buttons for image input type (radio buttons can only have one option selected) -->
-        <label>
-        <input type="radio" name="imageSource" value="file" id="imageSourceFile" checked>
-            Upload file
-        </label>
+    <!-- Mobile Navigation -->
 
-        <label>
-            <input type="radio" name="imageSource" value="url" id="imageSourceURL">
-            Image URL
-        </label>
+    <div class="mobile-header">
+        <img src="images/logo.png" alt="Logo">
+        <h1>Cooklection</h1>
+    </div>
 
-        <!-- File Upload Input -->
-        <label id="fileInputLabel">
-            <input type="file" name="imageFile" id="imageFile" accept="image/*">
-        </label>
+    <!-- Mobile Search -->
+    <div id="mobile-search" role="search" aria-label="Mobile Recipe Search">
+        <label for="search-field-mobile" class="visually-hidden">Search recipes</label>
+        <input id="search-field-mobile" type="search" name="search"
+            placeholder="Dish it out – what are you hungry for?">
+        <button id="search-button-mobile" type="submit"></button>
+    </div>
+    <nav class="mobile-nav">
+        <a href="../HomePage/home.html">
+            <img src="images/home.png" alt="Home page of website for summary">
+        </a>
+        <a href="../calendar/calendar.html">
+            <img src="images/calendar.png" alt="Calendar for meal planning">
+        </a>
 
-        <!-- Image URL Input -->
-        <label id="urlInputLabel" style="display: none;">
-            Image URL:
-            <input type="url" name="imageURL" id="imageURL" placeholder="Image URL">
-        </label>
+        <!-- create file does not exist until integrated with Thanh's work-->
+        <a href="recipeCard.html">
+            <img src="images/plus.png" alt="plus for creating recipe">
+        </a>
 
-        
-        <!-- Custom and Predefined Tags (Predefined tags = Difficulty and displays as an option list) -->
-        <label for="tags">
-            Tags: 
-            <select name="difficulty" id="tagsDropdown">
-                <option value="">Select a Tag</option>
-                <option value="Easy">Easy</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Pro">Pro</option>
-            </select>
-            <input name="tags" id="customTag" placeholder="Custom Tag">
-        </label>
-        
-        <!-- Ingredients Input -->
-        <div class="ingredient-row">
-            <input type="text" id="ingredientInput" placeholder="Ingredient name">
-            <input type="text" id="ingredientUnitInput" placeholder="e.g. 2 tbsp, 100g, 1 cup">
-            <button type="button" id="addIngredientBtn">Add Ingredient</button>
+        <a href="my-recipes.html">
+            <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+        </a>
+        <a href="../ShoppingCart/shopping.html">
+            <img src="images/shop.png" alt="Cart for shopping ingredients saved">
+        </a>
+    </nav>
+
+
+    <div id="layout-container">
+        <!-- Left: Create Recipe -->
+        <section id="left-panel">
+            <h1>Create a Recipe Card!</h1>
+            <form id="new-recipe">
+                <label>
+                    Recipe Name:
+                    <input type="text" id="recipeName" name="name" required placeholder="Recipe Name" />
+                </label>
+
+                <label>
+                    Author:
+                    <input type="text" id="authorName" name="author" required placeholder="Author Name" />
+                </label>
+
+                <label>
+                    <input type="radio" name="imageSource" value="file" id="imageSourceFile" checked />
+                    Upload file
+                </label>
+
+                <label>
+                    <input type="radio" name="imageSource" value="url" id="imageSourceURL" />
+                    Image URL
+                </label>
+
+                <label id="fileInputLabel">
+                    <input type="file" id="imageFile" accept="image/*" />
+                </label>
+
+                <label id="urlInputLabel" style="display: none;">
+                    Image URL:
+                    <input type="url" id="imageURL" placeholder="Image URL" />
+                </label>
+
+                <label>
+                    Tags:
+                    <select id="tagsDropdown">
+                        <option value="">Select a Tag</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Pro">Pro</option>
+                    </select>
+                    <input id="customTag" placeholder="Custom Tag" />
+                </label>
+
+                <div class="ingredient-row">
+                    <input type="text" id="ingredientInput" placeholder="Ingredient name" />
+                    <input type="text" id="ingredientUnitInput" placeholder="e.g. 2 tbsp, 100g" />
+                    <button type="button" id="addIngredientBtn">Add Ingredient</button>
+                </div>
+                <ul id="ingredientsList"></ul>
+
+                <label>
+                    Steps:
+                    <input type="text" id="stepInput" placeholder="Enter a step" />
+                    <button type="button" id="addStepBtn">Add</button>
+                </label>
+                <ol id="stepsList"></ol>
+
+                <label>
+                    Hours:
+                    <input type="number" id="timeHours" min="0" placeholder="0" />
+                </label>
+
+                <label>
+                    Minutes:
+                    <input type="number" id="timeMinutes" min="0" max="59" placeholder="30" />
+                </label>
+
+                <button type="submit">Create Recipe</button>
+                <button type="button" id="import-btn">Import a Recipe Card Instead</button>
+
+            </form>
+        </section>
+
+        <!-- Middle: Meal Planner -->
+        <section id="middle-panel">
+            <h2>Meal Planner</h2>
+            <button id="create-meal-btn">Create Meal</button>
+            <button id="cancel-meal-btn" style="display: none;">Cancel</button>
+
+            <div id="meal-controls" style="display: none;">
+                <input type="text" id="meal-name-input" placeholder="Enter meal name" required />
+                <button id="save-meal-btn">Save Meal</button>
+                <p>Select recipes for this meal:</p>
+                <div id="meal-selection-cards"></div>
+            </div>
+
+            <div id="meal-list-container">
+                <h3>Created Meals:</h3>
+                <ul id="meal-list"></ul>
+            </div>
+        </section>
+
+        <!-- Right: Recipe Cards -->
+        <section id="right-panel">
+            <label class="search-label">Search For A Specific Recipe:</label>
+            <search>
+                <input type="search" placeholder="Search" />
+            </search>
+            <h3 class="cards-header">Recipe Cards:</h3>
+            <main id="cardsContainer"></main>
+        </section>
+
+    </div>
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="../HomePage/home.html">Home</a>
+            <a href="my-recipes.html">Shelf</a>
+            <a href="recipeCard.html">Create</a>
+            <a href="../calendar/calendar.html">Calendar</a>
+            <a href="../ShoppingCart/shopping.html">Shopping Cart</a>
         </div>
-        
-        <ul id="ingredientsList"></ul>
-
-        
-        <!-- Steps Input -->
-        <label for="stepInput">
-            Steps:
-            <input type="text" id="stepInput" placeholder="Enter a step">
-            <button type="button" id="addStepBtn">Add</button>
-        </label>
-        <ol id="stepsList"></ol>
-
-        <label for="timeHours">
-            Hours:
-            <input type="number" id="timeHours" name="timeHours" min="0" placeholder="0">
-        </label>
-
-        <label for="timeMinutes">
-            Minutes:
-            <input type="number" id="timeMinutes" name="timeMinutes" min="0" max="59" placeholder="30">
-        </label>
-
-
-
-        
-        <!-- Create Card Button -->
-        <button type="submit">Create Recipe</button> 
-    </form>
-    
-    <br>
-    <!-- Adds search bar -->
-    <search>
-        <input type = "search" placeholder="Search">
-    </search>
-    
-    <!-- Cards Are Populated Here -->
-    <main id="cardsContainer"></main>
+        <p class="footer-message">Check out some heart-warming recipes today!</p>
+    </footer>
 </body>
+
 </html>

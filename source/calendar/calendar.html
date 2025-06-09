@@ -1,64 +1,140 @@
 <!DOCTYPE html>
-<html> 
-    <head>
-        <meta charset="UTF-8">
-        <title>Meal Planning</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="../home-page/styles.css"></link>
-        <link rel="stylesheet" href="calendar.css" > 
-        <script src="calendar.js" defer></script>
+<html>
 
-    </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Meal Planning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <body>
-        <!--Nav Bar to Other Features-->
-        <nav class="main-nav">
-            <a href="../home-page/index.html">Home</a>
-<!--            <a href="home.html">Home</a>  -->
-            <a href="../RecipeCard/recipeCard.html">Recipes</a>
-            <a href="calendar.html">Meal Planner</a>
-        </nav>
+  <link rel="stylesheet" href="calendar.css">
 
-        <!--Calender View Toggle-->
-        <nav class="calendar-toggle">
-            <button data-view="day">Day</button>
-            <button data-view="week">Week</button>
-            <button data-view="month" class="active">Month</button>
-        </nav>
+  <!-- Inter font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
 
-        <!--Add Recipe to Calendar-->
-        <nav class="add-recipes">
-        <form id="assign-form">
-        <select id="recipe-select">
-            <option value="">-- pick a recipe --</option>
-            </select>
-            <input type="date" id="recipe-date" required>
-            <input type="time" id="recipe-time" step="3600" required>
-            <button type="submit">Schedule</button>
-        </form>
-        </nav>
+  <!-- Pacifier font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Desktop Navigation -->
+  <header class="desktop-nav">
+    <nav class="nav-tabs">
+      <a class="logo" href="../HomePage/home.html">
+        <img src="images/logo.png" alt="Logo">
+      </a>
+      <h1 id="brand">Cooklection </h1>
+      <div role="search">
+        <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?">
+        </input>
+        <button type="submit"> </button>
+      </div>
+
+      <!-- text tabs -->
+      <a href="../calendar/calendar.html">Calendar</a>
+      <a href="../RecipeCard/my-recipes.html">Shelf</a>
+      <a href="../RecipeCard/recipeCard.html">Create</a>
+      <a class="cart" href="../shoppingCart/shopping.html">
+        <img src="images/shop.png" alt="shopping cart">
+      </a>
+    </nav>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-header">
+    <img src="images/logo.png" alt="Logo">
+    <h1>Cooklection</h1>
+  </div>
+
+  <!-- Mobile Search -->
+  <div id="mobile-search" role="search" aria-label="Mobile Recipe Search">
+    <label for="search-field-mobile" class="visually-hidden">Search recipes</label>
+    <input id="search-field-mobile" type="search" name="search" placeholder="Dish it out – what are you hungry for?">
+    <button id="search-button-mobile" type="submit"></button>
+  </div>
+  <nav class="mobile-nav">
+    <a href="../HomePage/home.html">
+      <img src="images/home.png" alt="Home page of website for summary">
+    </a>
+    <a href="../calendar/calendar.html">
+      <img src="images/calendar.png" alt="Calendar for meal planning">
+    </a>
+
+    <!-- create file does not exist until integrated with Thanh's work-->
+    <a href="../RecipeCard/recipeCard.html">
+      <img src="images/plus.png" alt="plus for creating recipe">
+    </a>
+
+    <a href="../RecipeCard/my-recipes.html">
+      <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+    </a>
+    <a href="../shoppingCart/shopping.html">
+      <img src="images/shop.png" alt="Cart for shopping ingredients saved">
+    </a>
+  </nav>
+
+  <!--Add Recipe to Calendar-->
+  <nav class="add-recipes">
+    <form id="assign-form">
+      <select id="recipe-select">
+        <option value="">-- pick a recipe --</option>
+      </select>
+      <input type="date" id="recipe-date" required>
+      <input type="time" id="recipe-time" step="60" required>
+      <button type="submit">Schedule</button>
+    </form>
+  </nav>
+
+  <!--Calender View Toggle-->
+  <nav class="calendar-toggle">
+    <button data-view="day">Day</button>
+    <button data-view="week">Week</button>
+    <button data-view="month">Month</button>
+  </nav>
 
 
-        <div id="calendar">
-            <!--Calendar Header-->
-            <div class="calendar-header">
-                <button id="prev-month">&lt; Previous</button>
-                 <h2 id="month-year">May 2025</h2>
-                 <button id="next-month">&gt; Next</button>
-            </div>
+  <div id="calendar">
+    <!--Calendar Header-->
+    <div class="calendar-header">
+      <button id="prev-month">&lt; Previous</button>
+      <h2 id="month-year">May 2025</h2>
+      <button id="next-month">&gt; Next</button>
+    </div>
 
-             <div class="calendar-days">
-             <!-- Days of the week -->
-                 <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-            </div>
+    <div class="calendar-days">
+      <!-- Days of the week -->
+      <div>Sun</div>
+      <div>Mon</div>
+      <div>Tue</div>
+      <div>Wed</div>
+      <div>Thu</div>
+      <div>Fri</div>
+      <div>Sat</div>
+    </div>
 
-            <div id="calendar-day-label" class="calendar-day-label"></div>
+    <div id="calendar-day-label" class="calendar-day-label"></div>
 
-            <div class="calendar-grid" id="calendar-grid">
-             <!-- Dates will go here -->
-            </div>
-        </div>
+    <div class="calendar-grid" id="calendar-grid">
+      <!-- Dates will go here -->
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="../HomePage/home.html">Home</a>
+      <a href="../RecipeCard/my-recipes.html">Shelf</a>
+      <a href="../calendar/calendar.html">Calendar</a>
+      <a href="../RecipeCard/recipeCard.html">Create</a>
+      <a href="../shoppingCart/shopping.html">Shopping Cart</a>
+    </div>
+    <p class="footer-message">Check out some heart-warming recipes today!</p>
+  </footer>
 
+  <script type="module" src="calendar.js" defer></script>
+</body>
 
-    </body>
 </html>

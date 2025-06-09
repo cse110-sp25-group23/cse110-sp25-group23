@@ -1,0 +1,100 @@
+<!--
+  TO DO LIST: 
+  DOCUMENTATION ON JS
+  ARIA tags
+  Failure points
+  footer
+  organize css file (remove tags I ended up deleting)
+  end to end testing
+  unit testing
+  fix the navigation bar and screen sizes
+  Clean image folder
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cooklection</title>
+
+  <!-- Home.css Style sheet connected-->
+  <link rel="stylesheet" href="nav-bar.css">
+
+  <!-- Inter font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+
+  <!-- Pacifier font style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Desktop Navigation -->
+  <header class="desktop-nav">
+    <nav class="nav-tabs">
+      <a class="logo" href="home.html">
+        <img src="images/logo.png" alt="Logo">
+      </a>
+      <h1 id="brand">Cooklection </h1>
+      <div role="search">
+        <input id="search-field-small" type="search" name="search" placeholder="Dish it out – what are you hungry for?">
+        </input>
+        <button type="submit"> </button>
+      </div>
+
+      <!-- text tabs -->
+      <a href="../calendar/calendar.html">Calendar</a>
+      <a href="shelf.html">Shelf</a>
+      <a href="shelf.html">Create</a>
+      <a class="cart" href="shop.html">
+        <img src="images/shop.png" alt="shopping cart">
+      </a>
+    </nav>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-header">
+    <img src="images/logo.png" alt="Logo">
+    <h1>Cooklection</h1>
+  </div>
+  <div id="mobile-search" role="search" aria-label="Mobile Recipe Search">
+    <label for="search-field-mobile" class="visually-hidden">Search recipes</label>
+    <input id="search-field-mobile" type="search" name="search" placeholder="Dish it out – what are you hungry for?">
+    <button id="search-button-mobile" type="submit"></button>
+  </div>
+  <nav class="mobile-nav">
+    <a href="../../HomePage/home.html">
+      <img src="images/home.png" alt="Home page of website for summary">
+    </a>
+    <a href="../../calendar/calendar.html">
+      <img src="images/calendar.png" alt="Calendar for meal planning">
+    </a>
+
+    <!-- create file does not exist until integrated with Thanh's work-->
+    <a href="../../recipeCard/recipeCard.html">
+      <img src="images/plus.png" alt="plus for creating recipe">
+    </a>
+
+    <a href="../../recipeCard/my-recipes.html">
+      <img src="images/shelf.png" alt="Shelf for browsing through certain categories">
+    </a>
+    <a href="../../shoppingCart/shopping.html">
+      <img src="images/shop.png" alt="Cart for shopping ingredients saved">
+    </a>
+  </nav>
+
+
+  <footer>
+
+  </footer>
+  <script src="home.js"></script>
+</body>
+
+</html>
