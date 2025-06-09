@@ -224,10 +224,10 @@ window.addEventListener('DOMContentLoaded', () => {
     document.querySelector('main').innerHTML = '';
 
     // Render all recipe cards into the <main> element using the loaded recipes
-    addRecipesToDocument(recipes);
+    // addRecipesToDocument(recipes);
 
     // Render the list of meals (meal names with View/Edit/Delete buttons)
-    // renderMealList();
+    renderMealList();
 });
 
 /**
