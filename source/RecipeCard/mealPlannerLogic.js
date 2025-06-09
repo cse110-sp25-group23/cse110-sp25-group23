@@ -217,6 +217,68 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // === DESKTOP SEARCH BAR SETUP ===
+
+    // Get desktop search input and button elements
+    const searchInput = document.getElementById('search-field-small');
+    const searchButton = document.querySelector('[type="submit"]');
+
+    /**
+     * Saves the desktop search query to localStorage and redirects to recipe page
+     */
+    function handleSearch() {
+        const query = searchInput.value.trim(); // Remove extra whitespace
+        if (query !== '') {
+            localStorage.setItem('searchQuery', query); // Save query
+            window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
+        }
+    }
+
+    // If the input exists, allow Enter key to trigger search
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+    }
+
+    // If the button exists, add click event to trigger search
+    if (searchButton) {
+        searchButton.addEventListener('click', handleSearch);
+    }
+
+    // === MOBILE SEARCH BAR SETUP ===
+
+    // Get mobile search input and button
+    const mobileSearchInput = document.getElementById('search-field-mobile');
+    const mobileSearchButton = document.getElementById('search-button-mobile');
+
+    /**
+     * Saves the mobile search query to localStorage and redirects to recipe page
+     */
+    function handleMobileSearch() {
+        const query = mobileSearchInput.value.trim(); // Remove extra whitespace
+        if (query !== '') {
+            localStorage.setItem('searchQuery', query); // Save query
+            window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
+        }
+    }
+
+    // If input exists, allow Enter key to trigger mobile search
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleMobileSearch();
+            }
+        });
+    }
+
+    // If button exists, add click event to trigger mobile search
+    if (mobileSearchButton) {
+        mobileSearchButton.addEventListener('click', handleMobileSearch);
+    }
+
     // Retrieve all recipe data from localStorage
     const recipes = getRecipesFromStorage();
 
@@ -647,74 +709,74 @@ function startEditMeal(mealName, editBtn) {
     };
 }
 
-/**
- * Handles all DOMContentLoaded initialization tasks.
- * Sets up search bar behavior for both desktop and mobile,
- * saving the query and redirecting to `my-recipes.html` if input is not empty.
- */
-window.addEventListener('DOMContentLoaded', () => {
-    // === DESKTOP SEARCH BAR SETUP ===
+// /**
+//  * Handles all DOMContentLoaded initialization tasks.
+//  * Sets up search bar behavior for both desktop and mobile,
+//  * saving the query and redirecting to `my-recipes.html` if input is not empty.
+//  */
+// window.addEventListener('DOMContentLoaded', () => {
+//     // === DESKTOP SEARCH BAR SETUP ===
 
-    // Get desktop search input and button elements
-    const searchInput = document.getElementById('search-field-small');
-    const searchButton = document.querySelector('[type="submit"]');
+//     // Get desktop search input and button elements
+//     const searchInput = document.getElementById('search-field-small');
+//     const searchButton = document.querySelector('[type="submit"]');
 
-    /**
-     * Saves the desktop search query to localStorage and redirects to recipe page
-     */
-    function handleSearch() {
-        const query = searchInput.value.trim(); // Remove extra whitespace
-        if (query !== '') {
-            localStorage.setItem('searchQuery', query); // Save query
-            window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
-        }
-    }
+//     /**
+//      * Saves the desktop search query to localStorage and redirects to recipe page
+//      */
+//     function handleSearch() {
+//         const query = searchInput.value.trim(); // Remove extra whitespace
+//         if (query !== '') {
+//             localStorage.setItem('searchQuery', query); // Save query
+//             window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
+//         }
+//     }
 
-    // If the input exists, allow Enter key to trigger search
-    if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleSearch();
-            }
-        });
-    }
+//     // If the input exists, allow Enter key to trigger search
+//     if (searchInput) {
+//         searchInput.addEventListener('keypress', (e) => {
+//             if (e.key === 'Enter') {
+//                 handleSearch();
+//             }
+//         });
+//     }
 
-    // If the button exists, add click event to trigger search
-    if (searchButton) {
-        searchButton.addEventListener('click', handleSearch);
-    }
+//     // If the button exists, add click event to trigger search
+//     if (searchButton) {
+//         searchButton.addEventListener('click', handleSearch);
+//     }
 
-    // === MOBILE SEARCH BAR SETUP ===
+//     // === MOBILE SEARCH BAR SETUP ===
 
-    // Get mobile search input and button
-    const mobileSearchInput = document.getElementById('search-field-mobile');
-    const mobileSearchButton = document.getElementById('search-button-mobile');
+//     // Get mobile search input and button
+//     const mobileSearchInput = document.getElementById('search-field-mobile');
+//     const mobileSearchButton = document.getElementById('search-button-mobile');
 
-    /**
-     * Saves the mobile search query to localStorage and redirects to recipe page
-     */
-    function handleMobileSearch() {
-        const query = mobileSearchInput.value.trim(); // Remove extra whitespace
-        if (query !== '') {
-            localStorage.setItem('searchQuery', query); // Save query
-            window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
-        }
-    }
+//     /**
+//      * Saves the mobile search query to localStorage and redirects to recipe page
+//      */
+//     function handleMobileSearch() {
+//         const query = mobileSearchInput.value.trim(); // Remove extra whitespace
+//         if (query !== '') {
+//             localStorage.setItem('searchQuery', query); // Save query
+//             window.location.href = '../RecipeCard/my-recipes.html'; // Redirect
+//         }
+//     }
 
-    // If input exists, allow Enter key to trigger mobile search
-    if (mobileSearchInput) {
-        mobileSearchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleMobileSearch();
-            }
-        });
-    }
+//     // If input exists, allow Enter key to trigger mobile search
+//     if (mobileSearchInput) {
+//         mobileSearchInput.addEventListener('keypress', (e) => {
+//             if (e.key === 'Enter') {
+//                 handleMobileSearch();
+//             }
+//         });
+//     }
 
-    // If button exists, add click event to trigger mobile search
-    if (mobileSearchButton) {
-        mobileSearchButton.addEventListener('click', handleMobileSearch);
-    }
-});
+//     // If button exists, add click event to trigger mobile search
+//     if (mobileSearchButton) {
+//         mobileSearchButton.addEventListener('click', handleMobileSearch);
+//     }
+// });
 
 
 /**
