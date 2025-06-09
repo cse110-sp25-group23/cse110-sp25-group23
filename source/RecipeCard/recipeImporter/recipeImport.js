@@ -29,46 +29,46 @@ const searchInput = document.getElementById('search-field-small');
 const searchButton = document.querySelector('[type="submit"]');
 
 function handleSearch() {
-const query = searchInput.value.trim();
-if (query !== '') {
-    localStorage.setItem('searchQuery', query);
-    window.location.href = '../my-recipes.html';
-}
+    const query = searchInput.value.trim();
+    if (query !== '') {
+        localStorage.setItem('searchQuery', query);
+        window.location.href = '../my-recipes.html';
+    }
 }
 
 if (searchInput) {
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-    handleSearch();
-    }
-});
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
 }
 
 if (searchButton) {
-searchButton.addEventListener('click', handleSearch);
+    searchButton.addEventListener('click', handleSearch);
 }
 
 const mobileSearchInput = document.getElementById('search-field-mobile');
 const mobileSearchButton = document.getElementById('search-button-mobile');
 
 function handleMobileSearch() {
-const query = mobileSearchInput.value.trim();
-if (query !== '') {
-    localStorage.setItem('searchQuery', query);
-    window.location.href = '../my-recipes.html';
-}
+    const query = mobileSearchInput.value.trim();
+    if (query !== '') {
+        localStorage.setItem('searchQuery', query);
+        window.location.href = '../my-recipes.html';
+    }
 }
 
 if (mobileSearchInput) {
-mobileSearchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-    handleMobileSearch();
-    }
-});
+    mobileSearchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleMobileSearch();
+        }
+    });
 }
 
 if (mobileSearchButton) {
-mobileSearchButton.addEventListener('click', handleMobileSearch);
+    mobileSearchButton.addEventListener('click', handleMobileSearch);
 }
 
 importButton.addEventListener('click', async () => {

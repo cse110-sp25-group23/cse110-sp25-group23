@@ -11,7 +11,7 @@
 
 #mobile-search {
     display: none;
-  }
+}
 
 /* Color of currently opened section */
 .active {
@@ -399,7 +399,7 @@ nav a:hover {
         text-align: center;
         max-width: 400px;
         width: 90%;
-      }
+    }
 
     .mobile-nav {
         display: flex;
@@ -469,9 +469,9 @@ nav a:hover {
     outline: none;
     font-style: italic;
     box-sizing: border-box;
-  }
-  
-  #search-button-mobile {
+}
+
+#search-button-mobile {
     position: absolute;
     top: 50%;
     right: 10px;
@@ -485,8 +485,8 @@ nav a:hover {
     background-color: #ffffff;
     cursor: pointer;
     padding: 0;
-  }
-  
-  #search-button-mobile:hover {
+}
+
+#search-button-mobile:hover {
     background-color: #d18572;
-  }
+}
