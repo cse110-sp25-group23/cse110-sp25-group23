@@ -7,7 +7,7 @@ npx playwright test __tests__/calendar/e2e-calendar.test.js
 */
 
 test.describe('Calendar App', () => {
-  const baseURL = 'http://127.0.0.1:5502/source/calendar/calendar.html';
+  const baseURL = '/source/calendar/calendar.html';
 
   test.beforeEach(async ({ page }) => {
     await page.goto(baseURL);
