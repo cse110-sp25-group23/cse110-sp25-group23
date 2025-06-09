@@ -106,4 +106,31 @@ test.describe('Recipe Homepage', () => {
 
     });
 
+
+    //All of the tests for the recipe favorites
+    test('Displays favorite recipes when at least one recipe is favorited', async({page}) => {
+        
+        const favorites = page.locator('#favorites-list recipe-card');
+        await expect(favorites).toHaveCount(1);
+    });
+
+
+    test('Displays favorite recipes correctly when there are no favorite recipes', async({page}) => {
+        await page.evaluate(() => {
+            const updatedRecipes = [
+              { name: 'Eggs', author: 'Teddy', favorite: false },
+              { name: 'Pizza', author: 'Dan', favorite: false }
+            ];
+            localStorage.setItem('recipes', JSON.stringify(updatedRecipes));
+        });
+
+        await page.reload();
+        
+        await expect(page.locator('#favorites-list')).not.toContainText('Eggs');
+        await expect(page.locator('#favorites-list')).not.toContainText('Pizza');
+        await expect(page.locator('#favorites-list')).toContainText('No favorites yet');
+        const favorites = page.locator('#favorites-list recipe-card');
+        await expect(favorites).toHaveCount(0);
+    });
+
 });
