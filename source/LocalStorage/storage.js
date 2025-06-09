@@ -366,5 +366,5 @@ function toggleInputs() {
 export {
 	addRecipesToDocument,
 	getRecipesFromStorage,
-	saveRecipesToStorage
+	saveRecipesToStorage,
 };

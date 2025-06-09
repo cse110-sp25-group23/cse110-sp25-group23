@@ -3,7 +3,36 @@ const SPOONACULAR_API_KEY = '84180a4b77f2405597b0c117c850eb62';
 const MAX_RETRIES = 2;
 const TIMEOUT_MS = 10000; // 10 seconds timeout
 
-import { finalizeRecipe } from '../LocalStorage/storage.js';
+//import { finalizeRecipe } from '../../LocalStorage/storage.js';
+function finalizeRecipe(recipe) {
+    const container = document.querySelector('main');
+    
+    //Create Recipe
+    const recipeCard = document.createElement('recipe-card');
+    recipeCard.data = recipe;
+    container.appendChild(recipeCard);
+
+    //Add Recipe to Storage
+    const localRecipes = getRecipesFromStorage();
+    localRecipes.push(recipe);
+    saveRecipesToStorage(localRecipes);
+
+    window.dispatchEvent(new Event('recipeCreated'));
+
+    //Clear Inputs
+    form.reset();
+    //Reset image input and radio buttons
+    document.getElementById('imageSourceFile').checked = true;
+    toggleInputs();
+
+    //reset ingredients list
+    ingredientsArray.length = 0;
+    ingredientsList.innerHTML = '';
+
+    //reset steps list
+    stepsArray.length = 0;
+    stepsList.innerHTML = '';
+}
 
 /**
  * Validates a URL
