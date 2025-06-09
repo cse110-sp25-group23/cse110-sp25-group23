@@ -39,8 +39,11 @@ function render() {
 const searchInput = document.getElementById('search-field-small');
 const searchButton = document.querySelector('[type="submit"]');
 
+/**
+ * handles redirection to shelf shalf page with results from desktop navigation search bar
+ */
 function handleSearch() {
-const query = searchInput.value.trim();
+    const query = searchInput.value.trim();
     if (query !== '') {
         localStorage.setItem('searchQuery', query);
         window.location.href = '../RecipeCard/my-recipes.html';
@@ -48,38 +51,41 @@ const query = searchInput.value.trim();
 }
 
 if (searchInput) {
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-    handleSearch();
-    }
-});
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
 }
 
 if (searchButton) {
-searchButton.addEventListener('click', handleSearch);
+    searchButton.addEventListener('click', handleSearch);
 }
 
 const mobileSearchInput = document.getElementById('search-field-mobile');
 const mobileSearchButton = document.getElementById('search-button-mobile');
 
+/**
+ * handles redirection to shelf shalf page with results from mobile navigation search bar
+ */
 function handleMobileSearch() {
-const query = mobileSearchInput.value.trim();
-if (query !== '') {
-    localStorage.setItem('searchQuery', query);
-    window.location.href = '../RecipeCard/my-recipes.html';
-}
+    const query = mobileSearchInput.value.trim();
+    if (query !== '') {
+        localStorage.setItem('searchQuery', query);
+        window.location.href = '../RecipeCard/my-recipes.html';
+    }
 }
 
 if (mobileSearchInput) {
-mobileSearchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-    handleMobileSearch();
-    }
-});
+    mobileSearchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleMobileSearch();
+        }
+    });
 }
 
 if (mobileSearchButton) {
-mobileSearchButton.addEventListener('click', handleMobileSearch);
+    mobileSearchButton.addEventListener('click', handleMobileSearch);
 }
 
 // Delegate clicks inside the UL
