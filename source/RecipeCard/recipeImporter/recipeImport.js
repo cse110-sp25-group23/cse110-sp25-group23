@@ -24,6 +24,53 @@ document.querySelectorAll('a').forEach(link => {
     });
 });
 
+// SEARCH BAR FUNCTIONALITY – redirects to my-recipes.html with query
+const searchInput = document.getElementById('search-field-small');
+const searchButton = document.querySelector('[type="submit"]');
+
+function handleSearch() {
+const query = searchInput.value.trim();
+if (query !== '') {
+    localStorage.setItem('searchQuery', query);
+    window.location.href = '../RecipeCard/my-recipes.html';
+}
+}
+
+if (searchInput) {
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+    handleSearch();
+    }
+});
+}
+
+if (searchButton) {
+searchButton.addEventListener('click', handleSearch);
+}
+
+const mobileSearchInput = document.getElementById('search-field-mobile');
+const mobileSearchButton = document.getElementById('search-button-mobile');
+
+function handleMobileSearch() {
+const query = mobileSearchInput.value.trim();
+if (query !== '') {
+    localStorage.setItem('searchQuery', query);
+    window.location.href = '../RecipeCard/my-recipes.html';
+}
+}
+
+if (mobileSearchInput) {
+mobileSearchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+    handleMobileSearch();
+    }
+});
+}
+
+if (mobileSearchButton) {
+mobileSearchButton.addEventListener('click', handleMobileSearch);
+}
+
 importButton.addEventListener('click', async () => {
     /** Properties Stored:
         * const recipe = {
