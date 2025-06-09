@@ -173,7 +173,6 @@ export class RecipeCard extends HTMLElement {
         });
 
 
-
         // Initialize delete and update logic
         delete_card(this.shadowRoot, this);
         update_card(this.shadowRoot, this, recipeData);
@@ -367,4 +366,3 @@ function delete_card(shadowRoot, hostElement) {
         });
     }
 }
-
