@@ -1,4 +1,21 @@
 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* let the content area grow, but always leave room for the footer */
+.container {
+  flex: 1;
+  padding-bottom: 120px; /* ~= your footer’s height; tweak as needed */
+}
+
+/* push footer to bottom when content is short */
+.site-footer {
+  margin-top: auto;
+}
 :root {
     --bg-color: #faeac1;
     --accent: #e9dab4;
