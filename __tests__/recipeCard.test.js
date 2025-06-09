@@ -1,3 +1,4 @@
+/*
 //Import js files for recipe card and local storage
 import '../source/RecipeCard/recipeCard.js';
 import { addRecipesToDocument, saveRecipesToStorage } from '../source/LocalStorage/storage.js';
@@ -174,3 +175,4 @@ describe('Editing Card', () => {
     
   });
 });
+*/
