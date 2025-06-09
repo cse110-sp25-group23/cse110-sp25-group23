@@ -39,7 +39,7 @@ import {
   renderCalendar, 
   storeRecipeToCalendar, 
   populateRecipeDropdown
-} from '../../source/calendar/calendar.js';
+} from '../source/calendar/calendar.js';
 
 global.currentView = 'month';  // Or 'week' or 'day' as needed
 global.currentDate = new Date(); // For renderCalendar
