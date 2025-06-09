@@ -1,9 +1,108 @@
 /* calendar.css */
+:root {
+  --bg-color: #faeac1;
+  --accent: #e9dab4;
+  --redlight: #e63f30;
+  --red: #ba3226;
+  --text-dark: #000000;
+  --card-bg: #ffffff;
+  --font: 'Inter';
+  --fontlabel: pacifico-regular;
+  --hour-height: 60px;
+}
 
+#mobile-search {
+  display: none;
+}
+
+/* === Previous/Next Buttons === */
+.calendar-header button {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--accent);
+  color: var(--text-dark);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calendar-header button:hover {
+  background-color: var(--redlight);
+  color: #fff;
+  border-color: var(--red);
+}
+
+/* Dropdown and date/time inputs */
+#assign-form select,
+#assign-form input[type="date"],
+#assign-form input[type="time"] {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  padding: 10px 16px;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: var(--text-dark);
+  transition: border 0.2s ease;
+}
+
+#assign-form select:focus,
+#assign-form input[type="date"]:focus,
+#assign-form input[type="time"]:focus {
+  border-color: var(--red);
+  outline: none;
+}
+
+#assign-form button[type="submit"] {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  padding: 10px 20px;
+  background-color: var(--red);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+#assign-form button[type="submit"]:hover {
+  background-color: var(--redlight);
+  color: var(--card-bg)
+}
+
+/* === DEFAULT === */
 * {
-  font-family: Helvetica;
-  color: black;
+  font-family: var(--font);
+  /* background-color: #f7f5ef; */
+  /* I commented this out as it was overriding basic css - anu, let me know if any issue arises*/
+  color: var(--text-dark);
   font-size: 12pt;
+}
+
+/* Add recipe styling */
+#assign-form {
+  font-family: var(--font);
+  padding: 6px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  /* wrap inputs nicely on smaller screens */
+  gap: 10px;
+  /* space between inputs */
+  justify-content: center;
+  /* center inputs inside the form */
+  align-items: center;
+  text-align: center;
+}
+
+
+.add-recipes {
+  display: flex;
+  justify-content: center;
+  /* horizontally center */
+  margin: 20px 0;
 }
 
 /* Container for the full calendar component */
@@ -12,61 +111,343 @@
   max-width: 100%;
   padding: 1rem 8px;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: var(--font);
+  padding-bottom: 40px;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  /* overrides */
+  height: auto;
+  /* overflow: visible; */
+  position: relative;
 }
 
-.calendar-header {
+/* Desktop Navigation */
+
+body {
+  font-family: var(--font);
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  margin-top: 40px;
+  font-weight: bold;
+  color: #000000;
+  font-family: var(--font), Arial;
+}
+
+/* === search bar === */
+#search-field-small {
+  /* max-width: 700px; */
+  align-self: center;
+  width: 100%;
+  max-width: 400px;
+  flex-grow: 1;
+  padding: 12px 16px;
+  padding-right: 40px;
+  /* room for button */
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  outline: none;
+  width: 1300px;
+  font-style: italic;
+}
+
+div[role="search"] {
+  position: relative;
+  display: inline-block;
+}
+
+div[role="search"] button {
+  transform: translateY(-50%) scale(1.5);
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 20%;
+  background: url('https://img.icons8.com/ios7/600/search.png') no-repeat center center;
+  background-size: 20px 20px;
+  background-color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+}
+
+div[role="search"] button:hover {
+  background-color: #d18572
+}
+
+/* === search bar ends=== */
+
+/* Shared */
+header,
+nav {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-.calendar-header h2 {
-  font-size: 36px;
-  font-style: bold;
-  font-family: 'Arial Narrow Bold';
+/* Desktop Navigation */
+.desktop-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 32px;
+  background-color: var(--bg-color);
+  /* border-bottom: 1px solid #ccc; */
+  flex-wrap: wrap;
+  gap: 20px;
+
 }
 
-/* Row displaying the days of the week (Sun, Mon, ...) */
-.calendar-days{
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
+.desktop-nav .logo img {
+  height: 100px;
+}
+
+.desktop-nav .logo img:hover {
+  transform: scale(1.2);
+}
+
+.desktop-nav .search-bar {
+  flex-grow: 1;
+  margin: 0 24px;
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  font-size: 16px;
+  min-width: 200px;
+  font-style: italic;
+  font-weight: bold;
+
+}
+
+/** === nav flexibility === **/
+.nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  /* Allow content to wrap on small screens */
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  max-width: 1200px;
+  /* Limit total width */
+  margin: 0 auto;
+  /* Center the nav bar horizontally */
+  border: 10px solid var(--red);
+  border-radius: 2rem;
+  background-color: var(--card-bg);
+  gap: 1rem;
+  box-sizing: border-box;
+  /* Include padding/border in total size */
+  width: 95%;
+  /* Responsive width that doesn't overflow */
+}
+
+.nav-tabs .logo img {
+  height: 80px;
+  max-width: 100%;
+}
+
+.nav-tabs h1 {
+  font-size: 2rem;
+  white-space: nowrap;
+}
+
+.nav-tabs [role="search"] {
+  flex-grow: 1;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.nav-tabs a,
+.nav-tabs .cart img {
+  max-width: 100%;
+}
+
+#search-field-small {
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
-/* Hide day-of-week labels in 'day' view */
-.calendar-days.day-view {
+.desktop-nav .nav-tabs a {
+  text-decoration: none;
+  color: #333;
+  font-size: 20px;
+  padding: 5px 5px;
+
+}
+
+
+.desktop-nav .cart img {
+  height: 32px;
+}
+
+.mobile-nav {
+  margin-top: 300px;
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--red);
+  padding: 12px 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-evenly;
+  /* evenly distribute icons */
+  align-items: center;
+  z-index: 999;
+}
+
+
+.mobile-nav a img {
+  height: 26px;
+
+}
+
+.mobile-header {
+  display: none;
+  /* hidden by default */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: var(--bg-color);
+}
+
+.mobile-header img {
+  height: 60px;
+}
+
+.mobile-header h1 {
+  font-family: "Pacifico", cursive;
+  font-size: 1.8rem;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+nav a:hover {
+  background-color: #d3c7aa;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+}
+
+
+
+.nav-inner {
+  display: flex;
+  flex-wrap: wrap;
+  /* allows elements to go to the next line */
+  align-items: center;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  /* optional: hides overflow */
+}
+
+.nav-inner a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Default: hide mobile nav on larger screens */
+.mobile-nav {
   display: none;
 }
 
-/* Core grid where calendar content (day cells or hour slots) is rendered */
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
-  width: 100%;
-  box-sizing: border-box;
-  transition: all 0.2s ease-in-out;
+/* === ARIA tags === */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* Default style for each cell in the calendar */
-.calendar-grid div {
-  border: 1px solid #ccc;
-  padding: 5px;
-  position: relative;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
+/* Show mobile nav on small screens */
+@media (max-width: 1205px) {
+  #mobile-search {
+    display: block;
+    position: relative;
+    margin: 16px auto;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--accent);
+    padding: 12px 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+    justify-content: space-evenly;
+    align-items: center;
+    z-index: 999;
+    
+  }
+
+  .mobile-nav a img {
+    height: 30px;
+    margin: 0 6px;
+  }
+
+  /* Optional: hide desktop nav on small screens */
+  .desktop-nav {
+    background-color: var(--accent);
+    display: none;
+  }
+
+  .mobile-header {
+    display: flex;
+  }
 }
+
+#brand {
+  font-family: "Pacifico", cursive;
+}
+
+
+/* === CALENDAR TOGGLE === */
 
 .calendar-toggle {
   display: flex;
   justify-content: center;
   margin: 10px 0;
+  padding: 10px 20px;
   gap: 10px;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
 }
 
 /* Toggle view button appearance */
@@ -77,25 +458,80 @@
   background: #f9f9f9;
   cursor: pointer;
   font-weight: bold;
+  font-family: 'Inter';
 }
 
-/* Highlight the active toggle button */
+.calendar-toggle button:hover,
 .calendar-toggle button.active {
-  background-color: #d0e0ff;
-  border-color: #4a90e2;
+  background-color: #fcefb2;
+}
+
+.calendar-toggle button.active {
+  font-style: oblique;
+  border: 2px solid var(--red);
+}
+
+/* === CALENDAR HEADER === */
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-header h2 {
+  font-size: 36px;
+  font-style: bold;
+  font-family: 'Arial';
+}
+
+/* === CALENDAR GRID === */
+
+/* Default for displaying the whole grid component */
+.calendar-days,
+.calendar-grid {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Row displaying the days of the week (Sun, Mon, ...) */
+.calendar-days {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* Hide day-of-week labels in 'day' view */
+.calendar-days.day-view {
+  display: none;
+}
+
+/* Core grid where calendar content (day cells or hour slots) is rendered */
+.calendar-grid {
+  grid-template-columns: repeat(7, 1fr);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Default style for each cell in the calendar */
+.calendar-grid div {
+  border: 1px solid #ccc;
+  padding: 5px;
+  position: relative;
+  overflow-wrap: break-word;
+  background: white;
 }
 
 /* Day cells styling */
 .day {
-  background-color: #fff;
-  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
 /* Hover effect for day cells */
-.day:hover {
-  background-color: #f0f0f0;
+/* * ensures everything inside also switches to the hover color */
+.day:hover,
+.day:hover * {
+  background-color: #fcefb2;
 }
 
 /* Make each month view cell a square using aspect ratio */
@@ -103,17 +539,123 @@
   aspect-ratio: 1 / 1;
 }
 
-/* 
-.calendar-grid.week-view div {
-  max-width: 100%;
-  height: 1000px;
-} */
+
+/* Day label */
+.day-number {
+  flex: 0 0 auto;
+  font-weight: bold;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+/* == MONTH VIEW FOR THE RECIPE CARDS == */
+
+.calendar-grid.month-view .day-number {
+  font-weight: bold;
+  border: none;
+}
+
+
+/* Recipe blocks in month view */
+.note-block,
+.note {
+  aspect-ratio: 1/1 fixed;
+  flex: 0 0 auto;
+  background-color: var(--bg-color) !important;
+  /* force color to show */
+  border-radius: 4px;
+  border: 1px solid var(--accent) !important;
+  /* force border to show */
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin: 1px 0;
+  padding: 1px 2px;
+  max-width: 95%;
+  white-space: nowrap;
+  line-height: 1.2;
+  max-height: 30px;
+  cursor: pointer;
+}
+
+.note-block {
+  z-index: 3;
+  box-sizing: border-box;
+  min-height: 48px;
+  /* overflow: hidden; */
+  position: absolute;
+  max-width: calc(100% - 4px);
+  height: auto;
+  overflow-x: scroll;
+}
+
+/* Recipe block in week and day view */
+.note {
+  position: absolute;
+  font-size: 1rem;
+  max-height: 48px;
+  width: 100%;
+  overflow: hidden;
+  overflow-x: scroll;
+  min-height: 48px;
+  height: auto !important;
+}
+
+.recipe-name {
+  background: transparent;
+}
+
+/* stack recipe blocks vertically */
+.calendar-grid.month-view .day {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+  position: relative;
+  padding: 2px;
+}
+
+
+.notes-container {
+  flex: 1 1 auto;
+  /* fill remaining space */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  /* ensure it uses all width of cell */
+  border: none;
+}
+
+
 
 /* === DAY VIEW Customizations === */
 
 /* DAY view layout: 1 column + time labels */
+
+.day-overlay {
+  position: absolute;
+  top: 0;
+  left: 50px;
+  width: calc(100% - 50px);
+  height: 1440px;
+  pointer-events: none;
+  /* allows interaction to pass through */
+  z-index: 2;
+  background-color: transparent !important;
+  box-sizing: border-box;
+}
+
+
+
 .calendar-grid.day-view {
+  position: relative;
+  display: grid;
   grid-template-columns: 50px 1fr;
+  grid-template-rows: repeat(24, var(--hour-height));
+  ;
+  overflow: visible;
+  height: 1440px;
 }
 
 /* Day view cells (hour slots) */
@@ -128,13 +670,15 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
-  display: none; /* hidden by default */
+  display: none;
+  /* hidden by default */
 }
 
 /* Show label only in day view */
 .calendar-day-label.day-view {
   display: block;
-  font-family: 'Arial Narrow Bold';
+  font-family: 'Arial';
+  font-weight: bold;
   font-size: 28px;
 }
 
@@ -142,14 +686,32 @@
 
 /* WEEK view layout: 1 label column + 7 days */
 .calendar-grid.week-view {
+  display: grid;
   grid-template-columns: 50px repeat(7, 1fr);
+  grid-template-rows: repeat(24, var(--hour-height));
+
 }
 
-/* === TIME STRUCTURE for day/week views === */
-/* Styles for the hour seperator */
-:root {
-  --hour-height: 60px;
+/* In week view, display recipe blocks in the same hour slot side by side */
+.calendar-grid.week-view .time-slot {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2px;
+  position: relative;
 }
+
+.calendar-grid.week-view .note {
+  position: absolute;
+  left: 2px;
+  height: 20px;
+  width: calc(100% - 15px);
+}
+
+
+/* === TIME STRUCTURE for day/week views === */
 
 /* Base for day and week views */
 /* Shared vertical layout: 24 hour slots (24 rows) */
@@ -157,29 +719,50 @@
 .calendar-grid.week-view {
   display: grid;
   grid-auto-rows: var(--hour-height);
-  height: calc(24 * var(--hour-height));
+  min-height: calc(24 * var(--hour-height));
 }
 
 /* Hour label */
+
+.calendar-grid.day-view .time-label {
+  text-align: right;
+  padding: 6px;
+  font-size: 0.85rem;
+  border-right: 1px solid #ccc;
+  height: 60px;
+  /* 1 hour height */
+}
+
 .time-label {
   text-align: right;
-  padding: 2px 6px;
-  font-size: 0.9rem;
+  padding: 6px;
+  font-size: 0.85rem;
   border-right: 1px solid #ccc;
 }
 
 /* Hour box */
 .time-slot {
   position: relative;
+  min-height: 48px;
+  height: auto;
   border-top: 1px solid #eee;
+  overflow: visible;
+  /* allows time blocks to flow into the next hour */
+  ;
 }
+
+.day-view .time-slot {
+  height: 60px;
+}
+
 
 /* 30-min dash */
 .time-slot::after {
   content: "";
   position: absolute;
   top: 50%;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   border-top: 1px dashed #ccc;
 }
 
@@ -190,10 +773,163 @@
   .calendar-header h2 {
     font-size: 1rem;
   }
+
   .calendar-grid div {
     /* aspect-ratio: 1 / 1.2; */
     aspect-ratio: auto;
     font-size: 0.8rem;
     height: 60px;
   }
+}
+
+/* === RESPONSIVE RECIPE BLOCK LIMITS === */
+
+@media (max-width: 768px) {
+  .calendar-grid.month-view .day .notes-container {
+    max-height: 90px;
+  }
+}
+
+
+/* == ADDING RECIPES ==*/
+
+.calendar-grid.month-view .day {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.calendar-grid.month-view .day .notes-container {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px;
+  box-sizing: border-box;
+  border: none;
+  overflow-y: auto;
+  max-height: calc(100% - 35px);
+}
+
+.calendar-grid.month-view .day .day-number {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* === DELETE RECIPES (edit is gone) === */
+
+.note-block .delete-recipe,
+.note .delete-recipe {
+  top: 3px;
+  right: 3px;
+}
+
+.note-block:hover button,
+.note:hover button {
+  display: block;
+}
+
+.note-block button,
+.note button {
+  position: absolute;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 0.8rem;
+  display: none;
+  cursor: pointer;
+}
+
+.note-block .delete-recipe {
+  top: 3px;
+  right: 3px;
+  background-color: #e9dab4;
+}
+
+/* Show on hover */
+.note-block:hover button {
+  display: block;
+}
+
+/* === footer === */
+.site-footer {
+  margin-top: 10px;
+  background-color: var(--accent);
+  color: var(--text-dark);
+  text-align: center;
+  padding: 20px 10px;
+  border-radius: 2rem;
+}
+
+.footer-links {
+  font-family: var(--font);
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--red);
+}
+
+.footer-message {
+  font-family: "Pacifico", cursive;
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--red);
+
+}
+
+@media (max-width: 1205px) {
+  .site-footer {
+    display: none;
+  }
+}
+
+#search-field-mobile {
+  width: 100%;
+  padding: 12px 16px;
+  padding-right: 40px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  outline: none;
+  font-style: italic;
+  box-sizing: border-box;
+}
+
+#search-button-mobile {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: url('https://img.icons8.com/ios7/600/search.png') no-repeat center center;
+  background-size: 20px 20px;
+  background-color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+}
+
+#search-button-mobile:hover {
+  background-color: #d18572;
 }

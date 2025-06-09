@@ -4,6 +4,9 @@
  * stored locally.
  */
 import { getRecipesFromStorage, saveRecipesToStorage } from '../LocalStorage/storage.js';
+import { getRecipeCardTemplateCSS } from '../RecipeCard/recipeCardTemplateCSS.js';
+// Import the existing Cart helper from your shoppingCart folderAdd commentMore actions
+import { Cart } from '../ShoppingCart/cart.js';
 
 export class RecipeCard extends HTMLElement {
     constructor() {
@@ -15,27 +18,170 @@ export class RecipeCard extends HTMLElement {
      * @param {Object} recipeData - Data for recipe
      */
     set data(recipeData) {
-        if(!recipeData) return;
+        if (!recipeData) return;
         this._data = recipeData;
-        // Create content inside the shadow DOM
-        this.shadowRoot.innerHTML = `
-        <h2>${recipeData.name}</h2>
-        <p>Author: ${recipeData.author}</p>
-        <img src="${recipeData.image}" alt="${recipeData.name}" style="width:100px;height:auto;">
-        <p>Tags: </p>
-        <ul>
-            ${recipeData.tags.map(tag => `<li>${tag}</li>`).join('')}
-        </ul>
-        <p>Ingredients: ${recipeData.ingredients}</p>
-        <p>Steps: ${recipeData.steps}</p>
-        <button class='delete-btn'>Delete</button>
-        <p>Time Estimate: ${recipeData.timeEstimate}</p>
+
+        // Create and append <style> element to our current card component
+        const style = document.createElement('style');
+        style.textContent = getRecipeCardTemplateCSS();
+        this.shadowRoot.appendChild(style);
+
+        // Create outer container and add content inside its shadow DOM
+        const container = document.createElement('div');
+        container.classList.add('card-container');
+
+        //div containers added for ingredients and tags to make future css styling easier
+        container.innerHTML = `
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <button class="toggle">Fullscreen</button>
+                    <button class="favorite-btn ${recipeData.favorite ? 'favorited' : ''}" aria-label="Favorite">♥</button>
+                    <img src="${recipeData.image}" alt="${recipeData.name}" class="recipe-image">
+                    <p class="recipe-name">${recipeData.name}</p>
+                    <p class="recipe-author">Author: ${recipeData.author}</p>
+                    <p>Ingredients:</p>
+                    <div class="ingredients-scroll">
+                        <ul>
+                            ${recipeData.ingredients.map(ing => `<li>${ing.name}${ing.unit ? ' - ' + ing.unit : ''}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <!-- INSERTED “Buy ingredients” button -->        
+                    <!-- —— NEW: “Add to cart” button (no redirect) —— -->
+                    <button class="add-to-cart-btn">Add to cart</button>
+                    <div class="tags-wrapper">
+                        <div class="tags-class">
+                            ${recipeData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card-back">
+                    <p>Steps: </p>
+                    <div class="steps-list">
+                        <ol>
+                            ${recipeData.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>                    
+                    </div>
+                    <p>Time Estimate: ${recipeData.timeEstimate}</p>
+                </div>
+            </div>
+        </div>
         `;
 
-    // Initialize delete and update logic
-        delete_card(this.shadowRoot,this);
-        update_card(this.shadowRoot, this, recipeData);
-    }   
+        //add this div container to shadow root
+        this.shadowRoot.appendChild(container);
+
+        // —— NEW: “Add to cart” button logic (identical to buyBtn except no redirect) —— //
+        const addCartBtn = container.querySelector('.add-to-cart-btn');
+        addCartBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            // Build the same miniRecipe object
+            const miniRecipe = {
+                id: `cart-${recipeData.id}`,
+                ingredients: recipeData.ingredients.map(ing => ({
+                    id: `${recipeData.id}-${ing.name}`,
+                    name: ing.name,
+                    qty: ing.qty,
+                    unit: ing.unit || ''
+                }))
+            };
+
+            // Add to Cart
+            Cart.addRecipe(miniRecipe);
+
+            // Instant UI feedback on this button only (no redirect)
+            addCartBtn.textContent = '✔ In Cart';
+            addCartBtn.disabled = true;
+            setTimeout(() => {
+                addCartBtn.textContent = 'Add to cart';
+                addCartBtn.disabled = false;
+            }, 1500);
+        });
+        /* Structure of our recipe-card
+        <recipe-card ....>
+            <style>
+                //imported
+            </style>
+            <div class="card-container">
+                <div class="flip-card">
+                    //all the inner stuff
+                </div>
+            </div>
+        </recipe-card>
+        */
+
+        const wrapper = container.querySelector('.tags-wrapper');
+        const tags = container.querySelector('.tags-class');
+
+        // Use requestAnimationFrame to ensure layout is updated
+        requestAnimationFrame(() => {
+            if (tags.scrollWidth > wrapper.clientWidth) {
+                // Duplicate content to allow looping feel
+                tags.innerHTML += tags.innerHTML;
+                tags.classList.add('scroll-animate');
+            }
+        });
+
+        // add the JS script for toggling card flip here. Since .flip-card is in shadow DOM
+        // we can't look for it or toggle it anywhere else but here
+        const flipCard = container.querySelector('.flip-card');
+        flipCard.addEventListener('click', () => {
+            flipCard.classList.toggle('flipped');
+        });
+
+        // add event handling for clicking the favorite button
+        const favButton = container.querySelector('.favorite-btn');
+        favButton.addEventListener('click', (e) => {
+            //prevents flipping
+            e.stopPropagation();
+
+            // Toggle favorite
+            favButton.classList.toggle('favorited');
+            this._data.favorite = !this._data.favorite;
+
+            // Update localStorage
+            let localRecipes = getRecipesFromStorage();
+            //use createdAt date to determine which card has been updated
+            let index = -1;
+            for (let i = 0; i < localRecipes.length; i++) {
+                if (localRecipes[i].createdAt === this._data.createdAt) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index !== -1) {
+                localRecipes[index].favorite = this._data.favorite;
+                saveRecipesToStorage(localRecipes);
+            }
+
+            // dispatch this custom event, will update my-recipes shelf to show this change
+            window.dispatchEvent(new Event('recipesUpdated'));
+        });
+
+        //event handling for clicking fullscreen button
+        const fullscreenBtn = container.querySelector(".toggle");
+        fullscreenBtn.addEventListener("click", (event) => {
+            event.stopPropagation(); // Prevents the card click from flipping
+
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                flipCard.requestFullscreen();
+            }
+        });
+
+
+        // // Initialize delete and update logic
+        // delete_card(this.shadowRoot, this);
+        // update_card(this.shadowRoot, this, recipeData);
+
+        if (!this.hasAttribute('readonly')) {
+            delete_card(this.shadowRoot, this);
+            update_card(this.shadowRoot, this, recipeData);
+        }
+    }
 }
 
 // Define the custom recipe card element
@@ -51,17 +197,18 @@ customElements.define('recipe-card', RecipeCard);
  * @param {*} hostElement - recipe-card custom element
  * @param {*} recipeData  - Original data object 
  */
-export function update_card(shadowRoot, hostElement, recipeData){
+export function update_card(shadowRoot, hostElement, recipeData) {
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
+    editButton.classList.add('edit-btn');
     shadowRoot.appendChild(editButton);
 
     editButton.addEventListener('click', () => {
-        const originalData   = { ...recipeData };
+        const originalData = { ...recipeData };
 
         //Can add more tags as we implement card (remember to edit HTML to sync)
         const predefinedTags = ["Easy", "Advanced", "Pro"];
-        const originalTags   = recipeData.tags;
+        const originalTags = recipeData.tags;
 
         //separate tags originally selected
         const predefinedSelectedTags = originalTags.filter(tag => predefinedTags.includes(tag));
@@ -81,6 +228,14 @@ export function update_card(shadowRoot, hostElement, recipeData){
         `;
 
         shadowRoot.innerHTML = `
+        <style>
+            :host {
+                display: block;
+                background: white;
+                padding: 20px;
+                border-radius: 12px;
+            }
+        </style>
         <label>Name: <input type="text" value="${originalData.name}" class="edit-name"></label><br>
         <label>Author: <input type= "text" value="${originalData.author}" class="edit-author"></label><br>
         <label>Image: <input type="text" value="${originalData.image}" class="edit-image"></label><br>
@@ -90,30 +245,44 @@ export function update_card(shadowRoot, hostElement, recipeData){
             ${editPredefinedTags}
             ${editCustomTags}
         </fieldset>
-        <label>Ingredients: <textarea class ="edit-ingredients">${originalData.ingredients}</textarea></label><br>
-        <label>Recipe: <textarea class="edit-recipe">${originalData.recipe}</textarea></label><br>
+        <label>Ingredients: <textarea class ="edit-ingredients" cols="30" placeholder="Format: \nMilk - 2 cups">${originalData.ingredients.map(i => `${i.name} - ${i.unit || ''}`).join('\n')}</textarea></label><br>
+        <label>Steps: <textarea class="edit-steps" placeholder="Step1 \nStep2">${originalData.steps ? originalData.steps.join('\n') : ''}</textarea></label><br>
         <button class="save-btn">Save</button>
         `;
-        
+
         const saveButton = shadowRoot.querySelector('.save-btn');
         saveButton.addEventListener('click', () => {
-        //tag handling: 
+            //tag handling: 
             //predefined tags
-            const checkedTags    = [];
-            const checkBoxedTags = shadowRoot.querySelectorAll('.edit-tag-checkbox'); 
-            
+            const checkedTags = [];
+            const checkBoxedTags = shadowRoot.querySelectorAll('.edit-tag-checkbox');
+
             checkBoxedTags.forEach(checkbox => {
-                if(checkbox.checked) {
+                if (checkbox.checked) {
                     checkedTags.push(checkbox.value);
                 }
             });
 
             //custom tags
-            const editedCustomTags =shadowRoot.querySelector('.edit-custom-tags').value;
+            const editedCustomTags = shadowRoot.querySelector('.edit-custom-tags').value;
             const savedCustomTags = editedCustomTags.split(',').map(tag => tag.trim()).filter(Boolean);
 
             const allEditedTags = checkedTags.concat(savedCustomTags);
-        
+
+            //need to handle ingredients and steps since both are stringified arrays
+            const editedIngredients = shadowRoot.querySelector('.edit-ingredients').value;
+            const savedIngredients = editedIngredients.split('\n')
+                .map(line => {
+                    const [name, unit] = line.split('-').map(s => s.trim());
+                    return name ? { name, unit: unit || '' } : null;
+                })
+                .filter(obj => obj);
+
+            const editedSteps = shadowRoot.querySelector('.edit-steps').value;
+            const savedSteps = editedSteps
+                .split('\n')
+                .map(step => step.trim())
+                .filter(step => step.length > 0);
 
             const updatedData = {
                 name: shadowRoot.querySelector('.edit-name').value,
@@ -121,23 +290,25 @@ export function update_card(shadowRoot, hostElement, recipeData){
                 image: shadowRoot.querySelector('.edit-image').value,
                 timeEstimate: shadowRoot.querySelector('.edit-time').value,
                 tags: allEditedTags,
-                ingredients: shadowRoot.querySelector('.edit-ingredients').value,
-                recipe: shadowRoot.querySelector('.edit-recipe').value
+                ingredients: savedIngredients,
+                steps: savedSteps
             };
 
-        //Updating logic --> compare new data with original to check for changes
+            //Updating logic --> compare new data with original to check for changes
 
             let hasChanges = false;
-            const finalData = { ...originalData};
+            const finalData = { ...originalData };
 
-            for(const key in updatedData) {
+            for (const key in updatedData) {
                 if (updatedData[key] !== originalData[key]) {
                     finalData[key] = updatedData[key];
                     hasChanges = true;
                 }
             }
 
+            shadowRoot.innerHTML = '';
             if (hasChanges) {
+
                 hostElement.data = finalData;
             } else {
                 hostElement.data = originalData;
@@ -149,6 +320,9 @@ export function update_card(shadowRoot, hostElement, recipeData){
                 localRecipes[index] = finalData;
                 saveRecipesToStorage(localRecipes);
             }
+
+            // dispatch this custom event, will update my-recipes shelf to show this change
+            window.dispatchEvent(new Event('recipesUpdated'));
         });
     });
 }
@@ -158,10 +332,15 @@ export function update_card(shadowRoot, hostElement, recipeData){
  * @param {*} shadowRoot  - Shadow DOM of a recipe card
  * @param {*} hostElement - recipe-card custom element
  */
-export function delete_card(shadowRoot, hostElement) {
-    const deleteButton = shadowRoot.querySelector('.delete-btn');
-    if(deleteButton) {
-        deleteButton.addEventListener('click', () => {            
+function delete_card(shadowRoot, hostElement) {
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.classList.add('delete-btn');
+    shadowRoot.appendChild(deleteButton);
+
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => {
             //update local storage
             let recipeString = localStorage.getItem('recipes');
             //turn the recipesString into an array
@@ -178,34 +357,17 @@ export function delete_card(shadowRoot, hostElement) {
             recipes = recipes.filter(recipe =>
                 !(recipe.name === deletedRecipe.name &&
                     recipe.author === deletedRecipe.author &&
-                    recipe.ingredients === deletedRecipe.ingredients &&
-                    recipe.steps === deletedRecipe.steps
+                    JSON.stringify(recipe.ingredients) === JSON.stringify(deletedRecipe.ingredients) &&
+                    JSON.stringify(recipe.steps) === JSON.stringify(deletedRecipe.steps)
                 )
             );
 
             localStorage.setItem('recipes', JSON.stringify(recipes));
 
             hostElement.remove();
+
+            // dispatch this custom event, will update my-recipes shelf to show this change
+            window.dispatchEvent(new Event('recipesUpdated'));
         });
     }
-}
-
-
-/**
- * Takes as input an array of recipes and for each one creates a
- * new <recipe-card> element, adds the recipe data to the card
- * using element.data = {...}, and then appends the new recipe
- * to the container (<main>)
- * @param {Array<Object>} recipes An array of recipes
- */
-
-function addRecipesToDocument(recipes) {
-    //or document.getElementById('cardsContainer')
-	const container = document.querySelector('main');    
-
-	for (let i = 0; i < recipes.length; i++) {
-		let recipeCard = document.createElement('recipe-card');
-		recipeCard.data = recipes[i];
-		container.appendChild(recipeCard);
-	}
 }
