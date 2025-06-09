@@ -1,6 +1,6 @@
 // __tests__/cart.test.js
 import { jest, describe, beforeEach, it, expect } from '@jest/globals';
-import { Cart } from './cart.js';
+import { Cart } from 'cart.js';
 
 describe('Cart helper', () => {
     beforeEach(() => {
