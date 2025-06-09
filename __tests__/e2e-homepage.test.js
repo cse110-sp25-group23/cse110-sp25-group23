@@ -110,6 +110,10 @@ test.describe('Recipe Homepage', () => {
     //All of the tests for the recipe favorites
     test('Displays favorite recipes when at least one recipe is favorited', async({page}) => {
         
+        await page.evaluate(() => {
+            window.dispatchEvent(new Event('recipesUpdated'));
+        });
+
         const favorites = page.locator('#favorites-list recipe-card');
         await expect(favorites).toHaveCount(1);
     });
@@ -132,5 +136,31 @@ test.describe('Recipe Homepage', () => {
         const favorites = page.locator('#favorites-list recipe-card');
         await expect(favorites).toHaveCount(0);
     });
+
+    //All tests for the navbar
+    test('Check if navbar navigates correctly to other pages', async ({page}) => {
+
+        //Check if navbar logo correctly navigates to home page
+        await page.click('a.logo');
+        await expect(page).toHaveURL(/\/home\.html$/);
+
+        //Check if navbar correctly navigates to calendar page
+        await page.click('nav >> text=Calendar');
+        await expect(page).toHaveURL(/\/calendar\.html$/);
+
+        //Check if navbar correctly navigates to shelf page
+        // await page.click('nav >> text=Shelf');
+        // await page.goto('/\/shelf/(\.html)?$/');
+
+        //Check if navbar correctly navigates to recipe creation page
+        await page.click('nav >> text=Create');
+        await expect(page).toHaveURL(/\/recipeCard\.html$/);
+
+        //Check if navbar correctly navigates to shopping page
+        await page.click('nav >> a.cart');
+        await expect(page).toHaveURL("http://127.0.0.1:5504/source/shoppingCart/shopping.html");
+        
+
+    }); 
 
 });
