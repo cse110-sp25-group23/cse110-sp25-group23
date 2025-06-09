@@ -106,6 +106,7 @@ span.item-name {
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s ease;
+    margin-bottom: 70px;
 }
 
 #clear:hover {

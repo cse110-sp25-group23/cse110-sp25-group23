@@ -3,7 +3,7 @@ console.log("JS file loaded");
 window.addEventListener('DOMContentLoaded', function () {
   console.log("Script running after DOM ready");
 
-  // e.g. "2025-06-04"
+  // e.g. "2025-06-04" and Pacific time
   const todayStr = new Date().toLocaleDateString("en-CA");
 
   console.log("✅ Running meal loader. Today = ", todayStr);
