@@ -28,18 +28,18 @@ We need to support:
 
 ## Decision Outcome
 
-**Chosen option: 2 – Full Create Recipe Site **
+**Chosen option: 2 – Full Create Recipe Site**
 
 This decision gave a lot of depth to how 
 
 ### Key Advantages
 
-* **More depth and features could be explored by making a new site
-* **Meal Planner option allows users to make food schedules to go back to constantly
+* More depth and features could be explored by making a new site
+* Meal Planner option allows users to make food schedules to go back to constantly
 
 *Why not Option 1?*   
-– It was a lot less creative and limited the features of our site
-– "Too Simple" in Design
+- It was a lot less creative and limited the features of our site
+- "Too Simple" in Design
 
 ---
 
