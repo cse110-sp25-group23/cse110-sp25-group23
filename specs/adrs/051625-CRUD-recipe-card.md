@@ -1,5 +1,3 @@
-# Recipe Card CRUD and Design
-
 ---
 status: accepted
 date: 2025-06-09
