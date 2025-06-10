@@ -84,7 +84,21 @@ For deleting the card, we can prompt the user whether or not they want to delete
 
 ![image](https://github.com/user-attachments/assets/ac07b5ea-189f-4bc1-a38f-afd3f1c5dfa5)
 
-DELETE UPDATE: In the finalized version of our site, we ended up having the delete be instantaneous rather than prompting the user with a warning. We also added the feature where if one shelf for a category is now empty completely, it would disappear entirely. 
+DELETE UPDATE: In the finalized version of our site, we ended up having the delete be instantaneous rather than prompting the user with a warning. 
+
+*Before Delete*
+
+
+<img width="1346" alt="image" src="https://github.com/user-attachments/assets/76512dfc-d209-4a91-909e-55499e91746b" />
+
+*After Delete*
+
+
+<img width="1346" alt="image" src="https://github.com/user-attachments/assets/df1a0521-549d-4f76-918f-48d2f5e31647" />
+
+
+
+We also added the feature where if one shelf for a category is now empty completely, it would disappear entirely. 
 
 
 *Example Before, the "Easy" shelf holding a test card:* <img width="1285" alt="image" src="https://github.com/user-attachments/assets/9681d3e3-4d12-48fb-af2c-944abc6b48fb" />
