@@ -14,7 +14,6 @@ We need to support:
 
 * Newly made cards appearing on the shelf
 * Easy to understand and input information
-* Design
 
 ---
 
