@@ -67,6 +67,17 @@ In this shelfing section, users will be prompted whether or not they want to vie
 
 Editing a card should follow a similar structure to how the "Create Card" section looks, or in other words, we can redirect them to that section, just with the title changed from "Create Card" to "Edit Card".
 
+These features are seen in the finalized version where users can view the card in full screen, or edit, or delete it.
+
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/889c17f8-1e59-478c-bf87-2ff95eeaa5d1" />
+
+
+This is what it looks like when the user wants to update the card with whatever information they want to change.
+
+<img width="371" alt="image" src="https://github.com/user-attachments/assets/734cb457-de8c-4642-aed8-aeabe29f4348" />
+
+
+
 ## Delete
 
 For deleting the card, we can prompt the user whether or not they want to delete the card, something along the lines of this:
