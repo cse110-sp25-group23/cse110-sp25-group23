@@ -48,7 +48,8 @@ which largely led to the final design choices to simply provide a user summary o
 
 * **Cart Summary** – Pulled from `localStorage` key `recipeCart`, implemented through the Cart page. The homepage limits display to the first 10 items and links to the full cart for more details.
 * **Favorites Section** – Filtered from recipes stored in `localStorage` using the `favorite` property:
-  – If `favorite: true`, the recipe appears in the homepage section.  
+  – If `favorite: true`, the recipe appears in the homepage's favorites section.
+  - If `favorite: false`, the recipe does not appear in the homepage's favorites section.
   – Live updates reflect any favoriting or unfavoriting action taken from the shelf page or other views.
 * **Today’s Meal Section** – Data is pulled from the calendar page, which stores recipes under date-time keys, including metadata like recipe name and author:
   – The homepage filters meals based on the current Pacific Time date.
