@@ -21,7 +21,7 @@ We need to support:
 
 |   #   | Option                                                | Summary                                                                                                            |
 | :---: | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-|   1   | **Add-on to "My Recipes".                              |  Simple create page gets shown*         
+|   1   | **Add-on to "My Recipes"**                              |  Simple create page gets shown*         
 |   2   | **Full Create Recipe Site**                           |  Creation Site with appealing UI, Meal Planner, and Search Recipe Functionality                   
 
 ---
