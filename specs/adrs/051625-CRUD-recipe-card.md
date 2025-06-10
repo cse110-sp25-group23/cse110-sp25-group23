@@ -53,7 +53,7 @@ This decision gave a lot of depth to how
 * **Good** –  Cards were more liked and visually appealing
 * **Good** – More room to add information to cards, as there was no need to worry about writing on textures
 * **Trade-off** – Could make our card look a lot more basic and less detailed
-* ** Bad** - Would make to redesign the card UI from the ground up again, taking valuable time
+* **Bad** - Would make to redesign the card UI from the ground up again, taking valuable time
 
 
 
