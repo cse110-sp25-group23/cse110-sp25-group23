@@ -8,10 +8,6 @@ decision-maker:  [Kelvin Tetteh]
 
 ---
 
-#  Create Recipe Card
-
----
-
 ## Context & Goals
 
 We need to support:
