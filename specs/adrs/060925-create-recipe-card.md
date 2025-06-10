@@ -34,7 +34,7 @@ This decision gave a lot of depth to how
 
 ### Key Advantages
 
-* ** More depth and features could be explored by making a new site
+* **More depth and features could be explored by making a new site
 * **Meal Planner option allows users to make food schedules to go back to constantly
 
 *Why not Option 1?*   
