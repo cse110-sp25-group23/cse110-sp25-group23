@@ -44,6 +44,13 @@ This decision gave a lot of depth to how
 
 ---
 
+### Implementation Details
+- Site would be broken up into 3 sections, "Create Recipe", "Meal Planner", and "Search Recipe";
+- Create Recipe is the section were users input the information of the card they are making, as well as an image to go along with it. Once created, this recipe automatically shows up in the "My Recipes" site on one of the shelves, depending on the tag, when it was created, etc.
+- Meal Planner works as an advanced tag, allowing users to group together meals into one category, which would also appear on the "My recipes" shelf. When a meal is clicked on the meal planner option, the search automatically shows whatever items are grouped into that specific category, removing unrelated recipes from the ones being shown.
+- Search Recipe allows for a Recipe of a specific title to be shown at the top of the page, creating convenience for the user to locate what they are looking for.
+
+
 ## Consequences
 
 * **Good** –  Other features such as Meal Planner and Searching Recipes took advantage of the full site
