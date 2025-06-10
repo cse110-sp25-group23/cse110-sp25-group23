@@ -1,6 +1,7 @@
 # Create Recipe Card
 
 ---
+
 status: accepted
 date: 2025-06-09
 decision-maker: [Kelvin Tetteh]
