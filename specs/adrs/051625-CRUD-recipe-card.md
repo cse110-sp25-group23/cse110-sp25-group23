@@ -37,14 +37,14 @@ This decision gave a lot of depth to how
 
 ### Key Advantages
 
-* ** Much more appealing to the eyes
-* ** Freedom to choose a variety of colors and design choices rather than looking to find specific textures
-* ** Matches the initial design of the home page
+* Much more appealing to the eyes
+* Freedom to choose a variety of colors and design choices rather than looking to find specific textures
+* Matches the initial design of the home page
 
 *Why not Option 1?*   
 - Most of the group disliked the design
-– Looked outdated, fit the design philosophy of the late 2000s/early 2010s more
-– Colors were dull and boring to look at
+- Looked outdated, fit the design philosophy of the late 2000s/early 2010s more
+- Most of the group disliked the design
 
 ---
 
