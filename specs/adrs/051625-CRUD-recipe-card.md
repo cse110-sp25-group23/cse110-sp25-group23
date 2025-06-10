@@ -22,14 +22,14 @@ We need to have:
 
 |   #   | Option                                                | Summary                                                                                                            |
 | :---: | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-|   1   | ** Wood-grained realistic/ rustic design.             |  "Coffee" / age-based design of card*         
-|   2   | ** Modern, Bright Card**                              | Card based on using fall colors, and focuses on more cartoony/simple design choices rather than                                                                        realistic               
+|   1   | **Wood-grained realistic/ rustic design.**            |  "Coffee" / age-based design of card         
+|   2   | **Modern, Bright Card**                               | Card based on using fall colors, and focuses on more cartoony/simple design choices rather than                                                                        realistic               
 
 ---
 
 ## Decision Outcome
 
-**Chosen option: 2 – Modern, Bright Card **
+**Chosen option: 2 – Modern, Bright Card**
 
 This decision gave a lot of depth to how 
 
