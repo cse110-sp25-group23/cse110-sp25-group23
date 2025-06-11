@@ -6,3 +6,8 @@
 ## Team Status May-20-2025
 - [Youtube Link to Status Video](https://youtu.be/eT7Pb_j9JsU)
 - [Link to Video in Repository](/admin/videos/statusvideo1.mp4)
+
+## Privste and Public team videos
+[Public team video]()
+[Private Team Video](https://youtu.be/RgWaplrCHQQ)
+  
