@@ -8,7 +8,7 @@
 - [Link to Video in Repository](/admin/videos/statusvideo1.mp4)
 
 ## Privste and Public team videos
-[Public team video]() 
+[Public team video](https://youtu.be/Gb0hJQoZJrk) 
 <br>
 [Private Team Video](https://youtu.be/RgWaplrCHQQ)
   
